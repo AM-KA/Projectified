@@ -38,25 +38,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.85" />
+            app:layout_constraintGuide_percent="0.95" />
 
-        <ImageView
-            android:id="@+id/imageViewCollege"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_business_center_24"
-            app:layout_constraintStart_toStartOf="@id/guideline1"
-            app:layout_constraintTop_toTopOf="@id/guideline3" />
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.1" />
 
         <TextView
-            android:id="@+id/textViewCollege"
+            android:id="@+id/textViewPost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="IIT(ISM) Dhanbad"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewCollege"
-            app:layout_constraintStart_toEndOf="@id/imageViewCollege"
-            app:layout_constraintTop_toTopOf="@id/imageViewCollege" />
+            android:text="Android Developer"
+            app:layout_constraintTop_toTopOf="@id/guideline3"
+            app:layout_constraintStart_toStartOf="@id/guideline1"/>
 
         <ImageView
             android:id="@+id/imageViewDate"
@@ -64,54 +61,36 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:src="@drawable/ic_calendar_today_24"
-            app:layout_constraintStart_toStartOf="@id/guideline1"
-            app:layout_constraintTop_toBottomOf="@id/imageViewCollege" />
+            app:layout_constraintStart_toStartOf="@id/guideline5"
+            app:layout_constraintTop_toBottomOf="@id/textViewPost" />
 
         <TextView
             android:id="@+id/textViewDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="04 July 2020"
+            android:layout_marginStart="10dp"
+            android:text="IIT(ISM) Dhanbad"
             app:layout_constraintBottom_toBottomOf="@id/imageViewDate"
-            app:layout_constraintStart_toStartOf="@id/textViewCollege"
+            app:layout_constraintStart_toEndOf="@id/imageViewDate"
             app:layout_constraintTop_toTopOf="@id/imageViewDate" />
 
         <ImageView
-            android:id="@+id/imageViewSeen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:src="@drawable/ic_outline_favorite_border_24"
-            app:layout_constraintStart_toStartOf="@id/guideline1"
-            app:layout_constraintTop_toBottomOf="@id/imageViewDate" />
-
-        <TextView
-            android:id="@+id/textViewSeen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Mark As Seen"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewSeen"
-            app:layout_constraintStart_toStartOf="@id/textViewCollege"
-            app:layout_constraintTop_toTopOf="@id/imageViewSeen" />
-
-        <ImageView
-            android:id="@+id/imageViewSelected"
+            android:id="@+id/imageViewCandidate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:src="@drawable/ic_baseline_done_outline_24"
-            app:layout_constraintBottom_toBottomOf="@id/guideline4"
-            app:layout_constraintStart_toStartOf="@id/guideline1"
-            app:layout_constraintTop_toBottomOf="@id/imageViewSeen" />
+            android:src="@drawable/ic_baseline_account_circle_24"
+            app:layout_constraintStart_toStartOf="@id/guideline5"
+            app:layout_constraintTop_toBottomOf="@id/imageViewDate" />
 
         <TextView
-            android:id="@+id/textViewSelected"
+            android:id="@+id/textViewCandidate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mark As Selected"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewSelected"
-            app:layout_constraintStart_toStartOf="@id/textViewCollege"
-            app:layout_constraintTop_toTopOf="@id/imageViewSelected" />
+            android:text="04 July 2020"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewCandidate"
+            app:layout_constraintStart_toStartOf="@id/textViewDate"
+            app:layout_constraintTop_toTopOf="@id/imageViewCandidate" />
 
         <Button
             android:id="@+id/button"
@@ -119,18 +98,18 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorPrimary"
             android:background="@drawable/buttons"
-            android:text="View"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewSelected"
+            android:text="View Details"
+            app:layout_constraintBottom_toBottomOf="@id/guideline4"
             app:layout_constraintEnd_toEndOf="@id/guideline2"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toEndOf="@id/barrier"
-            app:layout_constraintTop_toTopOf="@id/imageViewSeen" />
+            app:layout_constraintTop_toBottomOf="@id/imageViewCandidate" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="right"
-            app:constraint_referenced_ids="textViewSeen, textViewSelected" />
+            app:constraint_referenced_ids="textViewCandidate, textViewDate" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

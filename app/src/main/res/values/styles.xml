@@ -7,5 +7,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="font">@font/roboto</item>
     </style>
-
+    <style name="CardBg" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">#2196F3</item>
+    </style>
 </resources>
