@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -9,5 +9,18 @@
     </style>
     <style name="CardBg" parent="Widget.MaterialComponents.CardView">
         <item name="cardBackgroundColor">#2196F3</item>
+    </style>
+    <style name="Widget.App.TextInputLayout.OutlinedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="shapeAppearance">@style/Rounded</item>
+    </style>
+
+    <style name="Widget.App.TextInputLayout.OutlinedBox.ExposedDropdownMenu" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="shapeAppearance">@style/Rounded</item>
+    </style>
+
+
+    <style name="Rounded" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
     </style>
 </resources>
