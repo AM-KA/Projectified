@@ -6,7 +6,10 @@
     android:layout_margin="5dp"
     android:background="@drawable/bg_stroke"
     style="@style/CardBg"
+    android:outlineSpotShadowColor="#000000"
+    android:outlineAmbientShadowColor="@color/colorPrimaryDark"
     app:cardCornerRadius="20dp">
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -52,11 +55,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Android Developer"
+            android:fontFamily="@font/roboto"
             app:layout_constraintTop_toTopOf="@id/guideline3"
             app:layout_constraintStart_toStartOf="@id/guideline1"/>
 
         <ImageView
-            android:id="@+id/imageViewDate"
+            android:id="@+id/imageViewName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -65,14 +69,14 @@
             app:layout_constraintTop_toBottomOf="@id/textViewPost" />
 
         <TextView
-            android:id="@+id/textViewDate"
+            android:id="@+id/textViewName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:text="IIT(ISM) Dhanbad"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewDate"
-            app:layout_constraintStart_toEndOf="@id/imageViewDate"
-            app:layout_constraintTop_toTopOf="@id/imageViewDate" />
+            app:layout_constraintBottom_toBottomOf="@id/imageViewName"
+            app:layout_constraintStart_toEndOf="@id/imageViewName"
+            app:layout_constraintTop_toTopOf="@id/imageViewName" />
 
         <ImageView
             android:id="@+id/imageViewCandidate"
@@ -81,7 +85,7 @@
             android:layout_marginTop="10dp"
             android:src="@drawable/ic_baseline_account_circle_24"
             app:layout_constraintStart_toStartOf="@id/guideline5"
-            app:layout_constraintTop_toBottomOf="@id/imageViewDate" />
+            app:layout_constraintTop_toBottomOf="@id/imageViewName" />
 
         <TextView
             android:id="@+id/textViewCandidate"
@@ -89,7 +93,7 @@
             android:layout_height="wrap_content"
             android:text="04 July 2020"
             app:layout_constraintBottom_toBottomOf="@id/imageViewCandidate"
-            app:layout_constraintStart_toStartOf="@id/textViewDate"
+            app:layout_constraintStart_toStartOf="@id/textViewName"
             app:layout_constraintTop_toTopOf="@id/imageViewCandidate" />
 
         <Button
@@ -97,8 +101,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorPrimary"
-            android:background="@drawable/buttons"
+            android:background="@drawable/button2"
             android:text="View Details"
+            android:textSize="10dp"
             app:layout_constraintBottom_toBottomOf="@id/guideline4"
             app:layout_constraintEnd_toEndOf="@id/guideline2"
             app:layout_constraintHorizontal_bias="1"
@@ -110,6 +115,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="right"
-            app:constraint_referenced_ids="textViewCandidate, textViewDate" />
+            app:constraint_referenced_ids="textViewCandidate, @+id/textViewName" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
