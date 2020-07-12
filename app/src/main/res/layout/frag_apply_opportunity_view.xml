@@ -16,11 +16,14 @@
             android:layout_height="wrap_content"
             app:title="Offer Details"
             app:layout_scrollFlags="scroll|enterAlways|snap" />
+
     </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -110,73 +113,70 @@
                         app:layout_constraintGuide_begin="55dp" />
 
                     <TextView
-                        android:id="@+id/textViewOppurtinityDetails"
+                        android:id="@+id/textViewOpportunityDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Opportunity Details"
                         app:layout_constraintStart_toStartOf="@id/guideline5"
                         app:layout_constraintTop_toTopOf="@id/guideline7"/>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/editTextLayoutRequirements"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
-                        android:layout_marginTop="10dp"
+                    <TextView
+                        android:id="@+id/textViewRequirement"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Requirement"
                         app:layout_constraintStart_toStartOf="@id/guideline9"
-                        app:layout_constraintEnd_toEndOf="@id/guideline6"
-                        app:layout_constraintTop_toBottomOf="@id/textViewOppurtinityDetails">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editTextRequirement"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:drawablePadding="10dp"
-                            android:hint="Requirement"
-                            android:text="Oyo"
-                            android:inputType="text"
-                            android:defaultFocusHighlightEnabled="false"/>
-                    </com.google.android.material.textfield.TextInputLayout>
+                        app:layout_constraintTop_toBottomOf="@id/textViewOpportunityDetails"/>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/editTextLayoutSkills"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <TextView
+                        android:id="@+id/textViewRequirementData"
                         android:layout_width="0dp"
-                        android:layout_marginTop="10dp"
                         android:layout_height="wrap_content"
-                        app:layout_constraintStart_toStartOf="@id/guideline9"
+                        android:text="Oyo"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintStart_toStartOf="@id/guideline10"
                         app:layout_constraintEnd_toEndOf="@id/guideline6"
-                        app:layout_constraintTop_toBottomOf="@id/editTextLayoutRequirements">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editTextSkills"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:drawablePadding="10dp"
-                            android:hint="Skills"
-                            android:text="Retrofit"
-                            android:inputType="text"
-                            android:defaultFocusHighlightEnabled="false"/>
-                    </com.google.android.material.textfield.TextInputLayout>
+                        app:layout_constraintTop_toBottomOf="@id/textViewRequirement"/>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/editTextLayoutExpectation"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
-                        android:layout_marginTop="10dp"
+                    <TextView
+                        android:id="@+id/textViewSkills"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Requirement"
                         app:layout_constraintStart_toStartOf="@id/guideline9"
+                        app:layout_constraintTop_toBottomOf="@id/textViewRequirementData"/>
+
+                    <TextView
+                        android:id="@+id/textViewSkillsData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Retrofit"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintStart_toStartOf="@id/guideline10"
                         app:layout_constraintEnd_toEndOf="@id/guideline6"
-                        app:layout_constraintTop_toBottomOf="@id/editTextLayoutSkills"
-                        app:layout_constraintBottom_toTopOf="@id/guideline8">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editTextExpectation"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:drawablePadding="10dp"
-                            android:hint="Expectation From Applicant"
-                            android:text="Must have completed 1 project"
-                            android:inputType="text"
-                            android:defaultFocusHighlightEnabled="false"/>
-                    </com.google.android.material.textfield.TextInputLayout>
+                        app:layout_constraintTop_toBottomOf="@id/textViewSkills"/>
+
+                    <TextView
+                        android:id="@+id/textViewExpectation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Expectation From Applicant"
+                        app:layout_constraintStart_toStartOf="@id/guideline9"
+                        app:layout_constraintTop_toBottomOf="@id/textViewSkillsData"/>
+
+                    <TextView
+                        android:id="@+id/textViewExpectationData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Must have completed at least 1 project."
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintStart_toStartOf="@id/guideline10"
+                        app:layout_constraintEnd_toEndOf="@id/guideline6"
+                        app:layout_constraintTop_toBottomOf="@id/textViewExpectation"
+                        app:layout_constraintBottom_toTopOf="@id/guideline8"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
@@ -329,26 +329,30 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
+
+
             <Button
-                android:id="@+id/EnlistButton"
+                android:id="@+id/buttonCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button2"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
                 app:layout_constraintTop_toBottomOf="@id/cardViewRecruiterDetails"
-                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintEnd_toStartOf="@id/buttonApply"
+                app:layout_constraintHorizontal_chainStyle="spread"
                 android:layout_marginTop="40dp"
-                android:text="Enlist Opportunity"/>
+                android:text="Cancel"/>
 
             <Button
+                android:id="@+id/buttonApply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button2"
-                app:layout_constraintStart_toStartOf="@id/guideline1"
-                app:layout_constraintTop_toBottomOf="@id/EnlistButton"
+                app:layout_constraintStart_toEndOf="@id/buttonCancel"
+                app:layout_constraintTop_toTopOf="@id/buttonCancel"
+                app:layout_constraintBottom_toBottomOf="@id/buttonCancel"
                 app:layout_constraintEnd_toEndOf="@id/guideline2"
-                android:layout_marginTop="20dp"
-                android:text="Cancel"/>
+                android:text="Apply"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

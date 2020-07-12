@@ -183,7 +183,7 @@
 
 
             <androidx.cardview.widget.CardView
-            android:id="@+id/cardViewRecuirterDetails"
+            android:id="@+id/cardViewRecruiterDetails"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:cardCornerRadius="20dp"
@@ -243,7 +243,7 @@
 
 
                     <TextView
-                        android:id="@+id/textViewRecuirterDetails"
+                        android:id="@+id/textViewRecruiterDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Recuirter Details"
@@ -258,7 +258,7 @@
                         android:layout_marginTop="10dp"
                         app:layout_constraintEnd_toEndOf="@id/guideline12"
                         app:layout_constraintStart_toStartOf="@id/guideline15"
-                        app:layout_constraintTop_toBottomOf="@id/textViewRecuirterDetails">
+                        app:layout_constraintTop_toBottomOf="@id/textViewRecruiterDetails">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editTextName"
@@ -348,7 +348,7 @@
             android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="@id/guideline1"
             app:layout_constraintEnd_toEndOf="@id/guideline2"
-           app:layout_constraintTop_toBottomOf="@id/cardViewRecuirterDetails">
+           app:layout_constraintTop_toBottomOf="@id/cardViewRecruiterDetails">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
