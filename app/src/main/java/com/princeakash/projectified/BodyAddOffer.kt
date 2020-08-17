@@ -1,9 +1,13 @@
 package com.princeakash.projectified
 
+import java.util.*
+
 data class BodyAddOffer (
-        var offer_name:String,
-        var domain_name:String,
-        var requirements:String,
-        var skills:String,
-        var expectation:String,
-        var recruiter_id:String)
+
+        var apply_date: Date,
+        var resume: String,
+        var previousWork: String,
+        var applicant_id:String,
+        var offer_id:String,
+        var recruiter_id: String
+)

@@ -2,7 +2,8 @@ package com.princeakash.projectified
 
 data class ResponseGetOfferByIdRecruiter(
         var message:String,
-        var offer: Offer)
+        var offer: Offer
+)
 {
     data class Offer(
             var offer_id:String,
