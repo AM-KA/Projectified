@@ -7,33 +7,33 @@ import retrofit2.http.*
 interface RecruiterService {
 
     @POST("offer")
-    fun addOffer(@Header("Authorization") token: String, @Body bodyAddOffer:BodyAddOffer) : Deferred<ResponseAddOffer>
+    suspend fun addOffer(@Header("Authorization") token: String, @Body bodyAddOffer:BodyAddOffer) : ResponseAddOffer
 
-    @GET("byRecruiter/{recruiterID}")
-    fun getOffersByRecruiter(@Header("Authorization") token: String, @Path("recruiterID") recruiterID:String) : Deferred<ResponseGetOffersByRecruiter>
+    @GET("offer/recruiter/{recruiterID}")
+    suspend fun getOffersByRecruiter(@Header("Authorization") token: String, @Path("recruiterID") recruiterID:String) : ResponseGetOffersByRecruiter
 
-    @GET("byIdRecruiter/{offerID}")
-    fun getOfferByIdRecruiter(@Header("Authorization") token: String, @Path("offerID") offerID:String) : Deferred<ResponseGetOfferByIdRecruiter>
+    @GET("offer/{offerID}/recruiter")
+    suspend fun getOfferByIdRecruiter(@Header("Authorization") token: String, @Path("offerID") offerID:String) : ResponseGetOfferByIdRecruiter
 
-    @GET("{offerID}/getApplicants")
-    fun getOfferApplicants(@Header("Authorization") token: String, @Path("offerID") offerID:String) : Deferred<ResponseGetOfferApplicants>
+    @GET("offer/{offerID}/applicants")
+    suspend fun getOfferApplicants(@Header("Authorization") token: String, @Path("offerID") offerID:String) : ResponseGetOfferApplicants
 
-    @PATCH("{offerID}")
-    fun updateOffer(@Header("Authorization") token: String, @Path("offerID") offerID: String, @Body bodyUpdateOffer: BodyUpdateOffer): Deferred<ResponseUpdateOffer>
+    @PATCH("offer/{offerID}")
+    suspend fun updateOffer(@Header("Authorization") token: String, @Path("offerID") offerID: String, @Body bodyUpdateOffer: BodyUpdateOffer): ResponseUpdateOffer
 
-    @POST("toggle/{offerID}")
-    fun toggleVisibility(@Header("Authorization") token: String, @Path("offerID") offerID: String, @Body bodyToggleVisibility: BodyToggleVisibility) : Deferred<ResponseToggleVisibility>
+    @POST("offer/{offerID}/toggle")
+    suspend fun toggleVisibility(@Header("Authorization") token: String, @Path("offerID") offerID: String, @Body bodyToggleVisibility: BodyToggleVisibility) : ResponseToggleVisibility
 
-    @DELETE("{offerID}")
-    fun deleteOffer(@Header("Authorization") token: String, @Path("offerID") offerID:String): Deferred<ResponseDeleteOffer>
+    @DELETE("offer/{offerID}")
+    suspend fun deleteOffer(@Header("Authorization") token: String, @Path("offerID") offerID:String): ResponseDeleteOffer
 
-    @GET("byIdRecruiter/{applicationID}")
-    fun getApplicationById(@Header("Authorization") token: String, @Path("applicationID") applicationID:String): Deferred<ResponseGetApplicationDetailById>
+    @GET("application/{applicationID}/recruiter")
+    suspend fun getApplicationById(@Header("Authorization") token: String, @Path("applicationID") applicationID:String): ResponseGetApplicationByIdRecruiter
 
-    @PATCH("markSeen/{applicationID}")
-    fun markSeen(@Header("Authorization") token: String, @Path("applicationID") applicationID: String, @Body bodyMarkAsSeen: BodyMarkAsSeen): Deferred<ResponseMarkAsSeen>
+    @PATCH("application/{applicationID}/seen")
+    suspend fun markSeen(@Header("Authorization") token: String, @Path("applicationID") applicationID: String, @Body bodyMarkAsSeen: BodyMarkAsSeen): ResponseMarkAsSeen
 
-    @PATCH("markSelected/{applicationID}")
-    fun markSelected(@Header("Authorization") token: String, @Path("applicationID") applicationID: String, @Body bodyMarkAsSelected: BodyMarkAsSelected): Deferred<ResponseMarkAsSelected>
+    @PATCH("application/{applicationID}/selected")
+    suspend fun markSelected(@Header("Authorization") token: String, @Path("applicationID") applicationID: String, @Body bodyMarkAsSelected: BodyMarkAsSelected): ResponseMarkAsSelected
 
 }
