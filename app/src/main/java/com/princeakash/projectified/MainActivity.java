@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.kk);
 
-
         setSupportActionBar(toolbar);
 
         drawerLayout = findViewById(R.id.drawerLayout);

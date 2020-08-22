@@ -1,11 +1,11 @@
 package com.princeakash.projectified
 
-import ProfileRepository
 import android.app.Application
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import com.princeakash.projectified.candidate.CandidateRepository
 import com.princeakash.projectified.recruiter.RecruiterRepository
+import com.princeakash.projectified.user.ProfileRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit

@@ -1,10 +1,13 @@
-package com.princeakash.projectified.recruiter
+package com.princeakash.projectified.recruiter.myOffers.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.princeakash.projectified.MyApplication
+import com.princeakash.projectified.recruiter.BodyAddOffer
+import com.princeakash.projectified.recruiter.RecruiterRepository
+import com.princeakash.projectified.recruiter.ResponseAddOffer
 import kotlinx.coroutines.launch
 import java.lang.Exception
 

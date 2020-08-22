@@ -1,6 +1,5 @@
 package com.princeakash.projectified.user
 
-import kotlinx.coroutines.Deferred
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.PATCH

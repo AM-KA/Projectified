@@ -1,10 +1,13 @@
-package com.princeakash.projectified.recruiter
+package com.princeakash.projectified.recruiter.myOffers.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.princeakash.projectified.MyApplication
+import com.princeakash.projectified.ProfileFragment
+import com.princeakash.projectified.recruiter.*
+import com.princeakash.projectified.user.ProfileRepository
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -13,6 +16,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
     //RecruiterRepository instance, guaranteed to be singular because of being
     //picked up from instance of MyApplication.
     val recruiterRepository: RecruiterRepository = (app as MyApplication).recruiterRepository
+    val profileRepository: ProfileRepository = (app as MyApplication).profileRepository
 
     //MutableLiveData variables of responses for all kinds of requests handled by RecruiterViewModel
     //which can be put to observation in Activities/Fragments
@@ -27,7 +31,17 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
     var responseMarkAsSelected: MutableLiveData<ResponseMarkAsSelected> = MutableLiveData()
     var errorString: MutableLiveData<String> = MutableLiveData()
 
-    fun getOffersByRecruiter(token:String, recruiterID: String){
+    fun getOffersByRecruiter(){
+        val token:String = profileRepository.getToken()
+        val recruiterID: String = profileRepository.getUserId()
+        if(token.equals("")) {
+            errorString.postValue("Invalid Token. Please log in again.")
+            return
+        }
+        if(recruiterID.equals("")){
+            errorString.postValue("Invalid User ID. Please log in again.")
+            return
+        }
         viewModelScope.launch {
             try {
                 responseGetOffersByRecruiter.postValue(recruiterRepository.getOffersByRecruiter(token, recruiterID))
@@ -42,7 +56,12 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
     }
 
-    fun getOfferByIdRecruiter(token:String, offerID:String){
+    fun getOfferByIdRecruiter(offerID:String){
+        val token = profileRepository.getToken()
+        if(token.equals("")) {
+            errorString.postValue("Invalid Token. Please log in again.")
+            return
+        }
         viewModelScope.launch {
             try {
                 responseGetOfferByIdRecruiter.postValue(recruiterRepository.getOfferByIdRecruiter(token, offerID))
@@ -57,7 +76,12 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
     }
 
-    fun getOfferApplicants(token:String, offerID:String){
+    fun getOfferApplicants(offerID:String){
+        val token = profileRepository.getToken()
+        if(token.equals("")) {
+            errorString.postValue("Invalid Token. Please log in again.")
+            return
+        }
         viewModelScope.launch {
             try {
                 responseGetOfferApplicants.postValue(recruiterRepository.getOfferApplicants(token, offerID))
@@ -72,7 +96,12 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
     }
 
-    fun updateOffer(token:String, offerID:String, bodyUpdateOffer: BodyUpdateOffer){
+    fun updateOffer(offerID:String, bodyUpdateOffer: BodyUpdateOffer){
+        val token = profileRepository.getToken()
+        if(token.equals("")) {
+            errorString.postValue("Invalid Token. Please log in again.")
+            return
+        }
         viewModelScope.launch {
             try {
                 responseUpdateOffer.postValue(recruiterRepository.updateOffer(token, offerID, bodyUpdateOffer))
@@ -87,7 +116,12 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
     }
 
-    fun toggleVisibility(token:String, offerID:String, bodyToggleVisibility: BodyToggleVisibility){
+    fun toggleVisibility(offerID:String, bodyToggleVisibility: BodyToggleVisibility){
+        val token = profileRepository.getToken()
+        if(token.equals("")) {
+            errorString.postValue("Invalid Token. Please log in again.")
+            return
+        }
         viewModelScope.launch {
             try {
                 responseToggleVisibility.postValue(recruiterRepository.toggleVisibility(token, offerID, bodyToggleVisibility))
@@ -102,7 +136,12 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
     }
 
-    fun deleteOffer(token:String, offerID:String){
+    fun deleteOffer(offerID:String){
+        val token = profileRepository.getToken()
+        if(token.equals("")) {
+            errorString.postValue("Invalid Token. Please log in again.")
+            return
+        }
         viewModelScope.launch {
             try {
                 responseDeleteOffer.postValue(recruiterRepository.deleteOffer(token, offerID))
@@ -117,7 +156,12 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
     }
 
-    fun getApplicationById(token:String, applicationID:String){
+    fun getApplicationById(applicationID:String){
+        val token = profileRepository.getToken()
+        if(token.equals("")) {
+            errorString.postValue("Invalid Token. Please log in again.")
+            return
+        }
         viewModelScope.launch {
             try {
                 responseGetApplicationById.postValue(recruiterRepository.getApplicationById(token, applicationID))
@@ -132,7 +176,12 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
     }
 
-    fun markSeen(token:String, applicationID:String, bodyMarkAsSeen: BodyMarkAsSeen){
+    fun markSeen(applicationID:String, bodyMarkAsSeen: BodyMarkAsSeen){
+        val token = profileRepository.getToken()
+        if(token.equals("")) {
+            errorString.postValue("Invalid Token. Please log in again.")
+            return
+        }
         viewModelScope.launch {
             try {
                 responseMarkAsSeen.postValue(recruiterRepository.markSeen(token, applicationID, bodyMarkAsSeen))
@@ -147,7 +196,12 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
     }
 
-    fun markSelected(token:String, applicationID:String, bodyMarkAsSelected: BodyMarkAsSelected){
+    fun markSelected(applicationID:String, bodyMarkAsSelected: BodyMarkAsSelected){
+        val token = profileRepository.getToken()
+        if(token.equals("")) {
+            errorString.postValue("Invalid Token. Please log in again.")
+            return
+        }
         viewModelScope.launch {
             try {
                 responseMarkAsSelected.postValue(recruiterRepository.markSelected(token, applicationID, bodyMarkAsSelected))

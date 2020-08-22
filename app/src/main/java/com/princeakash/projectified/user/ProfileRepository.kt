@@ -1,22 +1,21 @@
+package com.princeakash.projectified.user
 
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.princeakash.projectified.MyApplication
-import com.princeakash.projectified.user.*
 import com.squareup.moshi.JsonAdapter
 import retrofit2.Retrofit
 import kotlin.Exception
 
 //TODO:Show exception via toast.
 class ProfileRepository(retrofit: Retrofit, app: MyApplication) {
-    var profileService:ProfileService
-    var application: MyApplication
+
+    var profileService: ProfileService = retrofit.create(ProfileService::class.java)
+    var application: MyApplication = app
     var sharedPref: SharedPreferences
     var editor: SharedPreferences.Editor
 
     init{
-        profileService= retrofit.create(ProfileService::class.java)
-        application = app
         sharedPref = application.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE)
         editor = sharedPref.edit()
     }

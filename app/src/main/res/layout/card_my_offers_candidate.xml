@@ -59,7 +59,7 @@
             app:layout_constraintTop_toTopOf="@id/imageViewCollege" />
 
         <ImageView
-            android:id="@+id/imageViewName"
+            android:id="@+id/imageViewDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -68,13 +68,13 @@
             app:layout_constraintTop_toBottomOf="@id/imageViewCollege" />
 
         <TextView
-            android:id="@+id/textViewName"
+            android:id="@+id/textViewDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="04 July 2020"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewName"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewDate"
             app:layout_constraintStart_toStartOf="@id/textViewCollege"
-            app:layout_constraintTop_toTopOf="@id/imageViewName" />
+            app:layout_constraintTop_toTopOf="@id/imageViewDate" />
 
         <ImageView
             android:id="@+id/imageViewSeen"
@@ -83,7 +83,7 @@
             android:layout_marginTop="30dp"
             android:src="@drawable/ic_outline_favorite_border_24"
             app:layout_constraintStart_toStartOf="@id/guideline1"
-            app:layout_constraintTop_toBottomOf="@id/imageViewName" />
+            app:layout_constraintTop_toBottomOf="@id/imageViewDate" />
 
         <TextView
             android:id="@+id/textViewSeen"
