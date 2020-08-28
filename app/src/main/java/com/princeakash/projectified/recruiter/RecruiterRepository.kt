@@ -1,5 +1,6 @@
 package com.princeakash.projectified.recruiter
 
+import com.princeakash.projectified.candidate.BodyAddApplication
 import retrofit2.Retrofit
 
 //TODO:Show exception via toast.

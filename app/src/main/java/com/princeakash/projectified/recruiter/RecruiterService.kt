@@ -1,6 +1,6 @@
 package com.princeakash.projectified.recruiter
 
-import com.princeakash.projectified.recruiter.*
+import com.princeakash.projectified.candidate.BodyAddApplication
 import retrofit2.http.*
 
 

@@ -1,13 +1,13 @@
 package com.princeakash.projectified.candidate
 
-import com.princeakash.projectified.candidate.*
+import com.princeakash.projectified.recruiter.BodyAddOffer
 import retrofit2.http.*
 
 interface CandidateService {
 
     // ADD Application
     @POST("application")
-    suspend  fun addApplication(@Header("Authorization") token: String, @Body bodyAddApplication:BodyAddApplication) : ResponseAddApplication
+    suspend  fun addApplication(@Header("Authorization") token: String, @Body bodyAddOffer: BodyAddOffer) : ResponseAddApplication
 
 
     // Get all Applications by ApplicantID

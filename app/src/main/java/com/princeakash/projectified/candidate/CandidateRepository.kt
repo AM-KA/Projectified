@@ -1,13 +1,14 @@
 
 package com.princeakash.projectified.candidate
 
+import com.princeakash.projectified.recruiter.BodyAddOffer
 import retrofit2.Retrofit
 
 //TODO:Show exception via toast
 class CandidateRepository(retrofit: Retrofit) {
     var candidateService: CandidateService = retrofit.create(CandidateService::class.java)
 
-    suspend fun addApplication(token: String, bodyAddApplication: BodyAddApplication) = candidateService.addApplication(token, bodyAddApplication)
+    suspend fun addApplication(token: String, bodyAddOffer: BodyAddOffer) = candidateService.addApplication(token, bodyAddOffer)
 
     suspend fun getApplicationByCandidate(token: String, applicantID: String) = candidateService.getApplicationsByCandidate(token, applicantID)
 
