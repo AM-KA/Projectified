@@ -3,6 +3,7 @@ package com.princeakash.projectified
 import android.app.Application
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import com.princeakash.projectified.Faq.FaqRepository
 import com.princeakash.projectified.candidate.CandidateRepository
 import com.princeakash.projectified.recruiter.RecruiterRepository
 import com.princeakash.projectified.user.ProfileRepository
@@ -11,7 +12,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-class MyApplication(): Application(){
+class MyApplication: Application(){
 
     //Moshi: GSON of Kotlin
     val moshi = Moshi.Builder()
@@ -26,6 +27,7 @@ class MyApplication(): Application(){
     var recruiterRepository = RecruiterRepository(retrofit)
     var profileRepository = ProfileRepository(retrofit, this)
     var candidateRepository = CandidateRepository(retrofit)
+    var faqRepository = FaqRepository(retrofit)
 
     //Show Toast by using Application Context
     fun showToast(message: String?){
