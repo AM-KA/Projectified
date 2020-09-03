@@ -26,7 +26,7 @@ class RecruiterAddOffersViewModel(val app: Application): AndroidViewModel(app) {
     //which can be put to observation in Activities/Fragments
     var responseAddOffer : MutableLiveData<ResponseAddOffer> = MutableLiveData()
 
-    fun addOffer(requirements: String, skills: String, expectation: String){
+    fun addOffer(offerName:String, domainName:String, requirements: String, skills: String, expectation: String){
         val token = profileRepository.getToken()
         val recruiterID: String = profileRepository.getUserId()
         if(token == "") {
@@ -39,9 +39,7 @@ class RecruiterAddOffersViewModel(val app: Application): AndroidViewModel(app) {
         }
         viewModelScope.launch {
             try {
-                TODO("Get Domain Name from Profile Repository")
-                TODO("Get Offer Name from Layout")
-                val bodyAddOffer = BodyAddOffer(Date(), "Offer Name", "Domain Name", requirements, skills, expectation, recruiterID)
+                val bodyAddOffer = BodyAddOffer(offerName, domainName, requirements, skills, expectation, recruiterID)
                 responseAddOffer.postValue(recruiterRepository.addOffer(bodyAddOffer, token))
             } catch(e: Exception){
 
