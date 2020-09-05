@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.princeakash.projectified.R
-import com.princeakash.projectified.recruiter.ApplicantCardModel
 import kotlinx.android.synthetic.main.card_my_offers_candidate.view.*
 
 class MyOfferApplicantsAdapter(var applicantList: List<ApplicantCardModel>?, val listener: MyOfferApplicantListener) : RecyclerView.Adapter<MyOfferApplicantsAdapter.MyOfferApplicantViewHolder>(){

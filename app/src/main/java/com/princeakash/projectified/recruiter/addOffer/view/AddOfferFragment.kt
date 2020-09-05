@@ -11,7 +11,7 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.lifecycle.ViewModelProvider
 import com.princeakash.projectified.R
-import com.princeakash.projectified.recruiter.ResponseAddOffer
+import com.princeakash.projectified.recruiter.addOffer.model.ResponseAddOffer
 import com.princeakash.projectified.recruiter.addOffer.viewmodel.RecruiterAddOffersViewModel
 import kotlinx.android.synthetic.main.frag_floatopportuninty.view.*
 

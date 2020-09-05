@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MyApplicationsFragment">
+    tools:context=".recruiter.myOffers.view.MyOffersFragment">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_applications"
+        android:id="@+id/fragment_offers"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

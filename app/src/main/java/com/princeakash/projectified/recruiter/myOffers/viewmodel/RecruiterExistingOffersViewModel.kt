@@ -5,8 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.princeakash.projectified.MyApplication
-import com.princeakash.projectified.ProfileFragment
 import com.princeakash.projectified.recruiter.*
+import com.princeakash.projectified.recruiter.myOffers.model.*
 import com.princeakash.projectified.user.ProfileRepository
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -14,11 +14,11 @@ import java.lang.Exception
 class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(app) {
 
     //RecruiterRepository instance, guaranteed to be singular because of being
-    //picked up from instance of MyApplication.
     val recruiterRepository: RecruiterRepository = (app as MyApplication).recruiterRepository
     val profileRepository: ProfileRepository = (app as MyApplication).profileRepository
 
-    //MutableLiveData variables of responses for all kinds of requests handled by RecruiterViewModel
+    //MutableLiveData variables of responses for all kinds of requests h
+    //picked up from instance of MyApplication.andled by RecruiterViewModel
     //which can be put to observation in Activities/Fragments
     var responseGetOffersByRecruiter: MutableLiveData<ResponseGetOffersByRecruiter> = MutableLiveData()
     var responseGetOfferByIdRecruiter: MutableLiveData<ResponseGetOfferByIdRecruiter> = MutableLiveData()

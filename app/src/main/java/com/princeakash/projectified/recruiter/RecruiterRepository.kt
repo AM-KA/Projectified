@@ -1,6 +1,10 @@
 package com.princeakash.projectified.recruiter
 
-import com.princeakash.projectified.candidate.BodyAddApplication
+import com.princeakash.projectified.recruiter.addOffer.model.BodyAddOffer
+import com.princeakash.projectified.recruiter.myOffers.model.BodyMarkAsSeen
+import com.princeakash.projectified.recruiter.myOffers.model.BodyMarkAsSelected
+import com.princeakash.projectified.recruiter.myOffers.model.BodyToggleVisibility
+import com.princeakash.projectified.recruiter.myOffers.model.BodyUpdateOffer
 import retrofit2.Retrofit
 
 //TODO:Show exception via toast.

@@ -5,12 +5,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.princeakash.projectified.MyApplication
-import com.princeakash.projectified.recruiter.BodyAddOffer
 import com.princeakash.projectified.recruiter.RecruiterRepository
-import com.princeakash.projectified.recruiter.ResponseAddOffer
+import com.princeakash.projectified.recruiter.addOffer.model.BodyAddOffer
+import com.princeakash.projectified.recruiter.addOffer.model.ResponseAddOffer
 import com.princeakash.projectified.user.ProfileRepository
 import kotlinx.coroutines.launch
-import retrofit2.http.Body
 import java.lang.Exception
 import java.util.*
 

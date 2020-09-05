@@ -1,43 +1,47 @@
-package com.princeakash.projectified.recruiter.myOffers.view
+package com.princeakash.projectified.candidate.addApplication.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.princeakash.projectified.R
-import com.princeakash.projectified.recruiter.myOffers.model.OfferCardModelRecruiter
+import com.princeakash.projectified.candidate.addApplication.model.GetOffersByDomainAdapter
+import com.princeakash.projectified.candidate.addApplication.viewModel.CandidateAddApplicationViewModel
+import com.princeakash.projectified.candidate.myApplications.model.OfferCardModelCandidate
 import com.princeakash.projectified.recruiter.myOffers.model.MyOffersAdapter
+import com.princeakash.projectified.recruiter.myOffers.model.OfferCardModelRecruiter
+import com.princeakash.projectified.recruiter.myOffers.view.MyOfferApplicantsFragment.Companion.OFFER_ID
+import com.princeakash.projectified.recruiter.myOffers.view.MyOfferDetailsFragment
 import com.princeakash.projectified.recruiter.myOffers.view.MyOfferDetailsFragment.Companion.OFFER_ID
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterExistingOffersViewModel
 import kotlinx.android.synthetic.main.frag_my_offers.*
 import kotlinx.android.synthetic.main.frag_my_offers.view.*
 
+class GetOffersByDomainFragement : Fragment() , GetOffersByDomainAdapter.GetOffersListener{
 
-class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
-
-    var recruiterExistingOffersViewModel: RecruiterExistingOffersViewModel? = null
-    var offerList: ArrayList<OfferCardModelRecruiter> = ArrayList()
+    var candidateAddApplicationViewModel: CandidateAddApplicationViewModel? = null
+    var offerList: ArrayList<OfferCardModelCandidate> = ArrayList()
     var errorString:String? = null
+
 
     //Determining whether re-fetching data is required or not
     var detailsViewed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
-        recruiterExistingOffersViewModel!!.responseGetOffersByRecruiter.observe(this, {
-            offerList = it?.offers as ArrayList<OfferCardModelRecruiter>
+        candidateAddApplicationViewModel = ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
+        candidateAddApplicationViewModel!!.responseGetOffersByDomain.observe(this, {
+            offerList = it?.offers as ArrayList<OfferCardModelCandidate>
             recyclerViewOffers.adapter?.notifyDataSetChanged()
         })
-        recruiterExistingOffersViewModel!!.errorString.observe(this, {
+        candidateAddApplicationViewModel!!.errorString.observe(this, {
             errorString = it
-            Toast.makeText(this@MyOfferHomeFragment.context, errorString, LENGTH_SHORT).show()
+            Toast.makeText(this@GetOffersByDomainFragement.context, errorString, Toast.LENGTH_SHORT).show()
         })
     }
 
@@ -46,7 +50,7 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
         /*savedInstanceState?.let {
             offerList = savedInstanceState.getSerializable(OFFERS_LIST) as ArrayList<OfferCardModelRecruiter>
         }*/
-        return inflater.inflate(R.layout.frag_my_offers, container, false)
+        return inflater.inflate(R.layout.frag_available_offers, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,14 +58,14 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
 
         //Start fetching offer list
         if(savedInstanceState == null || savedInstanceState.getBoolean(DETAILS_VIEWED)) {
-            recruiterExistingOffersViewModel!!.getOffersByRecruiter()
+            candidateAddApplicationViewModel!!.getOffersByDomain()
             detailsViewed = false
         }
 
         view.recyclerViewOffers.apply {
             layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
             setHasFixedSize(true)
-            adapter = MyOffersAdapter(offerList, this@MyOfferHomeFragment)
+            adapter = GetOffersByDomainAdapter(offerList, this@GetOffersByDomainFragement)
         }
     }
 
@@ -77,9 +81,9 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
         detailsViewed = true
         //Populate new fragment with details of offer.
         val bundle = Bundle()
-        bundle.putString(OFFER_ID, offerList.get(itemPosition).offer_id)
+        bundle.putString(GetOfferDetailsCandidateFragment._ID, offerList.get(itemPosition).offer_id)
         parentFragmentManager.beginTransaction()
-                .add(R.id.fragment_offers, MyOfferDetailsFragment::class.java, bundle, "MyOfferDetailsFragment")
+                .add(R.id.fragment_offers, GetOfferDetailsCandidateFragment::class.java, bundle, "GetOfferDetailsCandidateFragment")
                 .addToBackStack(null)
                 .commit()
     }

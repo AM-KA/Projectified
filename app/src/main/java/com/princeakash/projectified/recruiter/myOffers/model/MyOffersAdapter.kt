@@ -3,11 +3,8 @@ package com.princeakash.projectified.recruiter.myOffers.model
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.princeakash.projectified.R
-import com.princeakash.projectified.recruiter.OfferCardModelRecruiter
 import kotlinx.android.synthetic.main.card_my_offers.view.*
 
 class MyOffersAdapter(var offerList: List<OfferCardModelRecruiter>?, val listener:MyOffersListener): RecyclerView.Adapter<MyOffersAdapter.MyOffersViewHolder>() {
@@ -15,7 +12,7 @@ class MyOffersAdapter(var offerList: List<OfferCardModelRecruiter>?, val listene
     class MyOffersViewHolder(itemView: View, listener: MyOffersListener):RecyclerView.ViewHolder(itemView), View.OnClickListener{
         val textViewPost = itemView.textViewPost
         val textViewDate = itemView.textViewDate
-        val textViewApplicants = itemView.textViewCandidate
+        val textViewApplicants = itemView.textViewCollege
         val buttonViewDetails = itemView.button
         val myListener = listener
 

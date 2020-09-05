@@ -10,7 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.princeakash.projectified.R
-import com.princeakash.projectified.recruiter.*
+import com.princeakash.projectified.recruiter.myOffers.model.*
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterExistingOffersViewModel
 import kotlinx.android.synthetic.main.frag_candidate_details_recruiter.view.*
 
@@ -19,12 +19,12 @@ class MyOfferApplicationFragment : Fragment() {
     //ViewModel and Necessary LiveData Observer objects
     private var recruiterExistingOffersViewModel: RecruiterExistingOffersViewModel? = null
     private var responseGetApplicationByIdRecruiter: ResponseGetApplicationByIdRecruiter? = null
-    private var error:String? = null
+    private var error: String? = null
     private var responseMarkAsSeen: ResponseMarkAsSeen? = null
     private var responseMarkAsSelected: ResponseMarkAsSelected? = null
 
     //Application related data
-    private var applicationID:String? = null
+    private var applicationID: String? = null
 
     //Views
     private var textViewName: TextView? = null
@@ -34,8 +34,8 @@ class MyOfferApplicationFragment : Fragment() {
     private var textViewPhone: TextView? = null
     private var textViewPreviousWork: TextView? = null
     private var textViewResume: TextView? = null
-    private var imageViewSeen:ImageView? = null
-    private var imageViewSelected:ImageView? = null
+    private var imageViewSeen: ImageView? = null
+    private var imageViewSelected: ImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +64,7 @@ class MyOfferApplicationFragment : Fragment() {
             //Take action as per response
         })
 
-        if(savedInstanceState == null)
+        if (savedInstanceState == null)
             applicationID = arguments?.getString(APPLICATION_ID)
         else
             applicationID = savedInstanceState.getString(APPLICATION_ID)
@@ -99,7 +99,7 @@ class MyOfferApplicationFragment : Fragment() {
         outState.putString(APPLICATION_ID, applicationID)
     }
 
-    private fun populateViews(){
+    private fun populateViews() {
         responseGetApplicationByIdRecruiter?.let {
             textViewName?.text = it.applicant_name
             textViewCollege?.text = it.applicant_collegeName
@@ -111,20 +111,22 @@ class MyOfferApplicationFragment : Fragment() {
         }
     }
 
-    private fun markSeen(){
-        responseGetApplicationByIdRecruiter?.let{
+    private fun markSeen() {
+        responseGetApplicationByIdRecruiter?.let {
             val status = it.markAsSeen
             recruiterExistingOffersViewModel?.markSeen(applicationID!!, BodyMarkAsSeen(!status))
         }
     }
 
     private fun markSelected() {
-        responseGetApplicationByIdRecruiter?.let{
+        responseGetApplicationByIdRecruiter?.let {
             val status = it.markAsSelected
             recruiterExistingOffersViewModel?.markSelected(applicationID!!, BodyMarkAsSelected(!status))
         }
     }
-    companion object{
+
+    companion object {
         val APPLICATION_ID = "ApplicationId"
     }
 }
+

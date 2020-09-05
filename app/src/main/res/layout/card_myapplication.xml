@@ -81,7 +81,7 @@
 
 
         <ImageView
-            android:id="@+id/imageViewCandidate"
+            android:id="@+id/imageViewCollege"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -90,13 +90,13 @@
             app:layout_constraintTop_toBottomOf="@id/imageViewName" />
 
         <TextView
-            android:id="@+id/textViewCandidate"
+            android:id="@+id/textViewCollege"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="IIT(ISM) Dhanbad"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewCandidate"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewCollege"
             app:layout_constraintStart_toStartOf="@id/textViewName"
-            app:layout_constraintTop_toTopOf="@id/imageViewCandidate" />
+            app:layout_constraintTop_toTopOf="@id/imageViewCollege" />
 
         <ImageView
             android:id="@+id/imageViewDate"
@@ -105,7 +105,7 @@
             android:layout_marginTop="10dp"
             android:src="@drawable/ic_calendar_today_24"
             app:layout_constraintStart_toStartOf="@id/guideline5"
-            app:layout_constraintTop_toBottomOf="@id/imageViewCandidate" />
+            app:layout_constraintTop_toBottomOf="@id/imageViewCollege" />
 
         <TextView
             android:id="@+id/textViewDate"
@@ -113,7 +113,7 @@
             android:layout_height="wrap_content"
             android:text="4th July 2020"
             app:layout_constraintBottom_toBottomOf="@id/imageViewDate"
-            app:layout_constraintStart_toStartOf="@id/textViewCandidate"
+            app:layout_constraintStart_toStartOf="@id/textViewCollege"
             app:layout_constraintTop_toTopOf="@id/imageViewDate" />
 
 
@@ -141,7 +141,7 @@
             app:layout_constraintStart_toStartOf="@id/guideline5"
             app:layout_constraintHorizontal_bias="0.7"
 
-            app:layout_constraintTop_toBottomOf="@id/imageViewCandidate" />
+            app:layout_constraintTop_toBottomOf="@id/imageViewCollege" />
 
 
         <TextView
@@ -185,7 +185,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="right"
-            app:constraint_referenced_ids="textViewCandidate, @+id/textViewName" />\
+            app:constraint_referenced_ids="textViewCollege, @+id/textViewName" />\
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

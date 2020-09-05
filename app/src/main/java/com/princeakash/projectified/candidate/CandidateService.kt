@@ -1,22 +1,26 @@
 package com.princeakash.projectified.candidate
 
-import com.princeakash.projectified.recruiter.BodyAddOffer
+import com.princeakash.projectified.candidate.addApplication.model.BodyAddApplication
+import com.princeakash.projectified.candidate.addApplication.model.ResponseAddApplication
+import com.princeakash.projectified.candidate.myApplications.model.*
+import com.princeakash.projectified.recruiter.addOffer.model.BodyAddOffer
 import retrofit2.http.*
+import com.princeakash.projectified.candidate.myApplications.model.ResponseGetOfferById as ResponseGetOfferById1
 
 interface CandidateService {
 
     // ADD Application
     @POST("application")
-    suspend  fun addApplication(@Header("Authorization") token: String, @Body bodyAddOffer: BodyAddOffer) : ResponseAddApplication
+    suspend  fun addApplication(@Header("Authorization") token: String, @Body bodyAddApplication: BodyAddApplication) : ResponseAddApplication
 
 
     // Get all Applications by ApplicantID
     @GET("byApplicant/{applicantID}")
-    suspend  fun getApplicationsByCandidate(@Header("Authorization") token: String, @Path("applicantID") applicantID:String) : ResponseGetApplicationsCardView
+    suspend  fun getApplicationsByCandidate(@Header("Authorization") token: String, @Path("applicantID") applicantID:String) : ResponseGetApplicationsByCandidate
 
     // Get info about specific application by ApplicationID
     @GET("{applicationID}")
-    suspend fun getApplicationByIdCandidate(@Header("Authorization") token: String, @Path("applicationID") applicationID:String) : ResponseGetApplicationDetailById
+    suspend fun getApplicationByIdCandidate(@Header("Authorization") token: String, @Path("applicationID") applicationID:String) : ResponseGetApplicationDetailByIdCandidate
 
 
     //Update any offer through ApplicationId
@@ -26,7 +30,7 @@ interface CandidateService {
 
     // Delete any Application through ApplicationID
     @DELETE("{applicationID}")
-    suspend  fun deleteApplication(@Header("Authorization") token: String, @Path("applicationID") applicationID: String):ResponseDeleteApplication
+    suspend  fun deleteApplication(@Header("Authorization") token: String, @Path("applicationID") applicationID: String): ResponseDeleteApplication
 
 
     // Get info about all offers through domain name
@@ -36,7 +40,7 @@ interface CandidateService {
 
     // Get Info about specific offer through offerID
     @GET("{offerID}")
-    suspend  fun getOfferById(@Header("Authorization") token: String, @Path("offerID") offerID:String): ResponseGetOfferById
+    suspend  fun getOfferById(@Header("Authorization") token: String, @Path("offerID") offerID:String): ResponseGetOfferById1
 
 
 }

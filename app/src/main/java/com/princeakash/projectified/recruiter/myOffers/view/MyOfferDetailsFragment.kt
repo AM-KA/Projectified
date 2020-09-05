@@ -10,14 +10,12 @@ import android.widget.CompoundButton
 import android.widget.Switch
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
-import com.princeakash.projectified.recruiter.*
+import com.princeakash.projectified.recruiter.myOffers.model.*
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterExistingOffersViewModel
 import kotlinx.android.synthetic.main.frag_my_offer_details.view.*
-import kotlinx.android.synthetic.main.frag_myapplicationdetail.*
 
 class MyOfferDetailsFragment() : Fragment() {
 

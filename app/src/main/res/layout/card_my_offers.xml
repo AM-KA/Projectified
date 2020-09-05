@@ -79,7 +79,7 @@
             app:layout_constraintTop_toTopOf="@id/imageViewDate" />
 
         <ImageView
-            android:id="@+id/imageViewCandidate"
+            android:id="@+id/imageViewCollege"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -88,13 +88,13 @@
             app:layout_constraintTop_toBottomOf="@id/imageViewDate" />
 
         <TextView
-            android:id="@+id/textViewCandidate"
+            android:id="@+id/textViewCollege"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="3 Applicants"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewCandidate"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewCollege"
             app:layout_constraintStart_toStartOf="@id/textViewDate"
-            app:layout_constraintTop_toTopOf="@id/imageViewCandidate" />
+            app:layout_constraintTop_toTopOf="@id/imageViewCollege" />
 
         <Button
             android:id="@+id/button"
@@ -108,13 +108,13 @@
             app:layout_constraintEnd_toEndOf="@id/guideline2"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toEndOf="@id/barrier"
-            app:layout_constraintTop_toBottomOf="@id/imageViewCandidate" />
+            app:layout_constraintTop_toBottomOf="@id/imageViewCollege" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="right"
-            app:constraint_referenced_ids="textViewCandidate, textViewDate" />
+            app:constraint_referenced_ids="textViewCollege, textViewDate" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
