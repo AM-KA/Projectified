@@ -118,7 +118,7 @@
                         app:layout_constraintTop_toTopOf="@id/guideline7"/>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/editTextLayoutRequirements"
+                        android:id="@+id/editTextLayoutOfferName"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="0dp"
                         android:layout_marginTop="10dp"
@@ -126,6 +126,26 @@
                         app:layout_constraintStart_toStartOf="@id/guideline9"
                         app:layout_constraintEnd_toEndOf="@id/guideline6"
                         app:layout_constraintTop_toBottomOf="@id/textViewOppurtinityDetails">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextOfferName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="10dp"
+                            android:hint="Offer Name"
+                            android:text="Developer"
+                            android:inputType="text"
+                            android:defaultFocusHighlightEnabled="false"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/editTextLayoutRequirements"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="@id/guideline9"
+                        app:layout_constraintEnd_toEndOf="@id/guideline6"
+                        app:layout_constraintTop_toBottomOf="@id/editTextLayoutOfferName">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editTextRequirement"
                             android:layout_width="match_parent"

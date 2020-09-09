@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbarlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="Offer Details"
+            app:layout_scrollFlags="scroll|enterAlways|snap"/>
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.05"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.95"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.05"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.95"/>
+
+            <ImageView
+                android:id="@+id/imageProfile"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/ic_baseline_account_circle_24"
+                app:layout_constraintTop_toTopOf="@id/guideline3"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintBottom_toTopOf="@id/editTextLayoutCollege"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editTextLayoutCollege"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/imageProfile">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextCollege"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="10dp"
+                    android:hint="College"
+                    android:text="IIT (ISM) Dhanbad"
+                    android:inputType="text"
+                    android:defaultFocusHighlightEnabled="false"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editTextLayoutCourse"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/editTextLayoutCollege">
+                <AutoCompleteTextView
+                    android:id="@+id/editTextCourse"
+                    android:hint="Course"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editTextLayoutSemester"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/editTextLayoutCourse">
+                <AutoCompleteTextView
+                    android:id="@+id/editTextSemester"
+                    android:hint="Semester"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textViewLanguages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintTop_toBottomOf="@id/editTextLayoutSemester"
+                android:text="Languages"/>
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupLanguages"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@id/textViewLanguages"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintEnd_toEndOf="@id/guideline2">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipC"
+                    android:checked="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:text="C"/>
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipCpp"
+                    android:checked="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:text="C++"/>
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipJava"
+                    android:checked="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:text="Java"/>
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipPython"
+                    android:checked="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:text="Python"/>
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipKotlin"
+                    android:checked="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:text="Kotlin"/>
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipJavaScript"
+                    android:checked="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:text="JavScript"/>
+            </com.google.android.material.chip.ChipGroup>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editTextLayoutInterest1"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/chipGroupLanguages">
+                <AutoCompleteTextView
+                    android:id="@+id/editTextInterest1"
+                    android:hint="Interest 1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editTextLayoutInterest2"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/editTextLayoutInterest1">
+                <AutoCompleteTextView
+                    android:id="@+id/editTextInterest2"
+                    android:hint="Interest 2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editTextLayoutInterest3"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/editTextLayoutInterest2">
+                <AutoCompleteTextView
+                    android:id="@+id/editTextInterest3"
+                    android:hint="Interest 3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editTextLayoutHobbies"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/editTextLayoutInterest3">
+                <AutoCompleteTextView
+                    android:id="@+id/editTextHobbies"
+                    android:hint="Hobbies"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editTextLayoutDescription"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/editTextLayoutHobbies"
+                app:layout_constraintBottom_toBottomOf="@id/guideline4">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="10dp"
+                    android:hint="Description"
+                    android:text="I am fun loving"
+                    android:inputType="text"
+                    android:defaultFocusHighlightEnabled="false"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -9,6 +9,7 @@ data class ResponseGetOfferByIdRecruiter(
 {
     data class Offer(
             var offer_id:String,
+            var offer_name:String,
             var requirements:String,
             var skills:String,
             var expectation: String,

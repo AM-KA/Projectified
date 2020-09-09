@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.frag_my_offer_details.view.*
 class MyOfferDetailsFragment() : Fragment() {
 
     //Views
+    private var editTextOfferName: TextInputEditText? = null
     private var editTextRequirements: TextInputEditText? = null
     private var editTextSkills: TextInputEditText? = null
     private var editTextExpectations: TextInputEditText? = null
@@ -82,6 +83,7 @@ class MyOfferDetailsFragment() : Fragment() {
 
         val v = inflater.inflate(R.layout.frag_my_offer_details, container, false)
 
+        editTextOfferName = v.editTextOfferName
         editTextExpectations = v.editTextExpectation
         editTextSkills = v.editTextSkills
         editTextRequirements = v.editTextRequirement
@@ -139,6 +141,11 @@ class MyOfferDetailsFragment() : Fragment() {
     }
 
     private fun updateOffer() {
+        if(editTextOfferName!!.text == null || editTextOfferName!!.text!!.equals("")) {
+            editTextOfferName!!.error = "Enter offer name."
+            return
+        }
+
         if(editTextRequirements!!.text == null || editTextRequirements!!.text!!.equals("")) {
             editTextRequirements!!.error = "Enter requirements."
             return
@@ -154,10 +161,11 @@ class MyOfferDetailsFragment() : Fragment() {
             return
         }
 
+        val offerName = editTextOfferName!!.text!!.toString()
         val requirement = editTextRequirements!!.text!!.toString()
         val skills = editTextSkills!!.text!!.toString()
         val expectation = editTextSkills!!.text!!.toString()
-        val bodyUpdateOffer = BodyUpdateOffer(requirement, skills, expectation)
+        val bodyUpdateOffer = BodyUpdateOffer(offerName, requirement, skills, expectation)
         recruiterExistingOffersViewModel!!.updateOffer(offerId!!, bodyUpdateOffer)
     }
 
@@ -174,6 +182,7 @@ class MyOfferDetailsFragment() : Fragment() {
     }
 
     fun populateViews(){
+        editTextOfferName?.setText(responseGetOfferByIdRecruiter?.offer?.offer_name)
         editTextRequirements?.setText(responseGetOfferByIdRecruiter?.offer?.requirements)
         editTextSkills?.setText(responseGetOfferByIdRecruiter?.offer?.skills)
         editTextExpectations?.setText(responseGetOfferByIdRecruiter?.offer?.expectation)
@@ -181,6 +190,7 @@ class MyOfferDetailsFragment() : Fragment() {
     }
 
     fun setEditable(){
+        editTextOfferName?.isEnabled = editable
         editTextExpectations?.isEnabled = editable
         editTextSkills?.isEnabled = editable
         editTextRequirements?.isEnabled = editable
