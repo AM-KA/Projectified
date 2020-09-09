@@ -2,10 +2,10 @@ package com.princeakash.projectified.candidate
 
 import com.princeakash.projectified.candidate.addApplication.model.BodyAddApplication
 import com.princeakash.projectified.candidate.addApplication.model.ResponseAddApplication
+import com.princeakash.projectified.candidate.addApplication.model.ResponseGetOffersByDomain
 import com.princeakash.projectified.candidate.myApplications.model.*
-import com.princeakash.projectified.recruiter.addOffer.model.BodyAddOffer
 import retrofit2.http.*
-import com.princeakash.projectified.candidate.myApplications.model.ResponseGetOfferById as ResponseGetOfferById1
+import com.princeakash.projectified.candidate.addApplication.model.ResponseGetOfferById as ResponseGetOfferById1
 
 interface CandidateService {
 

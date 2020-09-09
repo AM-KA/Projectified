@@ -52,6 +52,8 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeListener {
         return fragment;
     }
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -9,8 +9,8 @@ import com.princeakash.projectified.MyApplication
 import com.princeakash.projectified.candidate.CandidateRepository
 import com.princeakash.projectified.candidate.addApplication.model.BodyAddApplication
 import com.princeakash.projectified.candidate.addApplication.model.ResponseAddApplication
-import com.princeakash.projectified.candidate.myApplications.model.ResponseGetOfferById
-import com.princeakash.projectified.candidate.myApplications.model.ResponseGetOffersByDomain
+import com.princeakash.projectified.candidate.addApplication.model.ResponseGetOfferById
+import com.princeakash.projectified.candidate.addApplication.model.ResponseGetOffersByDomain
 import com.princeakash.projectified.recruiter.RecruiterRepository
 import com.princeakash.projectified.user.ProfileRepository
 import kotlinx.coroutines.launch

@@ -55,4 +55,9 @@ class ProfileViewModel(app: Application): AndroidViewModel(app){
             }
         }
     }
+    fun createProfile(bodyUpdateProfile: BodyUpdateProfile)
+       viewModelScope.launch{
+
+    }
+
 }

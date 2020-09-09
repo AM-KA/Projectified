@@ -13,14 +13,9 @@ import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.addApplication.model.GetOffersByDomainAdapter
 import com.princeakash.projectified.candidate.addApplication.viewModel.CandidateAddApplicationViewModel
 import com.princeakash.projectified.candidate.myApplications.model.OfferCardModelCandidate
-import com.princeakash.projectified.recruiter.myOffers.model.MyOffersAdapter
-import com.princeakash.projectified.recruiter.myOffers.model.OfferCardModelRecruiter
-import com.princeakash.projectified.recruiter.myOffers.view.MyOfferApplicantsFragment.Companion.OFFER_ID
-import com.princeakash.projectified.recruiter.myOffers.view.MyOfferDetailsFragment
-import com.princeakash.projectified.recruiter.myOffers.view.MyOfferDetailsFragment.Companion.OFFER_ID
-import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterExistingOffersViewModel
-import kotlinx.android.synthetic.main.frag_my_offers.*
-import kotlinx.android.synthetic.main.frag_my_offers.view.*
+import kotlinx.android.synthetic.main.frag_available_offers.*
+import kotlinx.android.synthetic.main.frag_available_offers.view.*
+
 
 class GetOffersByDomainFragement : Fragment() , GetOffersByDomainAdapter.GetOffersListener{
 
@@ -47,9 +42,7 @@ class GetOffersByDomainFragement : Fragment() , GetOffersByDomainAdapter.GetOffe
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        /*savedInstanceState?.let {
-            offerList = savedInstanceState.getSerializable(OFFERS_LIST) as ArrayList<OfferCardModelRecruiter>
-        }*/
+
         return inflater.inflate(R.layout.frag_available_offers, container, false)
     }
 
@@ -58,7 +51,7 @@ class GetOffersByDomainFragement : Fragment() , GetOffersByDomainAdapter.GetOffe
 
         //Start fetching offer list
         if(savedInstanceState == null || savedInstanceState.getBoolean(DETAILS_VIEWED)) {
-            candidateAddApplicationViewModel!!.getOffersByDomain()
+            candidateAddApplicationViewModel!!.getOffer
             detailsViewed = false
         }
 
@@ -81,7 +74,7 @@ class GetOffersByDomainFragement : Fragment() , GetOffersByDomainAdapter.GetOffe
         detailsViewed = true
         //Populate new fragment with details of offer.
         val bundle = Bundle()
-        bundle.putString(GetOfferDetailsCandidateFragment._ID, offerList.get(itemPosition).offer_id)
+        bundle.putString(GetOfferDetailsCandidateFragment.OFFER_IDC, offerList.get(itemPosition).offer_id)
         parentFragmentManager.beginTransaction()
                 .add(R.id.fragment_offers, GetOfferDetailsCandidateFragment::class.java, bundle, "GetOfferDetailsCandidateFragment")
                 .addToBackStack(null)
