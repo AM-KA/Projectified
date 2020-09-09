@@ -68,7 +68,7 @@ class ProfileRepository(retrofit: Retrofit, app: MyApplication) {
         }
     }
 
-    fun getStoredProfile() : ResponseGetProfileById?{
+    fun getLocalProfile() : ResponseGetProfileById?{
         try{
             val json = sharedPref.getString(USER_PROFILE, null)!!
             val jsonAdapter:JsonAdapter<ResponseGetProfileById> = application.moshi.adapter(ResponseGetProfileById::class.java)
@@ -80,10 +80,10 @@ class ProfileRepository(retrofit: Retrofit, app: MyApplication) {
         }
     }
 
-    fun setStoredProfile(response: ResponseGetProfileById){
+    fun setLocalProfile(bodyCreateProfile: BodyCreateProfile){
         try{
-            val jsonAdapter = application.moshi.adapter(ResponseGetProfileById::class.java)
-            val json = jsonAdapter.toJson(response)
+            val jsonAdapter = application.moshi.adapter(BodyCreateProfile::class.java)
+            val json = jsonAdapter.toJson(bodyCreateProfile)
             editor.putString(USER_PROFILE, json)
             editor.commit()
         } catch (e: Exception){

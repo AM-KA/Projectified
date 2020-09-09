@@ -165,10 +165,10 @@ class MyOfferDetailsFragment() : Fragment() {
         val requirement = editTextRequirements!!.text!!.toString()
         val skills = editTextSkills!!.text!!.toString()
         val expectation = editTextSkills!!.text!!.toString()
-        val bodyUpdateOffer = BodyUpdateOffer(offerName, requirement, skills, expectation)
-        recruiterExistingOffersViewModel!!.updateOffer(offerId!!, bodyUpdateOffer)
-    }
 
+    val bodyUpdateOffer = BodyUpdateOffer(offerName, requirement, skills, expectation)
+    recruiterExistingOffersViewModel!!.updateOffer(offerId!!, bodyUpdateOffer)
+}
     private fun fetchOfferDetails() {
         //TODO:Start ProgressBar
         offerId?.let { recruiterExistingOffersViewModel!!.getOfferByIdRecruiter(it) }
