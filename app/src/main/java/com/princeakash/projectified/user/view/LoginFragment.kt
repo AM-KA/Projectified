@@ -6,15 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
 import com.princeakash.projectified.user.LoginBody
 import com.princeakash.projectified.user.ProfileViewModel
 import com.princeakash.projectified.user.ResponseLogin
-import kotlinx.android.synthetic.main.frag_myapplicationdetail.*
 import kotlinx.android.synthetic.main.signin_user.view.*
+
 
 class LoginFragment :Fragment() {
 
@@ -48,7 +46,13 @@ class LoginFragment :Fragment() {
                         displayHomeScreen()
                 }
                 SignUpButton?.setOnClickListener {
-                        TODO("Open Sign Up Screen Using transaction")
+
+
+                        val nextFrag = SignUp()
+                        requireActivity().supportFragmentManager.beginTransaction()
+                                .replace(R.id.fragment_frame, nextFrag, "findThisFragment")
+                                .addToBackStack(null)
+                                .commit()
 
                 }
 
@@ -70,6 +74,8 @@ class LoginFragment :Fragment() {
 
                 val logIn = LoginBody(email, password)
                 profileViewModel!!.logIn(logIn)
+
+
 
 
 

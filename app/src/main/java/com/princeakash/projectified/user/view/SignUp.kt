@@ -8,10 +8,12 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import com.princeakash.projectified.R
-import com.princeakash.projectified.user.*
+import com.princeakash.projectified.user.BodySignUp
+import com.princeakash.projectified.user.ProfileViewModel
+import com.princeakash.projectified.user.ResponseSignUp
 import kotlinx.android.synthetic.main.frag_myapplicationdetail.view.*
 import kotlinx.android.synthetic.main.signin_user.view.*
-import kotlinx.android.synthetic.main.signin_user.view.editTextPassword
+
 
 class SignUp : Fragment(){
 
@@ -71,10 +73,14 @@ class SignUp : Fragment(){
         val password = editTextPassword!!.text!!.toString()
         val name= editTextName!!.text!!.toString()
 
-        val signUp = BodySignUp(name,email,password)
+        val signUp = BodySignUp(name, email, password)
         profileViewModel!!.signUp((signUp))
 
-
+        val nextFrag = CreateProfileFragment()
+        requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_frame, nextFrag, "findThisFragment")
+                .addToBackStack(null)
+                .commit()
 
 
     }
