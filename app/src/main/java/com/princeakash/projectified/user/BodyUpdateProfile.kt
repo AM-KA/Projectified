@@ -2,12 +2,13 @@ package com.princeakash.projectified.user
 
 data class BodyUpdateProfile (
         var name:String,
-        var date:String,
         var collegeName:String,
+        var course: String,
         var semester:String,
-        var languages:String,
+        var languages:IntArray,
         var interest1:String,
         var interest2:String?,
         var interest3:String?,
-        var description:String
+        var description:String,
+        var hobbies: String
 )

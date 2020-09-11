@@ -68,10 +68,10 @@ class ProfileRepository(retrofit: Retrofit, app: MyApplication) {
         }
     }
 
-    fun getLocalProfile() : ResponseGetProfileById?{
+    fun getLocalProfile() : ProfileModel?{
         try{
             val json = sharedPref.getString(USER_PROFILE, null)!!
-            val jsonAdapter:JsonAdapter<ResponseGetProfileById> = application.moshi.adapter(ResponseGetProfileById::class.java)
+            val jsonAdapter:JsonAdapter<ProfileModel> = application.moshi.adapter(ProfileModel::class.java)
             return jsonAdapter.fromJson(json)!!
         } catch(e: Exception){
             e.printStackTrace()
@@ -80,10 +80,10 @@ class ProfileRepository(retrofit: Retrofit, app: MyApplication) {
         }
     }
 
-    fun setLocalProfile(bodyCreateProfile: BodyCreateProfile){
+    fun setLocalProfile(bodyProfile: ProfileModel){
         try{
-            val jsonAdapter = application.moshi.adapter(BodyCreateProfile::class.java)
-            val json = jsonAdapter.toJson(bodyCreateProfile)
+            val jsonAdapter = application.moshi.adapter(ProfileModel::class.java)
+            val json = jsonAdapter.toJson(bodyProfile)
             editor.putString(USER_PROFILE, json)
             editor.commit()
         } catch (e: Exception){

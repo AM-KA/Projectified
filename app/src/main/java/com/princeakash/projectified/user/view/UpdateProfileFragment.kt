@@ -7,26 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
-import androidx.annotation.ColorRes
 import androidx.fragment.app.Fragment
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.MainActivity
 import com.princeakash.projectified.R
-import com.princeakash.projectified.recruiter.myOffers.view.MyOfferApplicantsFragment
-import com.princeakash.projectified.user.BodyCreateProfile
-import com.princeakash.projectified.user.ProfileRepository
-import com.princeakash.projectified.user.ProfileViewModel
-import com.princeakash.projectified.user.ResponseCreateProfile
+import com.princeakash.projectified.user.*
 import com.princeakash.projectified.user.view.LoginFragment.Companion.USER_NAME
-import kotlinx.android.synthetic.main.frag_create_profile.view.*
+import kotlinx.android.synthetic.main.frag_create_profile.*
+import kotlinx.android.synthetic.main.frag_update_profile.view.*
 
-class CreateProfileFragment :Fragment()
-{
-
+class UpdateProfileFragment :Fragment() {
     private var editTextName: TextInputEditText? = null
     private var editTextCollege: TextInputEditText? = null
     private var editTextCourse: AutoCompleteTextView? = null
@@ -42,53 +36,96 @@ class CreateProfileFragment :Fragment()
     private var editChipJavaScript :Chip?=null
     private var editTextDescription1:TextInputEditText?=null
     private var editTextHobbies: AutoCompleteTextView? = null
-
+    private var chipGroupLanguages: ChipGroup? = null
     private var ButtonSave:Button?=null
+
     private var  num:IntArray = intArrayOf(0, 0, 0, 0, 0,0)
 
     //  View Models and fun Instances
     var profileViewModel: ProfileViewModel?=null
-    var profileRepository:ProfileRepository?=null
-    var responseCreateProfile:ResponseCreateProfile?=null
+    var responseUpdateProfile:ResponseUpdateProfile?=null
 
-    private lateinit var userName:String
+    private var enabled: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userName = requireArguments().getString(USER_NAME)!!
-        profileViewModel!!.responseCreateProfile.observe(viewLifecycleOwner, {
-            responseCreateProfile = it
+        profileViewModel!!.responseUpdateProfile.observe(viewLifecycleOwner, {
+            responseUpdateProfile = it
             Toast.makeText(context, it.message, LENGTH_SHORT).show()
-            //Navigate to Main Activity
-            startActivity(Intent(activity, MainActivity::class.java))
         })
+        if(savedInstanceState==null)
+        {
+            enabled = false
+            setEditable()
+        }else{
+            enabled = savedInstanceState.getBoolean(ENABLED_STATUS)
+        }
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v = inflater.inflate(R.layout.frag_create_profile, container, false)
+        val v = inflater.inflate(R.layout.frag_update_profile, container, false)
+
         editTextName = v.editTextName
         editTextCollege = v.editTextCollege
         editTextCourse = v.editTextCourse
         editTextSemester = v.editTextSemester
         editTextInterest1 = v.editTextInterest1
         editTextInterest2 = v.editTextInterest2
-        editTextInterest3 = v.editTextInterest1
-        editTextDescription1=v.editTextDescription1
+        editTextInterest3 = v.editTextInterest3
+        editTextDescription1=v.editTextDescription
         editTextHobbies = v.editTextHobbies
-        editChipC = v.chipC1
-        editChipCpp = v.chipCpp1
-        editChipJava = v.chipJava1
-        editChipKotlin = v.chipKotlin1
-        editChipPython = v.chipPython1
-        editChipJavaScript = v.chipJavaScript1
+        chipGroupLanguages = v.chipGroupLanguages
+        editChipC = v.chipC2
+        editChipCpp = v.chipCpp2
+        editChipJava = v.chipJava2
+        editChipKotlin = v.chipKotlin2
+        editChipPython = v.chipPython2
+        editChipJavaScript = v.chipJavaScript2
 
         ButtonSave = v.Save
         ButtonSave?.setOnClickListener {
-            validateParameters();
+            if(enabled)
+                validateParameters()
+            else{
+                enabled = true
+                setEditable()
+            }
         }
-        editTextName!!.setText(userName)
-        editTextName!!.isEnabled = false
-
+        if(savedInstanceState==null)
+            loadLocalProfile()
         return v
+    }
+
+    private fun loadLocalProfile() {
+        val profileModel = profileViewModel!!.getLocalProfile()!!
+        editTextName!!.setText(profileModel.name)
+        editTextCollege!!.setText(profileModel.collegeName)
+        editTextCourse!!.setText(profileModel.course)
+        editTextSemester!!.setText(profileModel.semester)
+        editTextInterest1!!.setText(profileModel.interest1)
+        editTextInterest2!!.setText(profileModel.interest2)
+        editTextInterest3!!.setText(profileModel.interest3)
+        editTextDescription1!!.setText(profileModel.description)
+        editTextHobbies!!.setText(profileModel.hobbies)
+        val num = profileModel.languages
+
+        if(num.get(0)==1){
+            editChipC!!.isChecked = true
+        }
+        if(num.get(1)==1){
+            editChipCpp!!.isChecked = true
+        }
+        if (num.get(2)==1){
+            editChipJava!!.isChecked = true
+        }
+        if (num.get(3)==1){
+            editChipKotlin!!.isChecked = true
+        }
+        if (num.get(4)==1){
+            editChipPython!!.isChecked = true
+        }
+        if (num.get(5)==1){
+            editChipJavaScript!!.isChecked = true
+        }
     }
 
     private fun validateParameters() {
@@ -137,6 +174,7 @@ class CreateProfileFragment :Fragment()
             num?.set(5, 1)
         }
 
+        val userName = editTextName!!.text!!.toString()
         val college = editTextCollege!!.text!!.toString()
         val course = editTextCourse!!.text!!.toString()
         val semester= editTextSemester!!.text!!.toString()
@@ -146,7 +184,32 @@ class CreateProfileFragment :Fragment()
         val description = editTextDescription1!!.text!!.toString()
         val hobbies = editTextHobbies!!.text!!.toString()
 
-        val bodycreateProfile = BodyCreateProfile(userName, college,course,semester,num,interest1,interest2,interest3,description, hobbies)
-        profileViewModel!!.createProfile(bodycreateProfile)
+        val bodyUpdateProfile = BodyUpdateProfile(userName, college, course, semester, num, interest1, interest2, interest3, description, hobbies)
+        profileViewModel!!.updateProfile(bodyUpdateProfile)
+    }
+
+    fun setEditable(){
+        editTextName!!.isEnabled = enabled
+        editTextCollege!!.isEnabled = enabled
+        editTextCourse!!.isEnabled = enabled
+        editTextSemester!!.isEnabled = enabled
+        editTextInterest1!!.isEnabled = enabled
+        editTextInterest2!!.isEnabled = enabled
+        editTextInterest3!!.isEnabled = enabled
+        chipGroupLanguages!!.isEnabled = enabled
+        editTextHobbies!!.isEnabled = enabled
+        editTextDescription1!!.isEnabled = enabled
+        if(enabled)
+            ButtonSave!!.text = "Save"
+        else
+            ButtonSave!!.text = "Edit"
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(ENABLED_STATUS, enabled)
+    }
+    companion object{
+        val ENABLED_STATUS = "EnabledStatus"
     }
 }

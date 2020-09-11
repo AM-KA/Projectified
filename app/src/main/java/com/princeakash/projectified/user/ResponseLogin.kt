@@ -4,5 +4,8 @@ data class ResponseLogin(
         var message: String,
         var userID: String,
         var token: String,
-        var code: Int
+        var code: Int,
+        var userName: String?,
+        var profileCompleted: Boolean,
+        var profile: ProfileModel?
 )
