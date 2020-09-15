@@ -1,6 +1,5 @@
 package com.princeakash.projectified.candidate.myApplications.view
 
-import android.media.Image
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,14 +11,6 @@ import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.myApplications.model.*
 import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateExistingApplicationViewModel
-import com.princeakash.projectified.recruiter.myOffers.model.BodyToggleVisibility
-import com.princeakash.projectified.recruiter.myOffers.model.BodyUpdateOffer
-import com.princeakash.projectified.recruiter.myOffers.view.MyOfferApplicantsFragment
-import com.princeakash.projectified.recruiter.myOffers.view.MyOfferApplicationFragment.Companion.APPLICATION_ID
-import com.princeakash.projectified.recruiter.myOffers.view.MyOfferDetailsFragment
-import com.princeakash.projectified.recruiter.myOffers.view.MyOfferDetailsFragment.Companion.EDITABLE_STATUS
-import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterExistingOffersViewModel
-import kotlinx.android.synthetic.main.frag_myapplicationdetail.*
 import kotlinx.android.synthetic.main.frag_myapplicationdetail.view.*
 import kotlinx.android.synthetic.main.frag_myapplicationdetail.view.editTextExpectation
 import kotlinx.android.synthetic.main.frag_myapplicationdetail.view.editTextRequirement
@@ -45,7 +36,7 @@ class MyApplicationDetailsFragment : Fragment(){
 
 
 
-    //Determines whether textviews are editable or not
+    //Determines whether TextViews are editable or not
     private var editable = false
 
     //ViewModels and Observable Objects
@@ -62,10 +53,7 @@ class MyApplicationDetailsFragment : Fragment(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
         candidateExistingApplicationViewModel= ViewModelProvider(requireParentFragment()).get(CandidateExistingApplicationViewModel::class.java)
-
         candidateExistingApplicationViewModel!!.responseGetApplicationDetailByIdCandidate.observe(viewLifecycleOwner, {
             responseGetApplicationDetailsByIdCandidate = it
             populateViews()
@@ -93,11 +81,9 @@ class MyApplicationDetailsFragment : Fragment(){
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         val v =inflater.inflate(R.layout.frag_myapplicationdetail, container,false)
-
-       editTextRequirements=v.editTextRequirement
-       editTextSkills     = v.editTextSkills
+        editTextRequirements=v.editTextRequirement
+        editTextSkills= v.editTextSkills
         editTextExpectations=v.editTextExpectation
         editTextName=v.editTextName
         editTextCollege=v.editTextCollege
@@ -111,8 +97,8 @@ class MyApplicationDetailsFragment : Fragment(){
         buttonUpdateDetails=v.buttonUpdateDetails
 
         if(savedInstanceState == null) {
-            //First loadup of Fragment
-            applicationId = arguments?.getString(APPLICATION_IDC)
+            //First LoadUp of Fragment
+            applicationId = requireArguments().getString(APPLICATION_IDC)
             fetchApplicationDetails()
         }
         else{
@@ -166,12 +152,11 @@ class MyApplicationDetailsFragment : Fragment(){
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-
-        outState.putString(APPLICATION_IDC, responseGetApplicationDetailsByIdCandidate?.application?.application_id)
+        outState.putString(APPLICATION_IDC, applicationId)
         outState.putBoolean(EDITABLE_STATUS, editable)
     }
 
-    fun populateViews(){
+    private fun populateViews(){
         editTextRequirements?.setText(responseGetApplicationDetailsByIdCandidate?.application?.requirements)
         editTextSkills?.setText(responseGetApplicationDetailsByIdCandidate?.application?.skills)
         editTextExpectations?.setText(responseGetApplicationDetailsByIdCandidate?.application?.expectation)
@@ -182,25 +167,20 @@ class MyApplicationDetailsFragment : Fragment(){
         editTextPreviousWork?.setText(responseGetApplicationDetailsByIdCandidate?.application?.previousWork)
         editTextResume?.setText(responseGetApplicationDetailsByIdCandidate?.application?.resume)
         if(responseGetApplicationDetailsByIdCandidate?.application?.is_seen!!)
-                {
-                    imageViewSeen?.setImageResource(R.drawable.ic_baseline_favorite_24)
-                }
+            imageViewSeen?.setImageResource(R.drawable.ic_baseline_favorite_24)
         else
             imageViewSeen?.setImageResource((R.drawable.ic_outline_favorite_border_24))
 
         if(responseGetApplicationDetailsByIdCandidate?.application?.is_selected!!)
-        {
             imageViewSelected?.setImageResource(R.drawable.ic_baseline_done_24)
-        }
         else
             imageViewSelected?.setImageResource((R.drawable.ic_baseline_done_outline_24))
 
     }
 
-    fun setEditable(){
-        editTextExpectations?.isEnabled = editable
-        editTextSkills?.isEnabled = editable
-        editTextRequirements?.isEnabled = editable
+    private fun setEditable(){
+        editTextPreviousWork?.isEnabled = editable
+        editTextResume?.isEnabled = editable
         if(editable){
             buttonUpdateDetails?.text = "Save Details"
         }else{
@@ -208,13 +188,13 @@ class MyApplicationDetailsFragment : Fragment(){
         }
     }
 
-    fun deleteApplication(){
+    private fun deleteApplication(){
         //TODO: Add DialogBox
         candidateExistingApplicationViewModel!!.deleteApplication(applicationId!!)
     }
 
     companion object {
-        val APPLICATION_IDC = "applicationId"
-        val EDITABLE_STATUS = "EditableStatus"
+        const val APPLICATION_IDC = "applicationId"
+        const val EDITABLE_STATUS = "EditableStatus"
     }
 }

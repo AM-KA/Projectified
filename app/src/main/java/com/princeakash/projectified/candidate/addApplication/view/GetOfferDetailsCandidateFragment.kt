@@ -13,7 +13,7 @@ import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.addApplication.model.ResponseGetOfferById
 import com.princeakash.projectified.candidate.addApplication.viewModel.CandidateAddApplicationViewModel
 import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateExistingApplicationViewModel
-import kotlinx.android.synthetic.main.flag_apply_opportunity_self.*
+import kotlinx.android.synthetic.main.frag_apply_opportunity_self.*
 import kotlinx.android.synthetic.main.frag_apply_opportunity_view.view.*
 import kotlinx.android.synthetic.main.frag_my_offer_details.view.*
 import kotlinx.android.synthetic.main.frag_my_offer_details.view.editTextExpectation
@@ -24,7 +24,6 @@ import kotlinx.android.synthetic.main.frag_myapplicationdetail.view.*
 
 class GetOfferDetailsCandidateFragment : Fragment(){
 
-
     private var editTextRequirements: TextInputEditText? = null
     private var editTextSkills: TextInputEditText? = null
     private var editTextExpectations: TextInputEditText? = null
@@ -34,7 +33,6 @@ class GetOfferDetailsCandidateFragment : Fragment(){
     private var editTextCourse: TextInputEditText?=null
     private var buttonApplyOpportunity: Button?=null
     private var buttonCancelOpportunity:Button?=null
-
 
     //View Models and Observable Objects
     private var candidateAddApplicationsViewModel: CandidateAddApplicationViewModel? = null
@@ -50,10 +48,10 @@ class GetOfferDetailsCandidateFragment : Fragment(){
 
         candidateAddApplicationsViewModel= ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
 
-      candidateAddApplicationsViewModel!!.responseGetOffersById.observe(viewLifecycleOwner, {
-          responseGetOfferById = it
-          populateView()
-      })
+        candidateAddApplicationsViewModel!!.responseGetOffersById.observe(viewLifecycleOwner, {
+            responseGetOfferById = it
+            populateViews()
+        })
 
 
           candidateAddApplicationsViewModel!!.errorString.observe(viewLifecycleOwner, {
@@ -77,30 +75,19 @@ class GetOfferDetailsCandidateFragment : Fragment(){
         buttonApplyOpportunity=v.buttonApply
         buttonCancelOpportunity=v.buttonCancel
 
-        if(savedInstanceState==null)
-        {
-            offerId=arguments?.getString(offerId)
-
+        if(savedInstanceState==null) {
+            offerId=requireArguments().getString(offerId)
             fetchOfferDetails()
         }
         else{
-
-            offerId = savedInstanceState.getString((OFFER_IDC)
-            responseGetOffersById?.let{
+            offerId = savedInstanceState.getString(OFFER_IDC)
+            responseGetOfferById?.let{
                 populateViews()
             }
         }
-
-
-
+        return v
     }
-
-
-
-
-
     companion object{
-
         val OFFER_IDC ="offerId"
     }
 }
