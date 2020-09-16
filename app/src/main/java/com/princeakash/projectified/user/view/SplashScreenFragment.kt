@@ -31,7 +31,7 @@ class SplashScreenFragment : Fragment() {
             override fun run() {
                 try{
                     //Sleep 3 seconds
-                    Thread.sleep((3*1000).toLong())
+                    sleep((3*1000).toLong())
                     val loginStatus = profileViewModel.getLoginStatus()
                     if(loginStatus == false){
                         takeToLogin()

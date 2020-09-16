@@ -73,7 +73,7 @@ class MyOfferApplicationFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.frag_candidate_details_recruiter, container, false)
-        textViewName = v.textViewName
+        textViewName = v.textViewCollege
         textViewCollege = v.textViewCollege
         textViewCourse = v.textViewCourse
         textViewSemester = v.textViewSemester

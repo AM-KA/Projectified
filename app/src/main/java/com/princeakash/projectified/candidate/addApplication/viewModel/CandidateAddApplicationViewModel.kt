@@ -57,8 +57,7 @@ class CandidateAddApplicationViewModel(val app: Application): AndroidViewModel(a
     fun addApplication(Resume:String , PreviousWork: String ,offerId: String){
         val token = profileRepository.getToken()
 
-     //  / val recruiterID: String = profileRepository///
-        val applicantID: String =profileRepository.getUserId()
+        val applicantID:String=profileRepository.getUserId()
 
         if(token == "") {
             errorString.postValue("Invalid Token. Please log in again.")
@@ -68,8 +67,7 @@ class CandidateAddApplicationViewModel(val app: Application): AndroidViewModel(a
         viewModelScope.launch {
             try {
 
-                TODO("Get Recuirter id from repo")
-               val   bodyAddApplication= BodyAddApplication(Date(),Resume,PreviousWork,applicantID ,"Offer Id","recuirter Id")
+               val   bodyAddApplication= BodyAddApplication(Date(),Resume,PreviousWork,applicantID ,offerId)
                 responseAddApplication.postValue(candidateRepository.addApplication(token,bodyAddApplication))
             } catch(e: Exception){
 

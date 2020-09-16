@@ -6,7 +6,7 @@
     tools:context=".recruiter.myOffers.view.MyOffersFragment">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_offers"
+        android:id="@+id/fragment_apply"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

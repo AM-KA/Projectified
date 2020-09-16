@@ -8,5 +8,4 @@ data class BodyAddApplication (
         var previousWork: String,
         var applicant_id:String,
         var offer_id:String,
-        var recruiter_id: String
 )

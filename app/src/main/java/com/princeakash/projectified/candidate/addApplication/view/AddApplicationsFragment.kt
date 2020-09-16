@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.princeakash.projectified.MyApplication
 import com.princeakash.projectified.R
+import com.princeakash.projectified.recruiter.myOffers.view.MyOfferHomeFragment
 
 //Parent Fragment for MyOffers Feature
 class AddApplicationsFragment : Fragment() {
@@ -22,9 +23,19 @@ class AddApplicationsFragment : Fragment() {
         return inflater.inflate(R.layout.fragement_apply_application, container, false)
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        //childFragmentManager.beginTransaction()
-        //       .replace()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (savedInstanceState == null) {
+            childFragmentManager
+                    .beginTransaction()
+                    .replace(
+                            R.id.fragment_apply,
+                            HomeFragment::class.java,
+                            null,
+                            "HomeFragment"
+                    )
+                    .addToBackStack(null)
+                    .commit()
+        }
     }
 }

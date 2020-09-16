@@ -13,6 +13,8 @@ import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.addApplication.model.ResponseGetOfferById
 import com.princeakash.projectified.candidate.addApplication.viewModel.CandidateAddApplicationViewModel
 import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateExistingApplicationViewModel
+import com.princeakash.projectified.recruiter.myOffers.view.MyOfferApplicantsFragment
+import com.princeakash.projectified.recruiter.myOffers.view.MyOfferDetailsFragment
 import kotlinx.android.synthetic.main.frag_apply_opportunity_self.*
 import kotlinx.android.synthetic.main.frag_apply_opportunity_view.view.*
 import kotlinx.android.synthetic.main.frag_my_offer_details.view.*
@@ -31,6 +33,7 @@ class GetOfferDetailsCandidateFragment : Fragment(){
     private var editTextCollege: TextInputEditText?=null
     private var editTextSemester: TextInputEditText?=null
     private var editTextCourse: TextInputEditText?=null
+    private var editTextPhone : TextInputEditText?=null
     private var buttonApplyOpportunity: Button?=null
     private var buttonCancelOpportunity:Button?=null
 
@@ -73,7 +76,6 @@ class GetOfferDetailsCandidateFragment : Fragment(){
         editTextSemester=v.editTextSemester
         editTextCourse=v.editTextCourse
         buttonApplyOpportunity=v.buttonApply
-        buttonCancelOpportunity=v.buttonCancel
 
         if(savedInstanceState==null) {
             offerId=requireArguments().getString(offerId)
@@ -85,8 +87,54 @@ class GetOfferDetailsCandidateFragment : Fragment(){
                 populateViews()
             }
         }
+
+        buttonApplyOpportunity?.setOnClickListener()
+        {
+
+            val bundle = Bundle()
+            bundle.putString(GetOfferDetailsCandidateFragment.OFFER_IDC, offerId)
+
+            parentFragmentManager.beginTransaction()
+                        .add(R.id.fragment_offers, ApplyOpportunityFragment::class.java, null, "ApplyOpportunityFragment")
+                        .addToBackStack(null)
+                        .commit()
+            }
+        buttonCancelOpportunity?.setOnClickListener()
+        {
+
+            parentFragmentManager.beginTransaction()
+                    .add(R.id.fragment_offers, HomeFragment::class.java, null, "Home Fragment")
+                    .addToBackStack(null)
+                    .commit()
+
+        }
+
+
         return v
     }
+
+    private fun fetchOfferDetails() {
+        //TODO:Start ProgressBar
+        offerId?.let { candidateAddApplicationsViewModel!!.getoffersById(it) }
+    }
+
+    fun populateViews() {
+        editTextExpectations?.setText(responseGetOfferById?.offer?.expectation)
+        editTextSkills?.setText(responseGetOfferById?.offer?.skills)
+        editTextRequirements?.setText(responseGetOfferById?.offer?.requirements)
+        editTextName?.setText(responseGetOfferById?.offer?.recruiter_name)
+        editTextCollege?.setText(responseGetOfferById?.offer?.recruiter_collegeName)
+        editTextSemester?.setText(responseGetOfferById?.offer?.recruiter_semester)
+        editTextCourse?.setText(responseGetOfferById?.offer?.recruiter_course)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(GetOfferDetailsCandidateFragment.OFFER_IDC, offerId)
+    }
+
+
+
     companion object{
         val OFFER_IDC ="offerId"
     }
