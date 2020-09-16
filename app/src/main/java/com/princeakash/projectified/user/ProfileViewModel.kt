@@ -26,7 +26,7 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
     fun getLoginStatus() = profileRepository.getLoginStatus()
     fun setLoginStatus(loginStatus: Boolean) = profileRepository.setLoginStatus(loginStatus)
     fun getLocalProfile() = profileRepository.getLocalProfile()
-    fun setLocalProfile(bodyCreateProfile: BodyCreateProfile) = profileRepository.setLocalProfile(bodyCreateProfile)
+    fun setLocalProfile(bodyModel: ProfileModel) = profileRepository.setLocalProfile(bodyModel)
     fun getToken() = profileRepository.getToken()
     fun setToken(token: String) = profileRepository.setToken(token)
     fun getUserId() = profileRepository.getUserId()
@@ -61,25 +61,24 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
         }
     }
 
-    fun createProfile(token: String, bodyCreateProfile: BodyCreateProfile) {
-
+    fun createProfile(bodyCreateProfile: BodyCreateProfile) {
         viewModelScope.launch {
             try {
                 var token = profileRepository.getToken()
                 responseCreateProfile.postValue(profileRepository.createProfile(token, bodyCreateProfile))
-                setLocalProfile(bodyCreateProfile)
-
+                setLocalProfile(ProfileModel(bodyCreateProfile))
             } catch (e: Exception) {
                 e.printStackTrace()
                 errorString.postValue(e.localizedMessage)
             }
         }
     }
-    fun updateProfile(token: String ,bodyUpdateProfile: BodyUpdateProfile){
+    fun updateProfile(bodyUpdateProfile: BodyUpdateProfile){
             viewModelScope.launch {
                 try{
                     var token = profileRepository.getToken()
                     responseUpdateProfile.postValue(profileRepository.updateProfile(token,bodyUpdateProfile))
+                    setLocalProfile(ProfileModel(bodyUpdateProfile))
                 } catch (e: Exception) {
                     e.printStackTrace()
                     errorString.postValue(e.localizedMessage)
@@ -87,6 +86,4 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
             }
     }
 
-
-
-    }
+}

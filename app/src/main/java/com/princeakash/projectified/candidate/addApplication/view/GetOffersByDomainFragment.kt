@@ -17,18 +17,21 @@ import kotlinx.android.synthetic.main.frag_available_offers.*
 import kotlinx.android.synthetic.main.frag_available_offers.view.*
 
 
-class GetOffersByDomainFragement : Fragment() , GetOffersByDomainAdapter.GetOffersListener{
+class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffersListener{
 
     var candidateAddApplicationViewModel: CandidateAddApplicationViewModel? = null
     var offerList: ArrayList<OfferCardModelCandidate> = ArrayList()
     var errorString:String? = null
-
-
-    //Determining whether re-fetching data is required or not
-    var detailsViewed = false
+    var domainName:String?=null
+    var listFetched:Boolean? = null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        listFetched = false
+        savedInstanceState?.let {
+            domainName = savedInstanceState.getString(DOMAIN_NAME)
+            listFetched = savedInstanceState.getBoolean(LIST_FETCHED)
+        }
         candidateAddApplicationViewModel = ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
         candidateAddApplicationViewModel!!.responseGetOffersByDomain.observe(this, {
             offerList = it?.offers as ArrayList<OfferCardModelCandidate>
@@ -36,7 +39,7 @@ class GetOffersByDomainFragement : Fragment() , GetOffersByDomainAdapter.GetOffe
         })
         candidateAddApplicationViewModel!!.errorString.observe(this, {
             errorString = it
-            Toast.makeText(this@GetOffersByDomainFragement.context, errorString, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@GetOffersByDomainFragment.context, errorString, Toast.LENGTH_SHORT).show()
         })
     }
 
@@ -50,28 +53,28 @@ class GetOffersByDomainFragement : Fragment() , GetOffersByDomainAdapter.GetOffe
         super.onViewCreated(view, savedInstanceState)
 
         //Start fetching offer list
-        if(savedInstanceState == null || savedInstanceState.getBoolean(DETAILS_VIEWED)) {
-            candidateAddApplicationViewModel!!.getOffer
-            detailsViewed = false
+        if(savedInstanceState == null || !listFetched!!) {
+            candidateAddApplicationViewModel!!.getOffersByDomain(domainName!!)
+            listFetched = true
+        } else if (listFetched!!){
+            offerList = savedInstanceState.getParcelableArrayList<OfferCardModelCandidate>(OFFERS_LIST) as ArrayList<OfferCardModelCandidate>
         }
 
         view.recyclerViewOffers.apply {
             layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
             setHasFixedSize(true)
-            adapter = GetOffersByDomainAdapter(offerList, this@GetOffersByDomainFragement)
+            adapter = GetOffersByDomainAdapter(offerList, this@GetOffersByDomainFragment)
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        //outState.putSerializable(OFFERS_LIST, offerList)
-        outState.putBoolean(DETAILS_VIEWED, detailsViewed)
+        outState.putSerializable(OFFERS_LIST, offerList)
+        outState.putBoolean(LIST_FETCHED, listFetched!!)
+        outState.putString(DOMAIN_NAME, domainName)
     }
 
     override fun onViewDetailsClick(itemPosition: Int) {
-
-        //Set detailsViewed to true so that on coming back, we can re-load all data
-        detailsViewed = true
         //Populate new fragment with details of offer.
         val bundle = Bundle()
         bundle.putString(GetOfferDetailsCandidateFragment.OFFER_IDC, offerList.get(itemPosition).offer_id)
@@ -83,6 +86,7 @@ class GetOffersByDomainFragement : Fragment() , GetOffersByDomainAdapter.GetOffe
 
     companion object {
         val OFFERS_LIST = "OffersList"
-        val DETAILS_VIEWED = "DetailsViewed"
+        val LIST_FETCHED = "ListFetched"
+        val DOMAIN_NAME = "DomainName"
     }
 }

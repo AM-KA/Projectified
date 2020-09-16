@@ -44,8 +44,6 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
-
         return inflater.inflate(R.layout.frag_myapplication, container, false)
     }
 
@@ -67,12 +65,10 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-
         outState.putBoolean(DETAILS_VIEWED, detailsViewed)
     }
 
     override fun onViewDetailsClick(itemPosition: Int) {
-
         //Set detailsViewed to true so that on coming back, we can re-load all data
         detailsViewed = true
         //Populate new fragment with details of Applications

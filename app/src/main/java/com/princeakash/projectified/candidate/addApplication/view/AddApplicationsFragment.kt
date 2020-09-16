@@ -11,7 +11,7 @@ import com.princeakash.projectified.MyApplication
 import com.princeakash.projectified.R
 
 //Parent Fragment for MyOffers Feature
-class AddApplicationsFragement : Fragment() {
+class AddApplicationsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
