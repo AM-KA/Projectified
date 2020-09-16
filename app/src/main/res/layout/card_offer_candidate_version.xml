@@ -6,7 +6,7 @@
     app:cardCornerRadius="20dp"
     android:layout_margin="2dp"
     style="@style/CardBg"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.anxdroid.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
