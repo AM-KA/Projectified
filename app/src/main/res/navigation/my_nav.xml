@@ -11,18 +11,18 @@
         android:label="fragment_home"
         tools:layout="@layout/frag_home" />
     <fragment
-        android:id="@+id/chatFragment"
-        android:name="com.princeakash.projectified.ChatFragment"
-        android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" />
+        android:id="@+id/myOffersFragment"
+        android:name="com.princeakash.projectified.recruiter.myOffers.view.MyOffersFragment"
+        android:label="fragment_offers"
+        tools:layout="@layout/fragment_my_offers" />
     <fragment
         android:id="@+id/myApplicationsFragment"
-        android:name="com.princeakash.projectified.MyApplicationsFragment"
-        android:label="fragment_my_applications"
+        android:name="com.princeakash.projectified.candidate.myApplications.view.MyApplicationFragment"
+        android:label="fragment_applications"
         tools:layout="@layout/fragment_my_applications" />
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.princeakash.projectified.ProfileFragment"
-        android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        android:label="frag_update"
+        tools:layout="@layout/frag_update_profile" />
 </navigation>

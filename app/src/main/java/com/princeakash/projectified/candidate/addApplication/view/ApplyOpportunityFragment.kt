@@ -37,9 +37,6 @@ class ApplyOpportunityFragment : Fragment() {
     // Error String
     private var error: String? = null
 
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -77,7 +74,7 @@ class ApplyOpportunityFragment : Fragment() {
         }
         buttonCancel!!.setOnClickListener{
             parentFragmentManager.beginTransaction()
-                    .add(R.id.fragment_offers, HomeFragment::class.java, null, "HomeFragment")
+                    .replace(R.id.fragment_offers, HomeFragment::class.java, null, "HomeFragment")
                     .addToBackStack(null)
                     .commit()
         }
@@ -101,8 +98,6 @@ class ApplyOpportunityFragment : Fragment() {
 
         TODO("tOAST to say Applies Succesfully")
     }
-
-
 
     companion object{
         val OFFER_IDC = "offerId"

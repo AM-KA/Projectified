@@ -30,7 +30,7 @@ class CandidateAddApplicationViewModel(val app: Application): AndroidViewModel(a
         //which can be put to observation in Activities/Fragments
         var responseGetOffersByDomain : MutableLiveData<ResponseGetOffersByDomain> = MutableLiveData()
         var responseAddApplication: MutableLiveData<ResponseAddApplication> = MutableLiveData()
-        var responseGetOffersById: MutableLiveData<ResponseGetOfferById> = MutableLiveData()
+        var responseGetOfferById: MutableLiveData<ResponseGetOfferById> = MutableLiveData()
 
 
         fun getOffersByDomain( domainName:String ){
@@ -88,7 +88,7 @@ class CandidateAddApplicationViewModel(val app: Application): AndroidViewModel(a
           viewModelScope.launch {
               try {
 
-                 responseGetOffersById.postValue(candidateRepository.getOfferById(token,offerId))
+                 responseGetOfferById.postValue(candidateRepository.getOfferById(token,offerId))
               } catch(e: Exception){
 
                   //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity

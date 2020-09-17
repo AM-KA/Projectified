@@ -5,9 +5,9 @@
         android:icon="@drawable/ic_baseline_home_24"
         android:id="@+id/homeFragment"/>
     <item
-        android:title="Chat"
+        android:title="My Offers"
         android:icon="@drawable/ic_outline_chat_24"
-        android:id="@+id/chatFragment"/>
+        android:id="@+id/myOffersFragment"/>
     <item
         android:title="My Applications"
         android:icon="@drawable/ic_baseline_my_offers_24"

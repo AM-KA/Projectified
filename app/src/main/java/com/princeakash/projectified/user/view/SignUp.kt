@@ -75,11 +75,11 @@ class SignUp : Fragment(){
         val signUp = BodySignUp(name, email, password)
         profileViewModel!!.signUp((signUp))
 
-        val nextFrag = CreateProfileFragment()
+        /*val nextFrag = CreateProfileFragment()
         requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_frame, nextFrag, "findThisFragment")
                 .addToBackStack(null)
-                .commit()
+                .commit()*/
 
 
     }

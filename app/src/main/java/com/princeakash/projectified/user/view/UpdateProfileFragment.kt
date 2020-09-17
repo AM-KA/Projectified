@@ -156,22 +156,22 @@ class UpdateProfileFragment :Fragment() {
             return
         }
         if (editChipC!!.isChecked()) {
-            num?.set(0, 1)
+            num.set(0, 1)
         }
         if (editChipCpp!!.isChecked()) {
-            num?.set(1, 1)
+            num.set(1, 1)
         }
         if (editChipJava!!.isChecked()) {
-            num?.set(2, 1)
+            num.set(2, 1)
         }
         if (editChipKotlin!!.isChecked()) {
-            num?.set(3, 1)
+            num.set(3, 1)
         }
         if (editChipPython!!.isChecked()) {
-            num?.set(4, 1)
+            num.set(4, 1)
          }
         if (editChipJavaScript!!.isChecked()) {
-            num?.set(5, 1)
+            num.set(5, 1)
         }
 
         val userName = editTextName!!.text!!.toString()

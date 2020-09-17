@@ -17,17 +17,6 @@ class HomeFragment : Fragment(), HomeListener {
 
     private var list: ArrayList<HomeItem>? = null
 
-    // TODO: Rename and change types of parameters
-    private var mParam1: String? = null
-    private var mParam2: String? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            mParam1 = requireArguments().getString(ARG_PARAM1)
-            mParam2 = requireArguments().getString(ARG_PARAM2)
-        }
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -46,22 +35,5 @@ class HomeFragment : Fragment(), HomeListener {
 
         recyclerView.layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
         return view
-    }
-
-    companion object {
-        // TODO: Rename parameter arguments, choose names that match
-        // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
-
-        // TODO: Rename and change types and number of parameters
-        fun newInstance(param1: String?, param2: String?): HomeFragment {
-            val fragment = HomeFragment()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

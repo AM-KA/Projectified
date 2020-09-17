@@ -56,8 +56,8 @@ class SplashScreenFragment : Fragment() {
 
     fun takeToLogin(){
         parentFragmentManager.beginTransaction()
-                .add(R.id.fragment_initial, LoginFragment(), "Login")
-                .addToBackStack(null)
+                .replace(R.id.fragment_initial, LoginFragment(), "Login")
+                //.addToBackStack(null)
                 .commit()
     }
 

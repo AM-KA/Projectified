@@ -12,6 +12,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.princeakash.projectified.Faq.FaqActivity
 import kotlinx.android.synthetic.main.kk.*
@@ -32,16 +33,8 @@ class MainActivity : AppCompatActivity() {
         navController = Navigation.findNavController(this, R.id.fragment)
 
         //Setting the navigation controller to Bottom Nav
-       TODO("SET up Nav Controller")
-
-
         //Setting up the action bar
-       // NavigatioxnUI.setupActionBarWithNavController(this, navController)
-
-
-
-
-
+        NavigationUI.setupActionBarWithNavController(this, navController)
 
         val drawerToggle: ActionBarDrawerToggle = object : ActionBarDrawerToggle(
                 this,
@@ -64,9 +57,6 @@ class MainActivity : AppCompatActivity() {
         drawerToggle.isDrawerIndicatorEnabled = true
         drawerLayout?.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
-
-
-
     }
 
 
@@ -95,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             R.id.Help -> {
 
                 val address = "amkafoundation@gmail.com"
-                TODO("Gmail of amka Foundation ")
+                //TODO("Gmail of amka Foundation ")
                 val subject: String = "Give Review For our app"
                 val intent = Intent(Intent.ACTION_SENDTO).apply {
                     data = Uri.parse("mailto:")
@@ -109,7 +99,6 @@ class MainActivity : AppCompatActivity() {
 
 
         }
-
         return true
     }
 }
