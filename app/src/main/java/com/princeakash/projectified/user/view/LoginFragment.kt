@@ -1,5 +1,6 @@
 package com.princeakash.projectified.user.view
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -35,6 +36,45 @@ class LoginFragment : Fragment() {
 
         override fun onCreate(savedInstanceState: Bundle?){
                 super.onCreate(savedInstanceState)
+        }
+
+        override fun onAttach(context: Context) {
+                super.onAttach(context)
+
+        }
+
+        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+                val v = inflater.inflate(R.layout.signin_user, container, false)
+                editTextEmail = v.editTextEmail
+                editTextPassword = v.editTextPassword
+                LogInButton = v.LogInButton
+                SignUpButton = v.SignUpButton
+
+                LogInButton?.setOnClickListener {
+                        displayHomeScreen()
+                }
+                SignUpButton?.setOnClickListener {
+
+
+
+                        /*val nextFrag = SignUp()
+                        requireActivity().supportFragmentManager.beginTransaction()
+                                .replace(R.id.fragment_frame, nextFrag, "findThisFragment")
+                                .addToBackStack(null)
+                                .commit()*/
+
+
+                        parentFragmentManager.beginTransaction()
+                                .replace(R.id.fragment_initial, SignUp(), "LoginFragment")
+                                //.addToBackStack(null)
+                                .commit()
+
+                }
+                return v
+        }
+
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+                super.onViewCreated(view, savedInstanceState)
                 profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
                 profileViewModel.responseLogin.observe(viewLifecycleOwner, {
                         responseLogin = it
@@ -62,37 +102,6 @@ class LoginFragment : Fragment() {
                         }
                 })
         }
-
-        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-                val v = inflater.inflate(R.layout.signin_user, container, false)
-                editTextEmail = v.editTextEmail
-                editTextPassword = v.editTextPassword
-                LogInButton = v.LogInButton
-                SignUpButton = v.SignUpButton
-
-                LogInButton?.setOnClickListener {
-                        displayHomeScreen()
-                }
-                SignUpButton?.setOnClickListener {
-
-
-
-                        val nextFrag = SignUp()
-                        requireActivity().supportFragmentManager.beginTransaction()
-                                .replace(R.id.fragment_frame, nextFrag, "findThisFragment")
-                                .addToBackStack(null)
-                                .commit()
-
-
-                        parentFragmentManager.beginTransaction()
-                                .add(R.id.fragment_initial, SignUp(), "LoginFragment")
-                                .addToBackStack(null)
-                                .commit()
-
-                }
-                return v
-        }
-
         fun displayHomeScreen() {
                 if (editTextEmail!!.text == null || editTextEmail!!.text!!.equals("")) {
                         editTextEmail!!.error = "Enter Phone Number."
@@ -108,12 +117,6 @@ class LoginFragment : Fragment() {
                 val logIn = LoginBody(email, password)
                 profileViewModel!!.logIn(logIn)
         }
-
-
-
-
-
-
 
         companion object{
                 val USER_NAME = "UserName"

@@ -15,19 +15,19 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class MyApplication: Application(){
 
     //Moshi: GSON of Kotlin
-    val moshi = Moshi.Builder()
+    var moshi = Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
                 .build()
 
-    val retrofit = Retrofit.Builder()
+    var retrofit = Retrofit.Builder()
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .baseUrl(BASE_URL)
                 .build()
 
-    var recruiterRepository = RecruiterRepository(retrofit)
-    var profileRepository = ProfileRepository(retrofit, this)
-    var candidateRepository = CandidateRepository(retrofit)
-    var faqRepository = FaqRepository(retrofit)
+    lateinit var recruiterRepository:RecruiterRepository
+    lateinit var profileRepository: ProfileRepository
+    lateinit var candidateRepository:CandidateRepository
+    lateinit var faqRepository:FaqRepository
 
     //Show Toast by using Application Context
     fun showToast(message: String?){
@@ -37,5 +37,21 @@ class MyApplication: Application(){
     //Storing static values
     companion object{
         val BASE_URL = "http://am-ka.com"
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        moshi = Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
+        retrofit = Retrofit.Builder()
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .baseUrl(BASE_URL)
+                .build()
+
+        recruiterRepository = RecruiterRepository(retrofit)
+        profileRepository = ProfileRepository(retrofit, this)
+        candidateRepository = CandidateRepository(retrofit)
+        faqRepository = FaqRepository(retrofit)
     }
 }

@@ -1,5 +1,6 @@
 package com.princeakash.projectified.user
 
+import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.princeakash.projectified.MyApplication
@@ -71,7 +72,7 @@ class ProfileRepository(retrofit: Retrofit, app: MyApplication) {
     fun getLocalProfile() : ProfileModel?{
         try{
             val json = sharedPref.getString(USER_PROFILE, null)!!
-            val jsonAdapter:JsonAdapter<ProfileModel> = application.moshi.adapter(ProfileModel::class.java)
+            val jsonAdapter:JsonAdapter<ProfileModel> = (application).moshi.adapter(ProfileModel::class.java)
             return jsonAdapter.fromJson(json)!!
         } catch(e: Exception){
             e.printStackTrace()
@@ -82,7 +83,7 @@ class ProfileRepository(retrofit: Retrofit, app: MyApplication) {
 
     fun setLocalProfile(bodyProfile: ProfileModel){
         try{
-            val jsonAdapter = application.moshi.adapter(ProfileModel::class.java)
+            val jsonAdapter = (application).moshi.adapter(ProfileModel::class.java)
             val json = jsonAdapter.toJson(bodyProfile)
             editor.putString(USER_PROFILE, json)
             editor.commit()

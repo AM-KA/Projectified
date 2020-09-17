@@ -10,7 +10,7 @@ class InitialActivity : AppCompatActivity() {
         setContentView(R.layout.activity_initial)
         if(savedInstanceState==null) {
             supportFragmentManager.beginTransaction()
-                    .add(R.id.fragment_initial, SplashScreenFragment(), "Splash")
+                    .replace(R.id.fragment_initial, SplashScreenFragment(), "Splash")
                     .commit()
         }
     }

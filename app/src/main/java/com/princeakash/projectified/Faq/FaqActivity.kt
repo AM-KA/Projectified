@@ -7,6 +7,6 @@ import com.princeakash.projectified.R
 class FaqActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_faq)
+        setContentView(R.layout.fragment_all_faq)
     }
 }
