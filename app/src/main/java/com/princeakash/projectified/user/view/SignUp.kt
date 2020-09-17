@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.signin_user.view.*
 
 class SignUp : Fragment(){
 
-
     private var editTextName: EditText? = null
     private var editTextEmail: EditText? = null
     private var editTextPassword:EditText?=null
@@ -33,9 +32,9 @@ class SignUp : Fragment(){
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val v = inflater.inflate(R.layout.sign_up_user, container, false)
+            val v = inflater.inflate(R.layout.sign_up_user, container, false)
 
 
         editTextEmail = v.editTextEmail

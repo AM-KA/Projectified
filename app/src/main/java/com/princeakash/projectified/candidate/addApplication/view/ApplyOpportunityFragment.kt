@@ -9,17 +9,12 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.addApplication.model.ResponseAddApplication
 import com.princeakash.projectified.candidate.addApplication.viewModel.CandidateAddApplicationViewModel
-import com.princeakash.projectified.candidate.myApplications.model.OfferCardModelCandidate
-import com.princeakash.projectified.recruiter.addOffer.view.AddOfferFragment
 import kotlinx.android.synthetic.main.frag_apply_opportunity_self.view.*
-import kotlinx.android.synthetic.main.frag_apply_opportunity_view.*
-import kotlinx.android.synthetic.main.frag_floatopportuninty.view.*
-import kotlinx.android.synthetic.main.frag_myapplicationdetail.*
+
 
 class ApplyOpportunityFragment : Fragment() {
 
