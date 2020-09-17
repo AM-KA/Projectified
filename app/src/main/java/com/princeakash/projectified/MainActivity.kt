@@ -8,14 +8,12 @@ import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.princeakash.projectified.Faq.FaqActivity
-import kotlinx.android.synthetic.main.kk.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -63,7 +61,7 @@ class MainActivity : AppCompatActivity() {
    fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
             R.id.AboutUs -> {
-                val intent = Intent(this@MainActivity, AboutUsView::class.java)
+                val intent = Intent(this@MainActivity, AboutUsActivity::class.java)
                 startActivity(intent)
 
             }

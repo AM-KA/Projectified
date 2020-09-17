@@ -19,11 +19,11 @@ import kotlinx.android.synthetic.main.frag_apply_opportunity_self.view.*
 class ApplyOpportunityFragment : Fragment() {
 
     //Views
-    private var TextName:TextView? = null
-    private var TextCollege: TextView? = null
-    private var TextCourse: TextView? = null
-    private var TextSemester: TextView? = null
-    private var TextPhone: TextView? = null
+    private var textName:TextView? = null
+    private var textCollege: TextView? = null
+    private var textCourse: TextView? = null
+    private var textSemester: TextView? = null
+    private var textPhone: TextView? = null
     private var editTextPreviousWork:TextInputEditText?=null
     private var editTextResume:TextInputEditText?=null
     private var buttonApply:Button?=null
@@ -59,11 +59,11 @@ class ApplyOpportunityFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.frag_apply_opportunity_self, container, false)
-        TextName = view.textViewName
-        TextCollege= view.textViewCollege
-        TextCourse= view.textViewCourse
-        TextSemester = view.textViewSemester
-        TextPhone=  view.textViewPhone
+        textName = view.textViewName
+        textCollege= view.textViewCollege
+        textCourse= view.textViewCourse
+        textSemester = view.textViewSemester
+        textPhone=  view.textViewPhone
         editTextPreviousWork =view.editTextPreviousWork
         editTextResume= view.editTextResume
         buttonApply=view.buttonCancel
