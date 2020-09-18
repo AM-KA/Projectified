@@ -15,6 +15,7 @@ import com.princeakash.projectified.candidate.addApplication.viewModel.Candidate
 import com.princeakash.projectified.candidate.myApplications.model.OfferCardModelCandidate
 import kotlinx.android.synthetic.main.frag_available_offers.*
 import kotlinx.android.synthetic.main.frag_available_offers.view.*
+import kotlin.properties.Delegates
 
 
 class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffersListener{
@@ -23,14 +24,16 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
     var offerList: ArrayList<OfferCardModelCandidate> = ArrayList()
     var errorString:String? = null
     var domainName:String?=null
-    var listFetched:Boolean? = null;
+    var listFetched by Delegates.notNull<Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         listFetched = false
-        savedInstanceState?.let {
+        if(savedInstanceState!=null) {
             domainName = savedInstanceState.getString(DOMAIN_NAME)
             listFetched = savedInstanceState.getBoolean(LIST_FETCHED)
+        }else{
+            domainName = requireArguments().getString(DOMAIN_NAME)
         }
         candidateAddApplicationViewModel = ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
         candidateAddApplicationViewModel!!.responseGetOffersByDomain.observe(this, {

@@ -27,7 +27,7 @@ class HomeAdapter(private val list: ArrayList<HomeItem>, private val context: Co
         return list.size
     }
 
-    class HomeViewHolder(itemView: View, homeListener: HomeListener) : RecyclerView.ViewHolder(itemView) {
+    class HomeViewHolder(itemView: View, homeListener: HomeListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         var imageView: ImageView
         var textView: TextView
         var homeListener: HomeListener
@@ -36,9 +36,28 @@ class HomeAdapter(private val list: ArrayList<HomeItem>, private val context: Co
             imageView = itemView.findViewById(R.id.image)
             textView = itemView.findViewById(R.id.description)
             this.homeListener = homeListener
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            homeListener.onDomainClick(adapterPosition)
         }
     }
 
-    class HomeItem(var itemName: String, var itemDrawable: Int)
-    interface HomeListener
+    class HomeItem(var itemName: String, var itemDrawable: Int, var domainArg: String)
+
+    interface HomeListener{
+        fun onDomainClick(position:Int)
+    }
+
+    companion object{
+        const val ANDROID = "android"
+        const val WEB = "web"
+        const val ML = "ml"
+        const val AI = "ai"
+        const val VIDEO = "video"
+        const val UIUX = "uiux"
+        const val CONTENT = "content"
+        const val OTHERS = "others"
+    }
 }
