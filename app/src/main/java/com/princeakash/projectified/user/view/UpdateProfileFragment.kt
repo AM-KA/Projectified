@@ -18,6 +18,7 @@ import com.princeakash.projectified.user.*
 import kotlinx.android.synthetic.main.frag_update_profile.view.*
 
 class UpdateProfileFragment :Fragment() {
+
     private var editTextName: TextInputEditText? = null
     private var editTextCollege: TextInputEditText? = null
     private var editTextCourse: AutoCompleteTextView? = null
@@ -74,6 +75,25 @@ class UpdateProfileFragment :Fragment() {
             }
         }
         return v
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
+        profileViewModel!!.responseUpdateProfile.observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let {
+                responseUpdateProfile = it
+                Toast.makeText(context, it.message, LENGTH_SHORT).show()
+            }
+        })
+        if(savedInstanceState==null)
+        {
+            loadLocalProfile()
+            enabled = false
+            setEditable()
+        }else{
+            enabled = savedInstanceState.getBoolean(ENABLED_STATUS)
+        }
     }
 
     private fun loadLocalProfile() {
@@ -191,22 +211,6 @@ class UpdateProfileFragment :Fragment() {
         outState.putBoolean(ENABLED_STATUS, enabled)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
-        profileViewModel!!.responseUpdateProfile.observe(viewLifecycleOwner, {
-            responseUpdateProfile = it
-            Toast.makeText(context, it.message, LENGTH_SHORT).show()
-        })
-        if(savedInstanceState==null)
-        {
-            loadLocalProfile()
-            enabled = false
-            setEditable()
-        }else{
-            enabled = savedInstanceState.getBoolean(ENABLED_STATUS)
-        }
-    }
     companion object{
         val ENABLED_STATUS = "EnabledStatus"
     }

@@ -57,10 +57,12 @@ class CreateProfileFragment :Fragment()
         super.onViewCreated(view, savedInstanceState)
         profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
         profileViewModel!!.responseCreateProfile.observe(viewLifecycleOwner, {
-            responseCreateProfile = it
-            Toast.makeText(context, it.message, LENGTH_SHORT).show()
-            //Navigate to Main Activity
-            startActivity(Intent(activity, MainActivity::class.java))
+            it?.getContentIfNotHandled()?.let{
+                responseCreateProfile = it
+                Toast.makeText(context, it.message, LENGTH_SHORT).show()
+                //Navigate to Main Activity
+                startActivity(Intent(activity, MainActivity::class.java))
+            }
         })
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
@@ -25,12 +26,16 @@ class AddOfferFragment : Fragment() {
     private var editTextRequirements: TextInputEditText? = null
     private var editTextSkills: TextInputEditText? = null
     private var editTextExpectation: TextInputEditText? = null
+    private lateinit var textViewName: TextView
+    private lateinit var textViewCollege: TextView
+    private lateinit var textViewCourse: TextView
+    private lateinit var textViewSemester: TextView
     private var buttonEnlist: Button? = null
 
     //ViewModels
-    private var recruiterAddOffersViewModel: RecruiterAddOffersViewModel? = null
-    private var responseAddOffer: ResponseAddOffer? = null
-    private var error: String? = null
+    private lateinit var recruiterAddOffersViewModel: RecruiterAddOffersViewModel
+    private lateinit var responseAddOffer: ResponseAddOffer
+    private lateinit var error: String
     private var domainName: String? = null
 
     /*
@@ -53,6 +58,10 @@ class AddOfferFragment : Fragment() {
         editTextRequirements = view.editTextRequirement
         editTextSkills = view.editTextSkills
         editTextExpectation = view.editTextExpectation
+        textViewName = view.textViewNameData
+        textViewCollege = view.textViewCollegeData
+        textViewCourse = view.textViewCourseData
+        textViewSemester = view.textViewSemesterData
         buttonEnlist = view.EnlistButton
 
         buttonEnlist!!.setOnClickListener {
@@ -105,5 +114,16 @@ class AddOfferFragment : Fragment() {
             error = it
             Toast.makeText(context, error, LENGTH_SHORT).show()
         })
+
+        loadRecruiterDetails()
+    }
+
+    private fun loadRecruiterDetails() {
+        recruiterAddOffersViewModel.getLocalProfile()?.let {
+            textViewName.setText(it.name)
+            textViewCollege.setText(it.collegeName)
+            textViewCourse.setText(it.course)
+            textViewSemester.setText(it.semester)
+        }
     }
 }

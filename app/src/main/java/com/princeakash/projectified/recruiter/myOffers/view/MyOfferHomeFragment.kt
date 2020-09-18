@@ -28,19 +28,6 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
     //Determining whether re-fetching data is required or not
     var detailsViewed = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
-        recruiterExistingOffersViewModel!!.responseGetOffersByRecruiter.observe(this, {
-            offerList = it?.offers as ArrayList<OfferCardModelRecruiter>
-            recyclerViewOffers.adapter?.notifyDataSetChanged()
-        })
-        recruiterExistingOffersViewModel!!.errorString.observe(this, {
-            errorString = it
-            Toast.makeText(this@MyOfferHomeFragment.context, errorString, LENGTH_SHORT).show()
-        })
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         /*savedInstanceState?.let {
@@ -51,6 +38,16 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
+        recruiterExistingOffersViewModel!!.responseGetOffersByRecruiter.observe(viewLifecycleOwner, {
+            offerList = it?.offers as ArrayList<OfferCardModelRecruiter>
+            view.recyclerViewOffers.adapter = MyOffersAdapter(offerList, this@MyOfferHomeFragment)
+        })
+        recruiterExistingOffersViewModel!!.errorString.observe(viewLifecycleOwner, {
+            errorString = it
+            Toast.makeText(this@MyOfferHomeFragment.context, errorString, LENGTH_SHORT).show()
+        })
 
         //Start fetching offer list
         if(savedInstanceState == null || savedInstanceState.getBoolean(DETAILS_VIEWED)) {
@@ -79,7 +76,7 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
         val bundle = Bundle()
         bundle.putString(OFFER_ID, offerList.get(itemPosition).offer_id)
         parentFragmentManager.beginTransaction()
-                .add(R.id.fragment_offers, MyOfferDetailsFragment::class.java, bundle, "MyOfferDetailsFragment")
+                .replace(R.id.fragment_offers, MyOfferDetailsFragment::class.java, bundle, "MyOfferDetailsFragment")
                 .addToBackStack(null)
                 .commit()
     }

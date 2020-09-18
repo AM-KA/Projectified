@@ -43,9 +43,45 @@ class MyOfferDetailsFragment() : Fragment() {
     //Offer Data
     private var offerId: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
 
+        val v = inflater.inflate(R.layout.frag_my_offer_details, container, false)
+
+        editTextOfferName = v.editTextOfferName
+        editTextExpectations = v.editTextExpectation
+        editTextSkills = v.editTextSkills
+        editTextRequirements = v.editTextRequirement
+        switchVisibility = v.switchAllow
+        buttonEditDetails = v.buttonEditDetails
+        buttonViewApplicants = v.buttonViewApplicants
+        buttonDelist = v.buttonDelist
+
+        buttonDelist?.setOnClickListener{
+            delistOpportunity()
+        }
+
+        buttonEditDetails?.setOnClickListener{
+            editable = !editable
+            setEditable()
+            if(!editable)
+               updateOffer()
+        }
+
+        buttonViewApplicants?.setOnClickListener{
+            viewApplicants()
+        }
+
+        switchVisibility?.setOnCheckedChangeListener { buttonView: CompoundButton?, isChecked: Boolean ->
+            run {
+                recruiterExistingOffersViewModel!!.toggleVisibility(offerId!!, BodyToggleVisibility(isChecked))
+            }
+        }
+        return v
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
 
         recruiterExistingOffersViewModel!!.responseGetOfferByIdRecruiter.observe(viewLifecycleOwner, {
@@ -76,25 +112,10 @@ class MyOfferDetailsFragment() : Fragment() {
             error = it
             Toast.makeText(context, error, LENGTH_SHORT).show()
         })
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-
-        val v = inflater.inflate(R.layout.frag_my_offer_details, container, false)
-
-        editTextOfferName = v.editTextOfferName
-        editTextExpectations = v.editTextExpectation
-        editTextSkills = v.editTextSkills
-        editTextRequirements = v.editTextRequirement
-        switchVisibility = v.switchAllow
-        buttonEditDetails = v.buttonEditDetails
-        buttonViewApplicants = v.buttonViewApplicants
-        buttonDelist = v.buttonDelist
 
         if(savedInstanceState == null) {
             //First loadup of Fragment
-            offerId = arguments?.getString(OFFER_ID)
+            offerId = requireArguments().getString(OFFER_ID)
             fetchOfferDetails()
         }
         else{
@@ -107,35 +128,13 @@ class MyOfferDetailsFragment() : Fragment() {
             }
             setEditable()
         }
-
-        buttonDelist?.setOnClickListener{
-            delistOpportunity()
-        }
-
-        buttonEditDetails?.setOnClickListener{
-            editable = !editable
-            setEditable()
-            if(editable)
-               updateOffer()
-        }
-
-        buttonViewApplicants?.setOnClickListener{
-            viewApplicants()
-        }
-
-        switchVisibility?.setOnCheckedChangeListener { buttonView: CompoundButton?, isChecked: Boolean ->
-            run {
-                recruiterExistingOffersViewModel!!.toggleVisibility(offerId!!, BodyToggleVisibility(isChecked))
-            }
-        }
-        return v
     }
 
     private fun viewApplicants() {
         val bundle = Bundle()
         bundle.putString(OFFER_ID, offerId)
         parentFragmentManager.beginTransaction()
-                .add(R.id.fragment_offers, MyOfferApplicantsFragment::class.java, bundle, "MyOfferApplicantsFragment")
+                .replace(R.id.fragment_offers, MyOfferApplicantsFragment::class.java, bundle, "MyOfferApplicantsFragment")
                 .addToBackStack(null)
                 .commit()
     }

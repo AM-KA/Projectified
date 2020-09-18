@@ -50,4 +50,6 @@ class RecruiterAddOffersViewModel(val app: Application): AndroidViewModel(app) {
             }
         }
     }
+
+    fun getLocalProfile() = profileRepository.getLocalProfile()
 }

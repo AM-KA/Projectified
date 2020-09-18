@@ -19,8 +19,8 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
     var errorString: MutableLiveData<Event<String>> = MutableLiveData()
     var responseSignUp: MutableLiveData<Event<ResponseSignUp>> = MutableLiveData()
     var responseLogin: MutableLiveData<ResponseLogin> = MutableLiveData()
-    var responseCreateProfile: MutableLiveData<ResponseCreateProfile> = MutableLiveData()
-    var responseUpdateProfile: MutableLiveData<ResponseUpdateProfile> = MutableLiveData()
+    var responseCreateProfile: MutableLiveData<Event<ResponseCreateProfile>> = MutableLiveData()
+    var responseUpdateProfile: MutableLiveData<Event<ResponseUpdateProfile>> = MutableLiveData()
 
 
     //Functions based on
@@ -79,7 +79,7 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
                 val userID = profileRepository.getUserId()
                 bodyCreateProfile.userID = userID
                 Log.d(TAG, "createProfile: "+token)
-                responseCreateProfile.postValue(profileRepository.createProfile("Bearer "+token, bodyCreateProfile))
+                responseCreateProfile.postValue(Event(profileRepository.createProfile("Bearer "+token, bodyCreateProfile)))
                 setLocalProfile(ProfileModel(bodyCreateProfile))
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -93,7 +93,7 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
                     val token = profileRepository.getToken()
                     val userID = profileRepository.getUserId()
                     bodyUpdateProfile.userID = userID
-                    responseUpdateProfile.postValue(profileRepository.updateProfile("Bearer "+token,bodyUpdateProfile))
+                    responseUpdateProfile.postValue(Event(profileRepository.updateProfile("Bearer "+token,bodyUpdateProfile)))
                     setLocalProfile(ProfileModel(bodyUpdateProfile))
                 } catch (e: Exception) {
                     e.printStackTrace()
