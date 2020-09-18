@@ -22,7 +22,7 @@
         tools:layout="@layout/fragment_my_applications" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.princeakash.projectified.user.view.CreateProfileFragment"
+        android:name="com.princeakash.projectified.user.view.UpdateProfileFragment"
         android:label="frag_update"
         tools:layout="@layout/frag_update_profile" />
 </navigation>

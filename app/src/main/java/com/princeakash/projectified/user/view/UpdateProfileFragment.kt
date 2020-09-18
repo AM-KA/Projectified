@@ -1,6 +1,5 @@
 package com.princeakash.projectified.user.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,14 +9,12 @@ import android.widget.Button
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
-import com.princeakash.projectified.MainActivity
 import com.princeakash.projectified.R
 import com.princeakash.projectified.user.*
-import com.princeakash.projectified.user.view.LoginFragment.Companion.USER_NAME
-import kotlinx.android.synthetic.main.frag_create_profile.*
 import kotlinx.android.synthetic.main.frag_update_profile.view.*
 
 class UpdateProfileFragment :Fragment() {
@@ -42,25 +39,11 @@ class UpdateProfileFragment :Fragment() {
     private var  num:IntArray = intArrayOf(0, 0, 0, 0, 0,0)
 
     //  View Models and fun Instances
-    var profileViewModel: ProfileViewModel?=null
-    var responseUpdateProfile:ResponseUpdateProfile?=null
+    lateinit var profileViewModel: ProfileViewModel
+    lateinit var responseUpdateProfile:ResponseUpdateProfile
 
     private var enabled: Boolean = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        profileViewModel!!.responseUpdateProfile.observe(viewLifecycleOwner, {
-            responseUpdateProfile = it
-            Toast.makeText(context, it.message, LENGTH_SHORT).show()
-        })
-        if(savedInstanceState==null)
-        {
-            enabled = false
-            setEditable()
-        }else{
-            enabled = savedInstanceState.getBoolean(ENABLED_STATUS)
-        }
-    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.frag_update_profile, container, false)
 
@@ -90,8 +73,6 @@ class UpdateProfileFragment :Fragment() {
                 setEditable()
             }
         }
-        if(savedInstanceState==null)
-            loadLocalProfile()
         return v
     }
 
@@ -208,6 +189,23 @@ class UpdateProfileFragment :Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(ENABLED_STATUS, enabled)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
+        profileViewModel!!.responseUpdateProfile.observe(viewLifecycleOwner, {
+            responseUpdateProfile = it
+            Toast.makeText(context, it.message, LENGTH_SHORT).show()
+        })
+        if(savedInstanceState==null)
+        {
+            loadLocalProfile()
+            enabled = false
+            setEditable()
+        }else{
+            enabled = savedInstanceState.getBoolean(ENABLED_STATUS)
+        }
     }
     companion object{
         val ENABLED_STATUS = "EnabledStatus"

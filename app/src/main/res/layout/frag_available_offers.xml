@@ -44,7 +44,14 @@
         app:layout_constraintStart_toStartOf="@id/guideline1"
         app:layout_constraintEnd_toEndOf="@id/guideline2"
         app:layout_constraintTop_toTopOf="@id/guideline3"
-        app:layout_constraintBottom_toBottomOf="@id/guideline4"
-        tools:listitem="@layout/card_offer_candidate_version"/>
+        app:layout_constraintBottom_toBottomOf="@id/guideline4"/>
+
+    <Button
+        android:id="@+id/buttonAddOffer"
+        android:layout_width="wrap_content"
+        android:text="Add"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@id/guideline2"
+        app:layout_constraintBottom_toTopOf="@id/guideline4"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

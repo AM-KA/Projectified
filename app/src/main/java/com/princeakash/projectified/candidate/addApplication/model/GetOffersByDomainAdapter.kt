@@ -8,7 +8,7 @@ import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.myApplications.model.OfferCardModelCandidate
 import kotlinx.android.synthetic.main.card_offer_candidate_version.view.*
 
-class GetOffersByDomainAdapter(var offerList: List<OfferCardModelCandidate>?, val listener:GetOffersListener): RecyclerView.Adapter<GetOffersByDomainAdapter.GetOfferViewHolder>() {
+class GetOffersByDomainAdapter(val offerList: List<OfferCardModelCandidate>, val listener:GetOffersListener): RecyclerView.Adapter<GetOffersByDomainAdapter.GetOfferViewHolder>() {
 
     class GetOfferViewHolder(itemView: View, listener: GetOffersListener):RecyclerView.ViewHolder(itemView), View.OnClickListener{
         val textViewPost = itemView.textViewPost
@@ -36,7 +36,6 @@ class GetOffersByDomainAdapter(var offerList: List<OfferCardModelCandidate>?, va
         holder.textViewDate.text = offerList?.get(position)?.float_date
         holder.textViewCollege.text = offerList?.get(position)?.collegeName
         holder.textViewSkills.text = offerList?.get(position)?.skills
-
     }
 
     override fun getItemCount(): Int = offerList!!.size

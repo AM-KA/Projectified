@@ -14,6 +14,6 @@ interface ProfileService {
     suspend fun createProfile(@Header("Authorization") token: String, @Body bodyCreateProfile: BodyCreateProfile) :ResponseCreateProfile
 
     @PATCH("profile/{profileID}")
-    suspend fun updateProfile(@Header("Authorization") token: String, @Body bodyUpdateProfile: BodyUpdateProfile, @Query("profileID") profileID:String) :  ResponseUpdateProfile
+    suspend fun updateProfile(@Header("Authorization") token: String, @Body bodyUpdateProfile: BodyUpdateProfile, @Path("profileID") profileID:String) :  ResponseUpdateProfile
 
 }

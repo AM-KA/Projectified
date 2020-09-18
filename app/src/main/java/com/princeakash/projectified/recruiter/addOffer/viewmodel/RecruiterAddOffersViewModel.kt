@@ -39,7 +39,7 @@ class RecruiterAddOffersViewModel(val app: Application): AndroidViewModel(app) {
         viewModelScope.launch {
             try {
                 val bodyAddOffer = BodyAddOffer(offerName, domainName, requirements, skills, expectation, recruiterID)
-                responseAddOffer.postValue(recruiterRepository.addOffer(bodyAddOffer, token))
+                responseAddOffer.postValue(recruiterRepository.addOffer(bodyAddOffer, "Bearer "+token))
             } catch(e: Exception){
 
                 //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity

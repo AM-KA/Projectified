@@ -44,7 +44,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseGetOffersByRecruiter.postValue(recruiterRepository.getOffersByRecruiter(token, recruiterID))
+                responseGetOffersByRecruiter.postValue(recruiterRepository.getOffersByRecruiter("Bearer "+token, recruiterID))
             } catch(e: Exception){
 
                 //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
@@ -64,7 +64,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseGetOfferByIdRecruiter.postValue(recruiterRepository.getOfferByIdRecruiter(token, offerID))
+                responseGetOfferByIdRecruiter.postValue(recruiterRepository.getOfferByIdRecruiter("Bearer "+token, offerID))
             } catch(e: Exception){
 
                 //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
@@ -84,7 +84,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseGetOfferApplicants.postValue(recruiterRepository.getOfferApplicants(token, offerID))
+                responseGetOfferApplicants.postValue(recruiterRepository.getOfferApplicants("Bearer "+token, offerID))
             } catch(e: Exception){
 
                 //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
@@ -104,7 +104,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseUpdateOffer.postValue(recruiterRepository.updateOffer(token, offerID, bodyUpdateOffer))
+                responseUpdateOffer.postValue(recruiterRepository.updateOffer("Bearer "+token, offerID, bodyUpdateOffer))
             } catch(e: Exception){
 
                 //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
@@ -124,7 +124,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseToggleVisibility.postValue(recruiterRepository.toggleVisibility(token, offerID, bodyToggleVisibility))
+                responseToggleVisibility.postValue(recruiterRepository.toggleVisibility("Bearer "+token, offerID, bodyToggleVisibility))
             } catch(e: Exception){
 
                 //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
@@ -144,7 +144,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseDeleteOffer.postValue(recruiterRepository.deleteOffer(token, offerID))
+                responseDeleteOffer.postValue(recruiterRepository.deleteOffer("Bearer "+token, offerID))
             } catch(e: Exception){
 
                 //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
@@ -164,7 +164,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseGetApplicationById.postValue(recruiterRepository.getApplicationById(token, applicationID))
+                responseGetApplicationById.postValue(recruiterRepository.getApplicationById("Bearer "+token, applicationID))
             } catch(e: Exception){
 
                 //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
@@ -184,7 +184,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseMarkAsSeen.postValue(recruiterRepository.markSeen(token, applicationID, bodyMarkAsSeen))
+                responseMarkAsSeen.postValue(recruiterRepository.markSeen("Bearer "+token, applicationID, bodyMarkAsSeen))
             } catch(e: Exception){
 
                 //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
@@ -204,7 +204,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseMarkAsSelected.postValue(recruiterRepository.markSelected(token, applicationID, bodyMarkAsSelected))
+                responseMarkAsSelected.postValue(recruiterRepository.markSelected("Bearer "+token, applicationID, bodyMarkAsSelected))
             } catch(e: Exception){
 
                 //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity

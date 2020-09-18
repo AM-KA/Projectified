@@ -12,6 +12,7 @@ import android.widget.Toast.LENGTH_SHORT
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
+import com.princeakash.projectified.candidate.addApplication.view.GetOffersByDomainFragment.Companion.DOMAIN_NAME
 import com.princeakash.projectified.recruiter.addOffer.model.ResponseAddOffer
 import com.princeakash.projectified.recruiter.addOffer.viewmodel.RecruiterAddOffersViewModel
 import kotlinx.android.synthetic.main.frag_floatopportuninty.view.*
@@ -42,16 +43,6 @@ class AddOfferFragment : Fragment() {
             domainName = requireArguments().getString(DOMAIN_NAME);
         else
             domainName = savedInstanceState.getString(DOMAIN_NAME);
-        recruiterAddOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterAddOffersViewModel::class.java)
-
-        recruiterAddOffersViewModel!!.responseAddOffer.observe(this, {
-            responseAddOffer = it
-        })
-
-        recruiterAddOffersViewModel!!.errorString.observe(this, {
-            error = it
-            Toast.makeText(context, error, LENGTH_SHORT).show()
-        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -101,7 +92,18 @@ class AddOfferFragment : Fragment() {
         super.onSaveInstanceState(outState)
         outState.putString(DOMAIN_NAME, domainName)
     }
-    companion object{
-        val DOMAIN_NAME = "domainName"
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recruiterAddOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterAddOffersViewModel::class.java)
+
+        recruiterAddOffersViewModel!!.responseAddOffer.observe(viewLifecycleOwner, {
+            responseAddOffer = it
+        })
+
+        recruiterAddOffersViewModel!!.errorString.observe(viewLifecycleOwner, {
+            error = it
+            Toast.makeText(context, error, LENGTH_SHORT).show()
+        })
     }
 }

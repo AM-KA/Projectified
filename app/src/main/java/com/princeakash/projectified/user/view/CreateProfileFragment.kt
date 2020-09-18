@@ -71,7 +71,7 @@ class CreateProfileFragment :Fragment()
         editTextSemester = v.editTextSemester
         editTextInterest1 = v.editTextInterest1
         editTextInterest2 = v.editTextInterest2
-        editTextInterest3 = v.editTextInterest1
+        editTextInterest3 = v.editTextInterest3
         editTextDescription1=v.editTextDescription1
         editTextHobbies = v.editTextHobbies
         editChipC = v.chipC1

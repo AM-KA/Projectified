@@ -61,6 +61,10 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
                 setUserId(response.userID)
                 Log.d(TAG, "logIn: "+response.token)
                 //TODO: Fetch Profile and save to SharedPreference using setLocalProfile()
+                if(response.profileCompleted){
+                    val bodyProfile = response.profile
+                    setLocalProfile(bodyProfile!!)
+                }
                 responseLogin.postValue(response)
             } catch (e: Exception) {
 
@@ -89,7 +93,7 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
                     val token = profileRepository.getToken()
                     val userID = profileRepository.getUserId()
                     bodyUpdateProfile.userID = userID
-                    responseUpdateProfile.postValue(profileRepository.updateProfile(token,bodyUpdateProfile))
+                    responseUpdateProfile.postValue(profileRepository.updateProfile("Bearer "+token,bodyUpdateProfile))
                     setLocalProfile(ProfileModel(bodyUpdateProfile))
                 } catch (e: Exception) {
                     e.printStackTrace()
