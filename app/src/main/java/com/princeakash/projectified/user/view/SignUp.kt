@@ -1,12 +1,16 @@
 package com.princeakash.projectified.user.view
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.princeakash.projectified.R
 import com.princeakash.projectified.user.BodySignUp
 import com.princeakash.projectified.user.ProfileViewModel
@@ -20,40 +24,59 @@ import kotlinx.android.synthetic.main.signin_user.view.SignUpButton
 
 class SignUp : Fragment(){
 
-    private var editTextName: EditText? = null
-    private var editTextPhone:EditText?=null
-    private var editTextEmail: EditText? = null
-    private var editTextPassword:EditText?=null
-    private  var editTextReEnterPassword:EditText?=null
+    private lateinit var editTextName: EditText
+    private lateinit var editTextPhone:EditText
+    private lateinit var editTextEmail: EditText
+    private lateinit var editTextPassword:EditText
+    private lateinit var editTextReEnterPassword:EditText
     private var SignUpButton: Button? = null
 
     //View Models and Fun Objects
 
-    private val profileViewModel: ProfileViewModel? = null
-    private val responseSignUp: ResponseSignUp? = null
+    private lateinit var profileViewModel: ProfileViewModel
+    private lateinit var errorString: String
+    private var errorShown = false
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if(savedInstanceState!=null)
+            errorShown = savedInstanceState.getBoolean("Error", false)
     }
 
-        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-            val v = inflater.inflate(R.layout.sign_up_user, container, false)
-
-
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val v = inflater.inflate(R.layout.sign_up_user, container, false)
         editTextEmail = v.editTextEmail1
         editTextName = v.editTextFullName1
         editTextPhone=v.editTextphonenumber1
         editTextPassword=v.editTextPassword1
         editTextReEnterPassword=v.editTextReEnterPassword1
         SignUpButton = v.SignUpButton
-
-       SignUpButton?.setOnClickListener {
-
+        SignUpButton?.setOnClickListener {
             displayHomeScreen()
         }
-
         return v
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
+        profileViewModel.responseSignUp.observe(viewLifecycleOwner, {
+            Toast.makeText(context, it.message, LENGTH_SHORT).show();
+        })
+        profileViewModel.errorString().observe(viewLifecycleOwner, {
+            //errorString = it
+            //if(!errorShown){
+            if(it!=null){
+                Toast.makeText(context, it, LENGTH_SHORT).show()
+                profileViewModel.errorString.postValue(null)
+            }
+            //errorShown = true;
+            //}
+        })
     }
 
     private  fun displayHomeScreen() {
@@ -66,7 +89,7 @@ class SignUp : Fragment(){
             editTextPassword!!.error = "Enter Password."
             return
         }
-        if (editTextReEnterPassword!!.text == null || editTextReEnterPassword!!.text!!.equals("") || editTextPassword!=editTextReEnterPassword) {
+        if (editTextReEnterPassword!!.text == null || editTextReEnterPassword!!.text!!.equals("") || editTextPassword!!.text.toString()!=editTextReEnterPassword!!.text.toString()) {
             editTextReEnterPassword!!.error = "Passwords didnt match"
             return
         }
@@ -74,18 +97,18 @@ class SignUp : Fragment(){
             editTextName!!.error = "Enter Name."
             return
         }
-        if (editTextphonenumber1!!.text == null || editTextphonenumber1!!.text!!.equals("") || editTextphonenumber1.length()!=10 ) {
-            editTextphonenumber1!!.error = "Enter phone Number."
+        if (editTextPhone!!.text == null || editTextPhone!!.text!!.equals("") || editTextPhone.length()!=10 ) {
+            editTextPhone!!.error = "Enter phone Number."
             return
         }
 
-        val phoneNumber =editTextphonenumber1!!.text!!.toString()
+        val phoneNumber =editTextPhone!!.text!!.toString()
         val email = editTextEmail!!.text!!.toString()
         val password = editTextPassword!!.text!!.toString()
         val name= editTextName!!.text!!.toString()
 
         val signUp = BodySignUp(name, email, phoneNumber,password)
-        profileViewModel!!.signUp((signUp))
+        profileViewModel.signUp(signUp)
 
         /*val nextFrag = CreateProfileFragment()
         requireActivity().supportFragmentManager.beginTransaction()
@@ -96,7 +119,8 @@ class SignUp : Fragment(){
 
     }
 
-
-
-
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean("Error", errorShown)
+        super.onSaveInstanceState(outState)
+    }
 }

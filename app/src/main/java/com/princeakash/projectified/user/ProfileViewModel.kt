@@ -1,8 +1,8 @@
 package com.princeakash.projectified.user
 
 import android.app.Application
-import android.widget.MultiAutoCompleteTextView
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.princeakash.projectified.MyApplication
@@ -11,9 +11,9 @@ import kotlinx.coroutines.launch
 class ProfileViewModel(app: Application): AndroidViewModel(app) {
 
     //ProfileRepository for all types of Profile-Related Operations
-    val profileRepository = (app as MyApplication).profileRepository
+    private val profileRepository = (app as MyApplication).profileRepository
 
-    //MutableLiveData for all exposable data
+    //MutableLiveData for all exposed data
     var errorString: MutableLiveData<String> = MutableLiveData()
     var responseSignUp: MutableLiveData<ResponseSignUp> = MutableLiveData()
     var responseLogin: MutableLiveData<ResponseLogin> = MutableLiveData()
@@ -29,8 +29,8 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
     fun setLocalProfile(bodyModel: ProfileModel) = profileRepository.setLocalProfile(bodyModel)
     fun getToken() = profileRepository.getToken()
     fun setToken(token: String) = profileRepository.setToken(token)
-    fun getUserId() = profileRepository.getUserId()
-    fun setUserId(id: String) = profileRepository.setUserId(id)
+    //fun getUserId() = profileRepository.getUserId()
+    private fun setUserId(id: String) = profileRepository.setUserId(id)
 
 
     //Functions based on
@@ -41,7 +41,7 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
                 responseSignUp.postValue(profileRepository.signUp(bodySignUp))
             } catch (e: Exception) {
                 e.printStackTrace()
-                errorString.postValue(e.localizedMessage)
+                errorString.value=(e.localizedMessage)
             }
         }
     }
@@ -64,7 +64,7 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
     fun createProfile(bodyCreateProfile: BodyCreateProfile) {
         viewModelScope.launch {
             try {
-                var token = profileRepository.getToken()
+                val token = profileRepository.getToken()
                 responseCreateProfile.postValue(profileRepository.createProfile(token, bodyCreateProfile))
                 setLocalProfile(ProfileModel(bodyCreateProfile))
             } catch (e: Exception) {
@@ -76,7 +76,7 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
     fun updateProfile(bodyUpdateProfile: BodyUpdateProfile){
             viewModelScope.launch {
                 try{
-                    var token = profileRepository.getToken()
+                    val token = profileRepository.getToken()
                     responseUpdateProfile.postValue(profileRepository.updateProfile(token,bodyUpdateProfile))
                     setLocalProfile(ProfileModel(bodyUpdateProfile))
                 } catch (e: Exception) {
@@ -86,4 +86,5 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
             }
     }
 
+    fun errorString():LiveData<String> = errorString
 }

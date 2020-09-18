@@ -27,9 +27,9 @@ class ProfileRepository(retrofit: Retrofit, app: MyApplication) {
 
     suspend fun createProfile(token: String,bodyCreateProfile: BodyCreateProfile)  = profileService.createProfile(token, bodyCreateProfile)
 
-    suspend fun updateProfile(token: String,bodyUpdateProfile: BodyUpdateProfile){
+    suspend fun updateProfile(token: String,bodyUpdateProfile: BodyUpdateProfile): ResponseUpdateProfile{
         val profileID = getUserId()
-        profileService.updateProfile(token,bodyUpdateProfile, profileID)
+        return profileService.updateProfile(token,bodyUpdateProfile, profileID)
     }
 
     fun getLoginStatus(): Boolean{

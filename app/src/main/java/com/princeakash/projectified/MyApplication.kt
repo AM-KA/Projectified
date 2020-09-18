@@ -36,7 +36,7 @@ class MyApplication: Application(){
 
     //Storing static values
     companion object{
-        val BASE_URL = "http://am-ka.com"
+        val BASE_URL = "http://192.168.43.139:3000/"
     }
 
     override fun onCreate() {
