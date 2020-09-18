@@ -14,5 +14,6 @@ data class BodyCreateProfile
         var interest2:String?,
         var interest3:String?,
         var description:String,
-        var hobbies: String
+        var hobbies: String,
+        var userID:String
 )

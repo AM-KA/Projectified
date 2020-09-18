@@ -34,7 +34,7 @@ interface CandidateService {
 
 
     // Get info about all offers through domain name
-    @GET("offer/byDomain/{domainName}")
+    @GET("offer/{domainName}")
     suspend  fun  getOffersByDomain(@Header("Authorization") token: String, @Path("domainName") domainName:String): ResponseGetOffersByDomain
 
 

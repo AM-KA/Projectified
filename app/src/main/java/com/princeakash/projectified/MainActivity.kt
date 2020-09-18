@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.kk)
+        //getSupportActionBar()!!.hide()
+        toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         drawerLayout = findViewById(R.id.drawerLayout)
         toolbar = findViewById(R.id.toolbar)

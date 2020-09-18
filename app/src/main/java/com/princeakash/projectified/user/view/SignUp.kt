@@ -65,17 +65,12 @@ class SignUp : Fragment(){
         super.onViewCreated(view, savedInstanceState)
         profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
         profileViewModel.responseSignUp.observe(viewLifecycleOwner, {
-            Toast.makeText(context, it.message, LENGTH_SHORT).show();
+            it?.getContentIfNotHandled()?.let { Toast.makeText(context, it.message, LENGTH_SHORT).show(); }
         })
         profileViewModel.errorString().observe(viewLifecycleOwner, {
-            //errorString = it
-            //if(!errorShown){
-            if(it!=null){
+            it?.getContentIfNotHandled()?.let {
                 Toast.makeText(context, it, LENGTH_SHORT).show()
-                profileViewModel.errorString.postValue(null)
             }
-            //errorShown = true;
-            //}
         })
     }
 
@@ -109,14 +104,6 @@ class SignUp : Fragment(){
 
         val signUp = BodySignUp(name, email, phoneNumber,password)
         profileViewModel.signUp(signUp)
-
-        /*val nextFrag = CreateProfileFragment()
-        requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_frame, nextFrag, "findThisFragment")
-                .addToBackStack(null)
-                .commit()*/
-
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

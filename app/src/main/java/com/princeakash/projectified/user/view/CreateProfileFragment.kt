@@ -12,6 +12,7 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.annotation.ColorRes
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.MainActivity
@@ -47,14 +48,14 @@ class CreateProfileFragment :Fragment()
     private var  num:IntArray = intArrayOf(0, 0, 0, 0, 0,0)
 
     //  View Models and fun Instances
-    var profileViewModel: ProfileViewModel?=null
+    lateinit var profileViewModel: ProfileViewModel
     var responseCreateProfile:ResponseCreateProfile?=null
 
-    private lateinit var userName:String
+    private var userName:String = ""
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        userName = requireArguments().getString(USER_NAME)!!
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
         profileViewModel!!.responseCreateProfile.observe(viewLifecycleOwner, {
             responseCreateProfile = it
             Toast.makeText(context, it.message, LENGTH_SHORT).show()
@@ -84,13 +85,14 @@ class CreateProfileFragment :Fragment()
         ButtonSave?.setOnClickListener {
             validateParameters();
         }
-        editTextName!!.setText(userName)
-        editTextName!!.isEnabled = false
-
         return v
     }
 
     private fun validateParameters() {
+        if (editTextName!!.text == null || editTextName!!.text!!.equals("")) {
+            editTextName!!.error = "Provide your college Name."
+            return
+        }
 
         if (editTextCollege!!.text == null || editTextCollege!!.text!!.equals("")) {
             editTextCollege!!.error = "Provide your college Name."
@@ -136,6 +138,7 @@ class CreateProfileFragment :Fragment()
             num.set(5, 1)
         }
 
+        userName = editTextName!!.text!!.toString()
         val college = editTextCollege!!.text!!.toString()
         val course = editTextCourse!!.text!!.toString()
         val semester= editTextSemester!!.text!!.toString()
@@ -145,7 +148,7 @@ class CreateProfileFragment :Fragment()
         val description = editTextDescription1!!.text!!.toString()
         val hobbies = editTextHobbies!!.text!!.toString()
 
-        val bodycreateProfile = BodyCreateProfile(userName, college,course,semester,num,interest1,interest2,interest3,description, hobbies)
+        val bodycreateProfile = BodyCreateProfile(userName, college,course,semester,num,interest1,interest2,interest3,description, hobbies, "0")
         profileViewModel!!.createProfile(bodycreateProfile)
     }
 }

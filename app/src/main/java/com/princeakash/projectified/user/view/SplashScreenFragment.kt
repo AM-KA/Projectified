@@ -63,5 +63,6 @@ class SplashScreenFragment : Fragment() {
 
     fun takeToHome(){
         startActivity(Intent(requireActivity(), MainActivity::class.java))
+        requireActivity().finish()
     }
 }

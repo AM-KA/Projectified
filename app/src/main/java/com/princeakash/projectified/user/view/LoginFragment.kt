@@ -34,15 +34,6 @@ class LoginFragment : Fragment() {
         private lateinit var profileViewModel: ProfileViewModel
         private lateinit var responseLogin: ResponseLogin
 
-        override fun onCreate(savedInstanceState: Bundle?){
-                super.onCreate(savedInstanceState)
-        }
-
-        override fun onAttach(context: Context) {
-                super.onAttach(context)
-
-        }
-
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
                 val v = inflater.inflate(R.layout.signin_user, container, false)
                 editTextEmail = v.editTextEmail
@@ -54,21 +45,10 @@ class LoginFragment : Fragment() {
                         displayHomeScreen()
                 }
                 SignUpButton?.setOnClickListener {
-
-
-
-                        /*val nextFrag = SignUp()
                         requireActivity().supportFragmentManager.beginTransaction()
-                                .replace(R.id.fragment_frame, nextFrag, "findThisFragment")
-                                .addToBackStack(null)
-                                .commit()*/
-
-
-                        parentFragmentManager.beginTransaction()
                                 .replace(R.id.fragment_initial, SignUp(), "LoginFragment")
                                 //.addToBackStack(null)
                                 .commit()
-
                 }
                 return v
         }
@@ -94,14 +74,15 @@ class LoginFragment : Fragment() {
                                         }
                                         val bundle = Bundle()
                                         bundle.putString(USER_NAME, responseLogin.userName)
-                                        parentFragmentManager.beginTransaction()
-                                                .add(R.id.fragment_initial, CreateProfileFragment::class.java, bundle, "LoginFragment")
+                                        requireActivity().supportFragmentManager.beginTransaction()
+                                                .replace(R.id.fragment_initial, CreateProfileFragment::class.java, bundle, "LoginFragment")
                                                 .addToBackStack(null)
                                                 .commit()
                                 }
                         }
                 })
         }
+
         fun displayHomeScreen() {
                 if (editTextEmail!!.text == null || editTextEmail!!.text!!.equals("")) {
                         editTextEmail!!.error = "Enter Phone Number."
@@ -120,6 +101,5 @@ class LoginFragment : Fragment() {
 
         companion object{
                 val USER_NAME = "UserName"
-
         }
 }

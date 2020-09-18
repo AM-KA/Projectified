@@ -1,10 +1,12 @@
 package com.princeakash.projectified.user
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.princeakash.projectified.Event
 import com.princeakash.projectified.MyApplication
 import kotlinx.coroutines.launch
 
@@ -14,8 +16,8 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
     private val profileRepository = (app as MyApplication).profileRepository
 
     //MutableLiveData for all exposed data
-    var errorString: MutableLiveData<String> = MutableLiveData()
-    var responseSignUp: MutableLiveData<ResponseSignUp> = MutableLiveData()
+    var errorString: MutableLiveData<Event<String>> = MutableLiveData()
+    var responseSignUp: MutableLiveData<Event<ResponseSignUp>> = MutableLiveData()
     var responseLogin: MutableLiveData<ResponseLogin> = MutableLiveData()
     var responseCreateProfile: MutableLiveData<ResponseCreateProfile> = MutableLiveData()
     var responseUpdateProfile: MutableLiveData<ResponseUpdateProfile> = MutableLiveData()
@@ -38,10 +40,14 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
     fun signUp(bodySignUp: BodySignUp) {
         viewModelScope.launch {
             try {
-                responseSignUp.postValue(profileRepository.signUp(bodySignUp))
+                val response = profileRepository.signUp(bodySignUp)
+                if(response.code == 200)
+                    responseSignUp.postValue(Event(response))
+                else
+                    errorString.postValue(Event(response.message))
             } catch (e: Exception) {
                 e.printStackTrace()
-                errorString.value=(e.localizedMessage)
+                errorString.postValue(Event(e.localizedMessage))
             }
         }
     }
@@ -53,6 +59,7 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
                 setLoginStatus(true)
                 setToken(response.token)
                 setUserId(response.userID)
+                Log.d(TAG, "logIn: "+response.token)
                 //TODO: Fetch Profile and save to SharedPreference using setLocalProfile()
                 responseLogin.postValue(response)
             } catch (e: Exception) {
@@ -65,11 +72,14 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
         viewModelScope.launch {
             try {
                 val token = profileRepository.getToken()
-                responseCreateProfile.postValue(profileRepository.createProfile(token, bodyCreateProfile))
+                val userID = profileRepository.getUserId()
+                bodyCreateProfile.userID = userID
+                Log.d(TAG, "createProfile: "+token)
+                responseCreateProfile.postValue(profileRepository.createProfile("Bearer "+token, bodyCreateProfile))
                 setLocalProfile(ProfileModel(bodyCreateProfile))
             } catch (e: Exception) {
                 e.printStackTrace()
-                errorString.postValue(e.localizedMessage)
+                errorString.postValue(Event(e.localizedMessage))
             }
         }
     }
@@ -77,14 +87,20 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
             viewModelScope.launch {
                 try{
                     val token = profileRepository.getToken()
+                    val userID = profileRepository.getUserId()
+                    bodyUpdateProfile.userID = userID
                     responseUpdateProfile.postValue(profileRepository.updateProfile(token,bodyUpdateProfile))
                     setLocalProfile(ProfileModel(bodyUpdateProfile))
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    errorString.postValue(e.localizedMessage)
+                    errorString.postValue(Event(e.localizedMessage))
                 }
             }
     }
 
-    fun errorString():LiveData<String> = errorString
+    fun errorString():LiveData<Event<String>> = errorString
+
+    companion object{
+        private const val TAG = "ProfileViewModel"
+    }
 }

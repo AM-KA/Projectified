@@ -184,7 +184,7 @@ class UpdateProfileFragment :Fragment() {
         val description = editTextDescription1!!.text!!.toString()
         val hobbies = editTextHobbies!!.text!!.toString()
 
-        val bodyUpdateProfile = BodyUpdateProfile(userName, college, course, semester, num, interest1, interest2, interest3, description, hobbies)
+        val bodyUpdateProfile = BodyUpdateProfile(userName, college, course, semester, num, interest1, interest2, interest3, description, hobbies, "0")
         profileViewModel!!.updateProfile(bodyUpdateProfile)
     }
 

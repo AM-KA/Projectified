@@ -41,10 +41,9 @@ class CandidateAddApplicationViewModel(val app: Application): AndroidViewModel(a
             }
             viewModelScope.launch {
                 try {
-
-                      responseGetOffersByDomain.postValue(candidateRepository.getOffersByDomain(token,domainName))
+                      responseGetOffersByDomain.postValue(candidateRepository.getOffersByDomain("Bearer " + token,domainName))
                 } catch(e: Exception){
-
+                    e.printStackTrace()
                     //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
                     errorString.postValue("Haha! You got an error!!" + e.localizedMessage)
 
@@ -67,7 +66,7 @@ class CandidateAddApplicationViewModel(val app: Application): AndroidViewModel(a
         viewModelScope.launch {
             try {
 
-               val   bodyAddApplication= BodyAddApplication(Date(),Resume,PreviousWork,applicantID ,offerId)
+               val bodyAddApplication= BodyAddApplication(Date(),Resume,PreviousWork,applicantID ,offerId)
                 responseAddApplication.postValue(candidateRepository.addApplication(token,bodyAddApplication))
             } catch(e: Exception){
 
@@ -87,8 +86,7 @@ class CandidateAddApplicationViewModel(val app: Application): AndroidViewModel(a
           }
           viewModelScope.launch {
               try {
-
-                 responseGetOfferById.postValue(candidateRepository.getOfferById(token,offerId))
+                 responseGetOfferById.postValue(candidateRepository.getOfferById("Bearer " + token,offerId))
               } catch(e: Exception){
 
                   //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity

@@ -1,6 +1,7 @@
 package com.princeakash.projectified.candidate.addApplication.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,15 +36,6 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
         }else{
             domainName = requireArguments().getString(DOMAIN_NAME)
         }
-        candidateAddApplicationViewModel = ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
-        candidateAddApplicationViewModel!!.responseGetOffersByDomain.observe(this, {
-            offerList = it?.offers as ArrayList<OfferCardModelCandidate>
-            recyclerViewOffers.adapter?.notifyDataSetChanged()
-        })
-        candidateAddApplicationViewModel!!.errorString.observe(this, {
-            errorString = it
-            Toast.makeText(this@GetOffersByDomainFragment.context, errorString, Toast.LENGTH_SHORT).show()
-        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -54,19 +46,26 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        view.recyclerViewOffers.apply {
+            layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+            setHasFixedSize(true)
+            adapter = GetOffersByDomainAdapter(offerList, this@GetOffersByDomainFragment)
+        }
+        candidateAddApplicationViewModel = ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
+        candidateAddApplicationViewModel!!.responseGetOffersByDomain.observe(viewLifecycleOwner, {
+            offerList = it.offers as ArrayList<OfferCardModelCandidate>
+            recyclerViewOffers.adapter!!.notifyDataSetChanged()
+        })
+        candidateAddApplicationViewModel!!.errorString.observe(this, {
+            errorString = it
+            Toast.makeText(this@GetOffersByDomainFragment.context, errorString, Toast.LENGTH_SHORT).show()
+        })
         //Start fetching offer list
         if(savedInstanceState == null || !listFetched!!) {
             candidateAddApplicationViewModel!!.getOffersByDomain(domainName!!)
             listFetched = true
         } else if (listFetched!!){
             offerList = savedInstanceState.getParcelableArrayList<OfferCardModelCandidate>(OFFERS_LIST) as ArrayList<OfferCardModelCandidate>
-        }
-
-        view.recyclerViewOffers.apply {
-            layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-            setHasFixedSize(true)
-            adapter = GetOffersByDomainAdapter(offerList, this@GetOffersByDomainFragment)
         }
     }
 
@@ -81,6 +80,7 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
         //Populate new fragment with details of offer.
         val bundle = Bundle()
         bundle.putString(GetOfferDetailsCandidateFragment.OFFER_IDC, offerList.get(itemPosition).offer_id)
+        Log.d(TAG, "onViewDetailsClick: " + offerList.get(itemPosition).offer_id)
         parentFragmentManager.beginTransaction()
                 .add(R.id.fragment_offers, GetOfferDetailsCandidateFragment::class.java, bundle, "GetOfferDetailsCandidateFragment")
                 .addToBackStack(null)
@@ -91,5 +91,6 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
         val OFFERS_LIST = "OffersList"
         val LIST_FETCHED = "ListFetched"
         val DOMAIN_NAME = "DomainName"
+        private const val TAG = "GetOffersByDomainFragme"
     }
 }
