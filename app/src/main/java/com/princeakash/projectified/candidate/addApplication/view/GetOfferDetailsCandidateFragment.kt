@@ -50,10 +50,10 @@ class GetOfferDetailsCandidateFragment : Fragment(){
         })
 
 
-          candidateAddApplicationsViewModel!!.errorString.observe(viewLifecycleOwner, {
-              error = it
-              Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-          })
+        candidateAddApplicationsViewModel!!.errorString.observe(viewLifecycleOwner, {
+            error = it
+            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+        })
       }
 
 
