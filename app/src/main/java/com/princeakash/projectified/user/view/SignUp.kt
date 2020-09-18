@@ -12,12 +12,16 @@ import com.princeakash.projectified.user.BodySignUp
 import com.princeakash.projectified.user.ProfileViewModel
 import com.princeakash.projectified.user.ResponseSignUp
 import kotlinx.android.synthetic.main.frag_myapplicationdetail.view.*
+import kotlinx.android.synthetic.main.sign_up_user.*
+import kotlinx.android.synthetic.main.sign_up_user.view.*
 import kotlinx.android.synthetic.main.signin_user.view.*
+import kotlinx.android.synthetic.main.signin_user.view.SignUpButton
 
 
 class SignUp : Fragment(){
 
     private var editTextName: EditText? = null
+    private var editTextPhone:EditText?=null
     private var editTextEmail: EditText? = null
     private var editTextPassword:EditText?=null
     private  var editTextReEnterPassword:EditText?=null
@@ -37,9 +41,11 @@ class SignUp : Fragment(){
             val v = inflater.inflate(R.layout.sign_up_user, container, false)
 
 
-        editTextEmail = v.editTextEmail
-        editTextName = v.editTextName
-        editTextPassword=v.editTextPassword
+        editTextEmail = v.editTextEmail1
+        editTextName = v.editTextFullName1
+        editTextPhone=v.editTextphonenumber1
+        editTextPassword=v.editTextPassword1
+        editTextReEnterPassword=v.editTextReEnterPassword1
         SignUpButton = v.SignUpButton
 
        SignUpButton?.setOnClickListener {
@@ -68,11 +74,17 @@ class SignUp : Fragment(){
             editTextName!!.error = "Enter Name."
             return
         }
+        if (editTextphonenumber1!!.text == null || editTextphonenumber1!!.text!!.equals("") || editTextphonenumber1.length()!=10 ) {
+            editTextphonenumber1!!.error = "Enter phone Number."
+            return
+        }
+
+        val phoneNumber =editTextphonenumber1!!.text!!.toString()
         val email = editTextEmail!!.text!!.toString()
         val password = editTextPassword!!.text!!.toString()
         val name= editTextName!!.text!!.toString()
 
-        val signUp = BodySignUp(name, email, password)
+        val signUp = BodySignUp(name, email, phoneNumber,password)
         profileViewModel!!.signUp((signUp))
 
         /*val nextFrag = CreateProfileFragment()
