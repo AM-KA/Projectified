@@ -5,98 +5,87 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.addApplication.model.ResponseGetOfferById
 import com.princeakash.projectified.candidate.addApplication.viewModel.CandidateAddApplicationViewModel
 import kotlinx.android.synthetic.main.frag_apply_opportunity_view.view.*
-import kotlinx.android.synthetic.main.frag_my_offer_details.view.editTextExpectation
-import kotlinx.android.synthetic.main.frag_my_offer_details.view.editTextRequirement
-import kotlinx.android.synthetic.main.frag_my_offer_details.view.editTextSkills
-import kotlinx.android.synthetic.main.frag_myapplicationdetail.view.*
 
 class GetOfferDetailsCandidateFragment : Fragment(){
 
-    private var editTextRequirements: TextInputEditText? = null
-    private var editTextSkills: TextInputEditText? = null
-    private var editTextExpectations: TextInputEditText? = null
-    private var editTextName: TextInputEditText? =null
-    private var editTextCollege: TextInputEditText?=null
-    private var editTextSemester: TextInputEditText?=null
-    private var editTextCourse: TextInputEditText?=null
-    private var buttonApplyOpportunity: Button?=null
-    private var buttonCancelOpportunity:Button?=null
+    private lateinit var textViewRequirements: TextView
+    private lateinit var textViewSkills: TextView
+    private lateinit var textViewExpectations: TextView
+    private lateinit var textViewName: TextView
+    private lateinit var textViewCollege: TextView
+    private lateinit var textViewSemester: TextView
+    private lateinit var textViewCourse: TextView
+    private lateinit var buttonApplyOpportunity: Button
+    private lateinit var buttonCancelOpportunity:Button
 
     //View Models and Observable Objects
-    private var candidateAddApplicationsViewModel: CandidateAddApplicationViewModel? = null
-    private var  responseGetOfferById : ResponseGetOfferById?=null
+    private lateinit var candidateAddApplicationsViewModel: CandidateAddApplicationViewModel
+    private lateinit var  responseGetOfferById : ResponseGetOfferById
 
     private var error:String? = null
 
     private var offerId:String ?=null
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        val v = inflater.inflate(R.layout.frag_apply_opportunity_view, container, false)
 
         candidateAddApplicationsViewModel= ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
 
-        candidateAddApplicationsViewModel!!.responseGetOfferById.observe(viewLifecycleOwner, {
+        candidateAddApplicationsViewModel.responseGetOfferById.observe(viewLifecycleOwner, {
             responseGetOfferById = it
             populateViews()
         })
 
 
-        candidateAddApplicationsViewModel!!.errorString.observe(viewLifecycleOwner, {
+        candidateAddApplicationsViewModel.errorString.observe(viewLifecycleOwner, {
             error = it
             Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
         })
-      }
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-        val v = inflater.inflate(R.layout.frag_apply_opportunity_view, container, false)
-
-        editTextExpectations = v.editTextExpectation
-        editTextSkills = v.editTextSkills
-        editTextRequirements = v.editTextRequirement
-        editTextName=v.editTextName
-        editTextCollege=v.editTextCollege
-        editTextSemester=v.editTextSemester
-        editTextCourse=v.editTextCourse
+        textViewExpectations = v.textViewExpectationData
+        textViewSkills = v.textViewSkillsData
+        textViewRequirements = v.textViewRequirementData
+        textViewName=v.textViewNameData
+        textViewCollege=v.textViewCollegeData
+        textViewSemester=v.textViewSemesterData
+        textViewCourse=v.textViewCourseData
         buttonApplyOpportunity=v.buttonApply
 
         if(savedInstanceState==null) {
-            offerId=requireArguments().getString(offerId)
+            offerId=requireArguments().getString(OFFER_IDC)
             fetchOfferDetails()
         }
         else{
             offerId = savedInstanceState.getString(OFFER_IDC)
-            responseGetOfferById?.let{
-                populateViews()
-            }
+            populateViews()
         }
 
-        buttonApplyOpportunity?.setOnClickListener()
+        buttonApplyOpportunity.setOnClickListener()
         {
 
             val bundle = Bundle()
             bundle.putString(OFFER_IDC, offerId)
 
             parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_offers, ApplyOpportunityFragment::class.java, bundle, "ApplyOpportunityFragment")
+                        .replace(R.id.fragment_apply, ApplyOpportunityFragment::class.java, bundle, "ApplyOpportunityFragment")
                         .addToBackStack(null)
                         .commit()
             }
-        buttonCancelOpportunity?.setOnClickListener()
+        buttonCancelOpportunity.setOnClickListener()
         {
 
             parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_offers, HomeFragment::class.java, null, "Home Fragment")
+                    .replace(R.id.fragment_apply, HomeFragment::class.java, null, "Home Fragment")
                     .addToBackStack(null)
                     .commit()
 
@@ -106,27 +95,29 @@ class GetOfferDetailsCandidateFragment : Fragment(){
         return v
     }
 
+
+
     private fun fetchOfferDetails() {
         //TODO:Start ProgressBar
-        offerId?.let { candidateAddApplicationsViewModel!!.getoffersById(it) }
+        candidateAddApplicationsViewModel.getoffersById(offerId!!)
     }
 
-    fun populateViews() {
-        editTextExpectations?.setText(responseGetOfferById?.offer?.expectation)
-        editTextSkills?.setText(responseGetOfferById?.offer?.skills)
-        editTextRequirements?.setText(responseGetOfferById?.offer?.requirements)
-        editTextName?.setText(responseGetOfferById?.offer?.recruiter_name)
-        editTextCollege?.setText(responseGetOfferById?.offer?.recruiter_collegeName)
-        editTextSemester?.setText(responseGetOfferById?.offer?.recruiter_semester)
-        editTextCourse?.setText(responseGetOfferById?.offer?.recruiter_course)
+    private fun populateViews() {
+        textViewExpectations.setText(responseGetOfferById.offer.expectation)
+        textViewSkills.setText(responseGetOfferById.offer.skills)
+        textViewRequirements.setText(responseGetOfferById.offer.requirements)
+        textViewName.setText(responseGetOfferById.offer.recruiter_name)
+        textViewCollege.setText(responseGetOfferById.offer.recruiter_collegeName)
+        textViewSemester.setText(responseGetOfferById.offer.recruiter_semester)
+        textViewCourse.setText(responseGetOfferById.offer.recruiter_course)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(GetOfferDetailsCandidateFragment.OFFER_IDC, offerId)
+        outState.putString(OFFER_IDC, offerId)
     }
 
     companion object{
-        val OFFER_IDC ="offerId"
+        const val OFFER_IDC ="offerId"
     }
 }

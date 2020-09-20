@@ -19,7 +19,7 @@ import java.util.*
 
 class CandidateAddApplicationViewModel(val app: Application): AndroidViewModel(app) {
 
-        //RecruiterRepository instance, guaranteed to be singular because of being
+        //CandidateRepository instance, guaranteed to be singular because of being
         //picked up from instance of MyApplication.
         val candidateRepository: CandidateRepository = (app as MyApplication).candidateRepository
         val profileRepository: ProfileRepository = (app as MyApplication).profileRepository
@@ -41,7 +41,7 @@ class CandidateAddApplicationViewModel(val app: Application): AndroidViewModel(a
             }
             viewModelScope.launch {
                 try {
-                      responseGetOffersByDomain.postValue(candidateRepository.getOffersByDomain("Bearer " + token,domainName))
+                      responseGetOffersByDomain.postValue(candidateRepository.getOffersByDomain("Bearer $token",domainName))
                 } catch(e: Exception){
                     e.printStackTrace()
                     //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
@@ -67,9 +67,10 @@ class CandidateAddApplicationViewModel(val app: Application): AndroidViewModel(a
             try {
 
                val bodyAddApplication= BodyAddApplication(Date(),Resume,PreviousWork,applicantID ,offerId)
-                responseAddApplication.postValue(candidateRepository.addApplication(token,bodyAddApplication))
+                responseAddApplication.postValue(candidateRepository.addApplication("Bearer $token",bodyAddApplication))
             } catch(e: Exception){
 
+                e.printStackTrace()
                 //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
                 errorString.postValue("Haha! You got an error!!" + e.localizedMessage)
 
@@ -97,4 +98,6 @@ class CandidateAddApplicationViewModel(val app: Application): AndroidViewModel(a
               }
           }
       }
-    }
+
+    fun getLocalProfile() = profileRepository.getLocalProfile()
+}

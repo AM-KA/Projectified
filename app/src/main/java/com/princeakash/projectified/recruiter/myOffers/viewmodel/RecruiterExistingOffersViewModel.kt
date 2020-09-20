@@ -87,6 +87,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
                 responseGetOfferApplicants.postValue(recruiterRepository.getOfferApplicants("Bearer "+token, offerID))
             } catch(e: Exception){
 
+                e.printStackTrace()
                 //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
                 errorString.postValue("Haha! You got an error!!" + e.localizedMessage)
 
@@ -166,6 +167,8 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
             try {
                 responseGetApplicationById.postValue(recruiterRepository.getApplicationById("Bearer "+token, applicationID))
             } catch(e: Exception){
+
+                e.printStackTrace()
 
                 //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
                 errorString.postValue("Haha! You got an error!!" + e.localizedMessage)

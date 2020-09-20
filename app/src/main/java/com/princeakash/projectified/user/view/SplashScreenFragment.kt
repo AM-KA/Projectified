@@ -38,7 +38,7 @@ class SplashScreenFragment : Fragment() {
                     }else{
                         val token = profileViewModel.getToken()
                         val jwt = JWT(token)
-                        if(jwt.isExpired((10*60).toLong())){
+                        if(jwt.isExpired((10).toLong())){
                             takeToLogin()
                         }else{
                             takeToHome()

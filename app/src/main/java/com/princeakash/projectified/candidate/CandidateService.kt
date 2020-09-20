@@ -39,7 +39,7 @@ interface CandidateService {
 
 
     // Get Info about specific offer through offerID
-    @GET("offer/{offerID}")
+    @GET("offer/{offerID}/candidate")
     suspend  fun getOfferById(@Header("Authorization") token: String, @Path("offerID") offerID:String): ResponseGetOfferById1
 
 

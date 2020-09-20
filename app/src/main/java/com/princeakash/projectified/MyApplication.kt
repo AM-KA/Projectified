@@ -8,15 +8,20 @@ import com.princeakash.projectified.candidate.CandidateRepository
 import com.princeakash.projectified.recruiter.RecruiterRepository
 import com.princeakash.projectified.user.ProfileRepository
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.*
+
 
 class MyApplication: Application(){
 
     //Moshi: GSON of Kotlin
     var moshi = Moshi.Builder()
-                .add(KotlinJsonAdapterFactory())
+                //.add(Date::class.java, Rfc3339DateJsonAdapter())
+                //.add(CustomDateAdapter())
+                //.add(KotlinJsonAdapterFactory())
                 .build()
 
     var retrofit = Retrofit.Builder()
@@ -42,6 +47,7 @@ class MyApplication: Application(){
     override fun onCreate() {
         super.onCreate()
         moshi = Moshi.Builder()
+                .add(CustomDateAdapter())
                 .add(KotlinJsonAdapterFactory())
                 .build()
         retrofit = Retrofit.Builder()
@@ -53,5 +59,6 @@ class MyApplication: Application(){
         profileRepository = ProfileRepository(retrofit, this)
         candidateRepository = CandidateRepository(retrofit)
         faqRepository = FaqRepository(retrofit)
+
     }
 }

@@ -163,7 +163,7 @@ class MyOfferDetailsFragment() : Fragment() {
         val offerName = editTextOfferName!!.text!!.toString()
         val requirement = editTextRequirements!!.text!!.toString()
         val skills = editTextSkills!!.text!!.toString()
-        val expectation = editTextSkills!!.text!!.toString()
+        val expectation = editTextExpectations!!.text!!.toString()
 
     val bodyUpdateOffer = BodyUpdateOffer(offerName, requirement, skills, expectation)
     recruiterExistingOffersViewModel!!.updateOffer(offerId!!, bodyUpdateOffer)

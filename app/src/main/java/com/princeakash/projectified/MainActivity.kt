@@ -8,33 +8,41 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import com.princeakash.projectified.Faq.FaqActivity
+import com.princeakash.projectified.user.ProfileViewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var profileViewModel:ProfileViewModel
+    private lateinit var navigationView: NavigationView
+
     var toolbar: Toolbar? = null
     var drawerLayout: DrawerLayout? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.kk)
-        //getSupportActionBar()!!.hide()
+
+        profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
+
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+
         drawerLayout = findViewById(R.id.drawerLayout)
-        toolbar = findViewById(R.id.toolbar)
+        navigationView = findViewById(R.id.navigation_view)
+        navigationView.setNavigationItemSelectedListener { onNavigationItemSelected(it) }
+
         bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigation)
         navController = findNavController(R.id.fragment)
         bottomNavigationView.setupWithNavController(navController)
-        //Setting the navigation controller to Bottom Nav
-        //Setting up the action bar
-        //NavigationUI.setupActionBarWithNavController(this, navController)
 
         val drawerToggle: ActionBarDrawerToggle = object : ActionBarDrawerToggle(
                 this,
@@ -61,8 +69,10 @@ class MainActivity : AppCompatActivity() {
 
             }
             R.id.LogOut -> {
-
-
+                profileViewModel.setLoginStatus(false)
+                val intent = Intent(this, InitialActivity::class.java)
+                startActivity(intent)
+                finish()
             }
             R.id.Share -> {
                 TODO("Sharing Link")
@@ -75,7 +85,7 @@ class MainActivity : AppCompatActivity() {
 
                 val address = "amkafoundation@gmail.com"
                 //TODO("Gmail of amka Foundation ")
-                val subject: String = "Give Review For our app"
+                val subject: String = "App Review: Projectified"
                 val intent = Intent(Intent.ACTION_SENDTO).apply {
                     data = Uri.parse("mailto:")
                     putExtra(Intent.EXTRA_EMAIL, address)

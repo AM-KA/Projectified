@@ -114,6 +114,7 @@
                 app:layout_constraintTop_toBottomOf="@id/editTextLayoutCollege">
                 <AutoCompleteTextView
                     android:id="@+id/editTextCourse"
+                    android:completionThreshold="2"
                     android:hint="Course"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>

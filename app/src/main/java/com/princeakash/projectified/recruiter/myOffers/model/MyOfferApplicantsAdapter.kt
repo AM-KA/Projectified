@@ -16,8 +16,8 @@ class MyOfferApplicantsAdapter(var applicantList: List<ApplicantCardModel>?, val
     }
 
     override fun onBindViewHolder(holder: MyOfferApplicantViewHolder, position: Int) {
-        holder.textViewCollege.text = applicantList!!.get(position).college_name
-        holder.textViewDate.text = applicantList!!.get(position).date
+        holder.textViewCollege.text = applicantList!!.get(position).collegeName
+        holder.textViewDate.text = applicantList!!.get(position).date.toString()
         if(applicantList!!.get(position).is_Seen)
             holder.imageViewSeen.setImageResource(R.drawable.ic_baseline_favorite_24)
         if(applicantList!!.get(position).is_Selected)

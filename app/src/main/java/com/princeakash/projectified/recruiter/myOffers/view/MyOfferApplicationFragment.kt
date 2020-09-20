@@ -17,14 +17,14 @@ import kotlinx.android.synthetic.main.frag_candidate_details_recruiter.view.*
 class MyOfferApplicationFragment : Fragment() {
 
     //ViewModel and Necessary LiveData Observer objects
-    private var recruiterExistingOffersViewModel: RecruiterExistingOffersViewModel? = null
+    private lateinit var recruiterExistingOffersViewModel: RecruiterExistingOffersViewModel
     private var responseGetApplicationByIdRecruiter: ResponseGetApplicationByIdRecruiter? = null
     private var error: String? = null
     private var responseMarkAsSeen: ResponseMarkAsSeen? = null
     private var responseMarkAsSelected: ResponseMarkAsSelected? = null
 
     //Application related data
-    private var applicationID: String? = null
+    private lateinit var applicationID: String
 
     //Views
     private var textViewName: TextView? = null
@@ -40,48 +40,54 @@ class MyOfferApplicationFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
-
-        recruiterExistingOffersViewModel!!.responseGetApplicationById.observe(viewLifecycleOwner, {
-            responseGetApplicationByIdRecruiter = it
-            populateViews()
-        })
-
-        recruiterExistingOffersViewModel!!.errorString.observe(viewLifecycleOwner, {
-            error = it
-            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-        })
-
-        recruiterExistingOffersViewModel!!.responseMarkAsSeen.observe(viewLifecycleOwner, {
-            responseMarkAsSeen = it
-
-            //Take action as per response
-        })
-
-        recruiterExistingOffersViewModel!!.responseMarkAsSelected.observe(viewLifecycleOwner, {
-            responseMarkAsSelected = it
-
-            //Take action as per response
-        })
-
-        if (savedInstanceState == null)
-            applicationID = arguments?.getString(APPLICATION_ID)
-        else
-            applicationID = savedInstanceState.getString(APPLICATION_ID)
+        applicationID = if (savedInstanceState == null) {
+            requireArguments().getString(APPLICATION_ID)!!
+        } else
+            savedInstanceState.getString(APPLICATION_ID)!!
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.frag_candidate_details_recruiter, container, false)
-        textViewName = v.textViewCollege
+        textViewName = v.textViewName
         textViewCollege = v.textViewCollege
         textViewCourse = v.textViewCourse
         textViewSemester = v.textViewSemester
         textViewPhone = v.textViewPhone
-        textViewPreviousWork = v.textViewPreviousWork
-        textViewResume = v.textViewResume
+        textViewPreviousWork = v.textViewWorkDescription
+        textViewResume = v.textViewResumeDescription
         imageViewSeen = v.imageViewSeen
         imageViewSelected = v.imageViewSelected
+
+        return v
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
+
+        recruiterExistingOffersViewModel.responseGetApplicationById.observe(viewLifecycleOwner, {
+            responseGetApplicationByIdRecruiter = it
+            populateViews()
+        })
+
+        recruiterExistingOffersViewModel.errorString.observe(viewLifecycleOwner, {
+            error = it
+            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+        })
+
+        recruiterExistingOffersViewModel.responseMarkAsSeen.observe(viewLifecycleOwner, {
+            responseMarkAsSeen = it
+
+            //Take action as per response
+        })
+
+        recruiterExistingOffersViewModel.responseMarkAsSelected.observe(viewLifecycleOwner, {
+            responseMarkAsSelected = it
+
+            //Take action as per response
+        })
+
 
         imageViewSeen?.setOnClickListener {
             markSeen()
@@ -91,7 +97,7 @@ class MyOfferApplicationFragment : Fragment() {
             markSelected()
         }
 
-        return v
+        recruiterExistingOffersViewModel.getApplicationById(applicationID)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -101,32 +107,32 @@ class MyOfferApplicationFragment : Fragment() {
 
     private fun populateViews() {
         responseGetApplicationByIdRecruiter?.let {
-            textViewName?.text = it.applicant_name
-            textViewCollege?.text = it.applicant_collegeName
-            textViewCourse?.text = it.applicant_course
-            textViewSemester?.text = it.applicant_semester
-            textViewPhone?.text = it.applicant_phone
-            textViewPreviousWork?.text = it.previousWork
-            textViewResume?.text = it.resume
+            textViewName?.text = it.application.applicant_name
+            textViewCollege?.text = it.application.applicant_collegeName
+            textViewCourse?.text = it.application.applicant_course
+            textViewSemester?.text = it.application.applicant_semester
+            textViewPhone?.text = it.application.applicant_phone
+            textViewPreviousWork?.text = it.application.previousWork
+            textViewResume?.text = it.application.resume
         }
     }
 
     private fun markSeen() {
         responseGetApplicationByIdRecruiter?.let {
-            val status = it.markAsSeen
-            recruiterExistingOffersViewModel?.markSeen(applicationID!!, BodyMarkAsSeen(!status))
+            val status = it.application.is_Seen
+            recruiterExistingOffersViewModel.markSeen(applicationID, BodyMarkAsSeen(!status))
         }
     }
 
     private fun markSelected() {
         responseGetApplicationByIdRecruiter?.let {
-            val status = it.markAsSelected
-            recruiterExistingOffersViewModel?.markSelected(applicationID!!, BodyMarkAsSelected(!status))
+            val status = it.application.is_Selected
+            recruiterExistingOffersViewModel.markSelected(applicationID, BodyMarkAsSelected(!status))
         }
     }
 
     companion object {
-        val APPLICATION_ID = "ApplicationId"
+        const val APPLICATION_ID = "ApplicationId"
     }
 }
 

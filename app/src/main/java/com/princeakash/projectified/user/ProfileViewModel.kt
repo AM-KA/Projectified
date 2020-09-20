@@ -18,7 +18,7 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
     //MutableLiveData for all exposed data
     var errorString: MutableLiveData<Event<String>> = MutableLiveData()
     var responseSignUp: MutableLiveData<Event<ResponseSignUp>> = MutableLiveData()
-    var responseLogin: MutableLiveData<ResponseLogin> = MutableLiveData()
+    var responseLogin: MutableLiveData<Event<ResponseLogin>> = MutableLiveData()
     var responseCreateProfile: MutableLiveData<Event<ResponseCreateProfile>> = MutableLiveData()
     var responseUpdateProfile: MutableLiveData<Event<ResponseUpdateProfile>> = MutableLiveData()
 
@@ -65,7 +65,7 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
                     val bodyProfile = response.profile
                     setLocalProfile(bodyProfile!!)
                 }
-                responseLogin.postValue(response)
+                responseLogin.postValue(Event(response))
             } catch (e: Exception) {
 
             }

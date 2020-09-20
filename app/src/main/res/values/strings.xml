@@ -4,4 +4,33 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string-array name="courses">
+        <item>Bachelor of Technology</item>
+        <item>Integrated Master of Technology</item>
+    </string-array>
+
+    <string-array name="semesters">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+
+    <string-array name="interests">
+        <item>Web Development</item>
+        <item>App Development</item>
+        <item>Data Science</item>
+        <item>None</item>
+    </string-array>
+
+    <string-array name="colleges">
+        <item>Indian Institute of Technology (ISM) Dhanbad</item>
+    </string-array>
 </resources>

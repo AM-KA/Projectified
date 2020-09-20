@@ -1,9 +1,11 @@
 package com.princeakash.projectified.user.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.Toast
@@ -65,6 +67,20 @@ class UpdateProfileFragment :Fragment() {
         editChipPython = v.chipPython2
         editChipJavaScript = v.chipJavaScript2
 
+        val adapterCourse = ArrayAdapter.createFromResource(requireContext(), R.array.courses, android.R.layout.simple_spinner_dropdown_item)
+        adapterCourse.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        editTextCourse!!.setAdapter(adapterCourse)
+
+        val adapterSemester = ArrayAdapter.createFromResource(requireContext(), R.array.semesters, android.R.layout.simple_spinner_dropdown_item)
+        adapterSemester.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        editTextSemester!!.setAdapter(adapterSemester)
+
+        val adapterInterest = ArrayAdapter.createFromResource(requireContext(), R.array.interests, android.R.layout.simple_spinner_dropdown_item)
+        adapterInterest.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        editTextInterest1!!.setAdapter(adapterInterest)
+        editTextInterest2!!.setAdapter(adapterInterest)
+        editTextInterest3!!.setAdapter(adapterInterest)
+
         ButtonSave = v.Save
         ButtonSave?.setOnClickListener {
             if(enabled)
@@ -80,7 +96,7 @@ class UpdateProfileFragment :Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
-        profileViewModel!!.responseUpdateProfile.observe(viewLifecycleOwner, {
+        profileViewModel.responseUpdateProfile.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 responseUpdateProfile = it
                 Toast.makeText(context, it.message, LENGTH_SHORT).show()
@@ -97,7 +113,7 @@ class UpdateProfileFragment :Fragment() {
     }
 
     private fun loadLocalProfile() {
-        val profileModel = profileViewModel!!.getLocalProfile()!!
+        val profileModel = profileViewModel.getLocalProfile()!!
         editTextName!!.setText(profileModel.name)
         editTextCollege!!.setText(profileModel.collegeName)
         editTextCourse!!.setText(profileModel.course)
@@ -108,25 +124,13 @@ class UpdateProfileFragment :Fragment() {
         editTextDescription1!!.setText(profileModel.description)
         editTextHobbies!!.setText(profileModel.hobbies)
         val num = profileModel.languages
-
-        if(num.get(0)==1){
-            editChipC!!.isChecked = true
-        }
-        if(num.get(1)==1){
-            editChipCpp!!.isChecked = true
-        }
-        if (num.get(2)==1){
-            editChipJava!!.isChecked = true
-        }
-        if (num.get(3)==1){
-            editChipKotlin!!.isChecked = true
-        }
-        if (num.get(4)==1){
-            editChipPython!!.isChecked = true
-        }
-        if (num.get(5)==1){
-            editChipJavaScript!!.isChecked = true
-        }
+        Log.d(TAG, "loadLocalProfile: "+num[4])
+        editChipC!!.isChecked = num.get(0)==1
+        editChipCpp!!.isChecked = num.get(1)==1
+        editChipJava!!.isChecked = num.get(2)==1
+        editChipKotlin!!.isChecked = num.get(3)==1
+        editChipPython!!.isChecked = num.get(4)==1
+        editChipJavaScript!!.isChecked = num.get(5)==1
     }
 
     private fun validateParameters() {
@@ -186,7 +190,7 @@ class UpdateProfileFragment :Fragment() {
         val hobbies = editTextHobbies!!.text!!.toString()
 
         val bodyUpdateProfile = BodyUpdateProfile(userName, college, course, semester, num, interest1, interest2, interest3, description, hobbies, "0")
-        profileViewModel!!.updateProfile(bodyUpdateProfile)
+        profileViewModel.updateProfile(bodyUpdateProfile)
     }
 
     fun setEditable(){
@@ -197,7 +201,12 @@ class UpdateProfileFragment :Fragment() {
         editTextInterest1!!.isEnabled = enabled
         editTextInterest2!!.isEnabled = enabled
         editTextInterest3!!.isEnabled = enabled
-        chipGroupLanguages!!.isEnabled = enabled
+        editChipC!!.isClickable = enabled
+        editChipCpp!!.isClickable = enabled
+        editChipJava!!.isClickable = enabled
+        editChipJavaScript!!.isClickable = enabled
+        editChipKotlin!!.isClickable = enabled
+        editChipPython!!.isClickable = enabled
         editTextHobbies!!.isEnabled = enabled
         editTextDescription1!!.isEnabled = enabled
         if(enabled)
@@ -213,5 +222,6 @@ class UpdateProfileFragment :Fragment() {
 
     companion object{
         val ENABLED_STATUS = "EnabledStatus"
+        private const val TAG = "UpdateProfileFragment"
     }
 }

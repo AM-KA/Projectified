@@ -20,9 +20,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Faq.FaqActivity" />
+        <activity
+            android:name=".Faq.FaqActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".AboutUsActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

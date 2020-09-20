@@ -57,27 +57,29 @@ class LoginFragment : Fragment() {
                 super.onViewCreated(view, savedInstanceState)
                 profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
                 profileViewModel.responseLogin.observe(viewLifecycleOwner, {
-                        responseLogin = it
-                        if(responseLogin.code!=200){
-                                Toast.makeText(context, responseLogin.message, LENGTH_SHORT).show()
-                        }else{
-                                profileViewModel.setToken(responseLogin.token)
-                                profileViewModel.setLoginStatus(true)
-                                if(responseLogin.profileCompleted){
-                                        //Navigate to main activity
-                                        val intent = Intent(activity, MainActivity::class.java)
-                                        startActivity(intent)
+                        it?.getContentIfNotHandled()?.let {
+                                responseLogin = it
+                                if(responseLogin.code!=200){
+                                        Toast.makeText(context, responseLogin.message, LENGTH_SHORT).show()
                                 }else{
-                                        //Navigate to CreateProfileFragment
-                                        responseLogin.profile?.let {
-                                                profileViewModel.setLocalProfile(it)
+                                        profileViewModel.setToken(responseLogin.token)
+                                        profileViewModel.setLoginStatus(true)
+                                        if(responseLogin.profileCompleted){
+                                                //Navigate to main activity
+                                                val intent = Intent(activity, MainActivity::class.java)
+                                                startActivity(intent)
+                                        }else{
+                                                //Navigate to CreateProfileFragment
+                                                responseLogin.profile?.let {
+                                                        profileViewModel.setLocalProfile(it)
+                                                }
+                                                val bundle = Bundle()
+                                                bundle.putString(USER_NAME, responseLogin.userName)
+                                                requireActivity().supportFragmentManager.beginTransaction()
+                                                        .replace(R.id.fragment_initial, CreateProfileFragment::class.java, bundle, "LoginFragment")
+                                                        .addToBackStack(null)
+                                                        .commit()
                                         }
-                                        val bundle = Bundle()
-                                        bundle.putString(USER_NAME, responseLogin.userName)
-                                        requireActivity().supportFragmentManager.beginTransaction()
-                                                .replace(R.id.fragment_initial, CreateProfileFragment::class.java, bundle, "LoginFragment")
-                                                .addToBackStack(null)
-                                                .commit()
                                 }
                         }
                 })
@@ -96,7 +98,7 @@ class LoginFragment : Fragment() {
                 val password = editTextPassword!!.text!!.toString()
 
                 val logIn = LoginBody(email, password)
-                profileViewModel!!.logIn(logIn)
+                profileViewModel.logIn(logIn)
         }
 
         companion object{

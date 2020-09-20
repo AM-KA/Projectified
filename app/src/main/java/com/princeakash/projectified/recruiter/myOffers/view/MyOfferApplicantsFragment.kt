@@ -28,14 +28,13 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
 
     private var offerId: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
 
         recruiterExistingOffersViewModel!!.responseGetOfferApplicants.observe(viewLifecycleOwner, {
             applicantList = it.applicants as ArrayList<ApplicantCardModel>
-            recyclerViewApplicants.adapter?.notifyDataSetChanged()
+            recyclerViewApplicants.adapter = MyOfferApplicantsAdapter(applicantList, this)
         })
 
         recruiterExistingOffersViewModel!!.errorString.observe(viewLifecycleOwner, {
@@ -54,10 +53,6 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
 
             //Take action as per response
         })
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
         if(savedInstanceState == null){
             offerId = arguments?.getString(OFFER_ID)
             offerId?.let{
@@ -88,7 +83,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
         val bundle = Bundle()
         bundle.putString(APPLICATION_ID, applicationID)
         parentFragmentManager.beginTransaction()
-                .add(R.id.fragment_offers, MyOfferApplicationFragment::class.java, bundle, "MyOfferApplicationFragment")
+                .replace(R.id.fragment_offers, MyOfferApplicationFragment::class.java, bundle, "MyOfferApplicationFragment")
                 .commit()
     }
 
