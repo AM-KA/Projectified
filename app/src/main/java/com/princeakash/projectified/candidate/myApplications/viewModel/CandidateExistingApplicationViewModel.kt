@@ -28,11 +28,12 @@ class CandidateExistingApplicationViewModel(val app: Application) : AndroidViewM
     var errorString: MutableLiveData<String> = MutableLiveData()
 
     fun getApplicationsByCandidate() {profileRepository.getUserId()
+        val token: String = profileRepository.getToken()
+        val applicantID: String =profileRepository.getUserId()
         if (token.equals("")) {
             errorString.postValue("Invalid Token. Please log in again.")
             return
-        val token: String = profileRepository.getToken()
-        val applicantID: String =
+
         }
         if (applicantID.equals("")) {
             errorString.postValue("Invalid User ID. Please log in again.")
