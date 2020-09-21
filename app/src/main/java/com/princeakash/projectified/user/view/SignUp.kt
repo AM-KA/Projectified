@@ -104,6 +104,10 @@ class SignUp : Fragment(){
 
         val signUp = BodySignUp(name, email, phoneNumber,password)
         profileViewModel.signUp(signUp)
+
+
+
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -27,12 +27,12 @@ class CandidateExistingApplicationViewModel(val app: Application) : AndroidViewM
     var responseGetApplicationDetailByIdCandidate: MutableLiveData<ResponseGetApplicationDetailByIdCandidate> = MutableLiveData()
     var errorString: MutableLiveData<String> = MutableLiveData()
 
-    fun getApplicationsByCandidate() {
-        val token: String = profileRepository.getToken()
-        val applicantID: String = profileRepository.getUserId()
+    fun getApplicationsByCandidate() {profileRepository.getUserId()
         if (token.equals("")) {
             errorString.postValue("Invalid Token. Please log in again.")
             return
+        val token: String = profileRepository.getToken()
+        val applicantID: String =
         }
         if (applicantID.equals("")) {
             errorString.postValue("Invalid User ID. Please log in again.")
@@ -40,7 +40,7 @@ class CandidateExistingApplicationViewModel(val app: Application) : AndroidViewM
         }
         viewModelScope.launch {
             try {
-                responseGetApplicationByCandidate.postValue(candidateRepository.getApplicationByCandidate(token, applicantID))
+                responseGetApplicationByCandidate.postValue(candidateRepository.getApplicationByCandidate("Bearer" +token, applicantID))
             } catch (e: Exception) {
 
                 //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
@@ -60,7 +60,7 @@ class CandidateExistingApplicationViewModel(val app: Application) : AndroidViewM
         }
         viewModelScope.launch {
             try {
-                responseGetApplicationDetailByIdCandidate.postValue(candidateRepository.getApplicationDetailByIdCandidate(token, applicationID))
+                responseGetApplicationDetailByIdCandidate.postValue(candidateRepository.getApplicationDetailByIdCandidate("Bearer" +token, applicationID))
             } catch (e: Exception) {
 
                 //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
@@ -81,7 +81,7 @@ class CandidateExistingApplicationViewModel(val app: Application) : AndroidViewM
         }
         viewModelScope.launch {
             try {
-                responseUpdateApplication.postValue(candidateRepository.updateApplication(token, applicationID, bodyUpdateApplication))
+                responseUpdateApplication.postValue(candidateRepository.updateApplication("Beraer" +token, applicationID, bodyUpdateApplication))
             } catch (e: Exception) {
 
                 //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
@@ -102,7 +102,7 @@ class CandidateExistingApplicationViewModel(val app: Application) : AndroidViewM
         }
         viewModelScope.launch {
             try {
-                responseDeleteApplication.postValue(candidateRepository.deleteApplication(applicationID, token))
+                responseDeleteApplication.postValue(candidateRepository.deleteApplication("Bearer" +token ,applicationID))
             } catch (e: Exception) {
 
                 //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity

@@ -14,6 +14,8 @@ import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.addApplication.model.ResponseAddApplication
 import com.princeakash.projectified.candidate.addApplication.viewModel.CandidateAddApplicationViewModel
+import com.princeakash.projectified.user.BodySignUp
+import com.princeakash.projectified.user.view.SignUp
 import kotlinx.android.synthetic.main.frag_apply_opportunity_self.view.*
 
 
@@ -24,7 +26,6 @@ class ApplyOpportunityFragment : Fragment() {
     private lateinit var textCollege: TextView
     private lateinit var textCourse: TextView
     private lateinit var textSemester: TextView
-    private lateinit var textPhone: TextView
     private lateinit var editTextPreviousWork:TextInputEditText
     private lateinit var editTextResume:TextInputEditText
     private lateinit var buttonApply:Button
@@ -66,7 +67,6 @@ class ApplyOpportunityFragment : Fragment() {
         textCollege= view.textViewCollege
         textCourse= view.textViewCourse
         textSemester = view.textViewSemester
-        textPhone=  view.textViewPhone
         editTextPreviousWork =view.editTextPreviousWork
         editTextResume= view.editTextResume
         buttonApply=view.buttonSubmit
@@ -107,7 +107,6 @@ class ApplyOpportunityFragment : Fragment() {
         textCollege.setText(profileModel.collegeName)
         textCourse.setText(profileModel.course)
         textSemester.setText(profileModel.semester)
-        TODO("textPhone")
     }
 
     companion object{

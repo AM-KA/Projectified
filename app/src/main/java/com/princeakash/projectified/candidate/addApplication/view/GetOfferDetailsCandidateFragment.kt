@@ -60,6 +60,7 @@ class GetOfferDetailsCandidateFragment : Fragment(){
         textViewSemester=v.textViewSemesterData
         textViewCourse=v.textViewCourseData
         buttonApplyOpportunity=v.buttonApply
+        buttonCancelOpportunity=v.buttonCancel
 
         if(savedInstanceState==null) {
             offerId=requireArguments().getString(OFFER_IDC)
@@ -81,6 +82,7 @@ class GetOfferDetailsCandidateFragment : Fragment(){
                         .addToBackStack(null)
                         .commit()
             }
+
         buttonCancelOpportunity.setOnClickListener()
         {
 
