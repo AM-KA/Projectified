@@ -53,6 +53,11 @@ class MyApplicationDetailsFragment : Fragment(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         candidateExistingApplicationViewModel= ViewModelProvider(requireParentFragment()).get(CandidateExistingApplicationViewModel::class.java)
         candidateExistingApplicationViewModel!!.responseGetApplicationDetailByIdCandidate.observe(viewLifecycleOwner, {
             responseGetApplicationDetailsByIdCandidate = it
@@ -78,6 +83,7 @@ class MyApplicationDetailsFragment : Fragment(){
             Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
         })
     }
+
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

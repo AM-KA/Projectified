@@ -31,15 +31,6 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       candidateExistingApplicationViewModel= ViewModelProvider(requireParentFragment()).get(CandidateExistingApplicationViewModel::class.java)
-        candidateExistingApplicationViewModel!!.responseGetApplicationByCandidate.observe(this, {
-            applicationList = it?.Application as ArrayList<ApplicationCardModelCandidate>
-            recyclerViewApplications.adapter?.notifyDataSetChanged()
-        })
-       candidateExistingApplicationViewModel!!.errorString.observe(this, {
-            errorString = it
-            Toast.makeText(this@MyApplicationsHomeFragment.context, errorString, LENGTH_SHORT).show()
-        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +40,16 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        candidateExistingApplicationViewModel= ViewModelProvider(requireParentFragment()).get(CandidateExistingApplicationViewModel::class.java)
+        candidateExistingApplicationViewModel!!.responseGetApplicationByCandidate.observe(viewLifecycleOwner, {
+            applicationList = it?.Application as ArrayList<ApplicationCardModelCandidate>
+            recyclerViewApplications.adapter?.notifyDataSetChanged()
+        })
+        candidateExistingApplicationViewModel!!.errorString.observe(viewLifecycleOwner, {
+            errorString = it
+            Toast.makeText(this@MyApplicationsHomeFragment.context, errorString, LENGTH_SHORT).show()
+        })
 
         //Start fetching applications list
         if(savedInstanceState == null || savedInstanceState.getBoolean(DETAILS_VIEWED)) {
