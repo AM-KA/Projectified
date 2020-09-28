@@ -92,25 +92,33 @@ class MyOfferDetailsFragment() : Fragment() {
         })
 
         recruiterExistingOffersViewModel!!.responseToggleVisibility.observe(viewLifecycleOwner, {
-            responseToggleVisibility = it
-            //TODO: Show Toast
+            it?.getContentIfNotHandled()?.let{
+                responseToggleVisibility = it
+                //TODO: Show Toast
+            }
         })
 
         recruiterExistingOffersViewModel!!.responseUpdateOffer.observe(viewLifecycleOwner, {
-            responseUpdateOffer = it
-            //TODO: Show Toast and start ProgressBar
-            fetchOfferDetails()
+            it?.getContentIfNotHandled()?.let{
+                responseUpdateOffer = it
+                //TODO: Show Toast and start ProgressBar
+                fetchOfferDetails()
+            }
         })
 
         recruiterExistingOffersViewModel!!.responseDeleteOffer.observe(viewLifecycleOwner, {
-            responseDeleteOffer = it
-            //TODO: Show Toast
-            parentFragmentManager.popBackStackImmediate()
+            it?.getContentIfNotHandled()?.let{
+                responseDeleteOffer = it
+                //TODO: Show Toast
+                parentFragmentManager.popBackStackImmediate()
+            }
         })
 
         recruiterExistingOffersViewModel!!.errorString.observe(viewLifecycleOwner, {
-            error = it
-            Toast.makeText(context, error, LENGTH_SHORT).show()
+            it?.getContentIfNotHandled()?.let{
+                error = it
+                Toast.makeText(context, error, LENGTH_SHORT).show()
+            }
         })
 
         if(savedInstanceState == null) {

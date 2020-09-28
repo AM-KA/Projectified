@@ -46,8 +46,7 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
                 else
                     errorString.postValue(Event(response.message))
             } catch (e: Exception) {
-                e.printStackTrace()
-                errorString.postValue(Event(e.localizedMessage))
+                handleError(e)
             }
         }
     }
@@ -67,7 +66,7 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
                 }
                 responseLogin.postValue(Event(response))
             } catch (e: Exception) {
-
+                handleError(e)
             }
         }
     }
@@ -82,8 +81,7 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
                 responseCreateProfile.postValue(Event(profileRepository.createProfile("Bearer "+token, bodyCreateProfile)))
                 setLocalProfile(ProfileModel(bodyCreateProfile))
             } catch (e: Exception) {
-                e.printStackTrace()
-                errorString.postValue(Event(e.localizedMessage))
+                handleError(e)
             }
         }
     }
@@ -96,13 +94,17 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
                     responseUpdateProfile.postValue(Event(profileRepository.updateProfile("Bearer "+token,bodyUpdateProfile)))
                     setLocalProfile(ProfileModel(bodyUpdateProfile))
                 } catch (e: Exception) {
-                    e.printStackTrace()
-                    errorString.postValue(Event(e.localizedMessage))
+                    handleError(e)
                 }
             }
     }
 
     fun errorString():LiveData<Event<String>> = errorString
+
+    fun handleError(e: Exception){
+        e.printStackTrace()
+        errorString.postValue(Event(e.localizedMessage))
+    }
 
     companion object{
         private const val TAG = "ProfileViewModel"

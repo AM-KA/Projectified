@@ -67,20 +67,26 @@ class MyApplicationDetailsFragment : Fragment(){
         })
 
         candidateExistingApplicationViewModel!!.responseUpdateApplication.observe(viewLifecycleOwner, {
-            responseUpdateApplication = it
-            //TODO: Show Toast and start ProgressBar
-            fetchApplicationDetails()
+            it?.getContentIfNotHandled()?.let{
+                responseUpdateApplication = it
+                //TODO: Show Toast and start ProgressBar
+                fetchApplicationDetails()
+            }
         })
 
         candidateExistingApplicationViewModel!!.responseDeleteApplication.observe(viewLifecycleOwner, {
-            responseDeleteApplication= it
-            //TODO: Show Toast
-            parentFragmentManager.popBackStackImmediate()
+            it?.getContentIfNotHandled()?.let{
+                responseDeleteApplication= it
+                //TODO: Show Toast
+                parentFragmentManager.popBackStackImmediate()
+            }
         })
 
         candidateExistingApplicationViewModel!!.errorString.observe(viewLifecycleOwner, {
-            error = it
-            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+            it?.getContentIfNotHandled()?.let{
+                error = it
+                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+            }
         })
     }
 

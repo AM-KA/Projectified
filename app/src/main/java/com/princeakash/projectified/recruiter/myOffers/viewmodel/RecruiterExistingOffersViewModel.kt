@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.princeakash.projectified.Event
 import com.princeakash.projectified.MyApplication
 import com.princeakash.projectified.recruiter.*
 import com.princeakash.projectified.recruiter.myOffers.model.*
@@ -23,35 +24,30 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
     var responseGetOffersByRecruiter: MutableLiveData<ResponseGetOffersByRecruiter> = MutableLiveData()
     var responseGetOfferByIdRecruiter: MutableLiveData<ResponseGetOfferByIdRecruiter> = MutableLiveData()
     var responseGetOfferApplicants: MutableLiveData<ResponseGetOfferApplicants> = MutableLiveData()
-    var responseUpdateOffer: MutableLiveData<ResponseUpdateOffer> = MutableLiveData()
-    var responseToggleVisibility: MutableLiveData<ResponseToggleVisibility> = MutableLiveData()
-    var responseDeleteOffer: MutableLiveData<ResponseDeleteOffer> = MutableLiveData()
+    var responseUpdateOffer: MutableLiveData<Event<ResponseUpdateOffer>> = MutableLiveData()
+    var responseToggleVisibility: MutableLiveData<Event<ResponseToggleVisibility>> = MutableLiveData()
+    var responseDeleteOffer: MutableLiveData<Event<ResponseDeleteOffer>> = MutableLiveData()
     var responseGetApplicationById : MutableLiveData<ResponseGetApplicationByIdRecruiter> = MutableLiveData()
-    var responseMarkAsSeen: MutableLiveData<ResponseMarkAsSeen> = MutableLiveData()
-    var responseMarkAsSelected: MutableLiveData<ResponseMarkAsSelected> = MutableLiveData()
-    var errorString: MutableLiveData<String> = MutableLiveData()
+    var responseMarkAsSeen: MutableLiveData<Event<ResponseMarkAsSeen>> = MutableLiveData()
+    var responseMarkAsSelected: MutableLiveData<Event<ResponseMarkAsSelected>> = MutableLiveData()
+    var errorString: MutableLiveData<Event<String>> = MutableLiveData()
 
     fun getOffersByRecruiter(){
         val token:String = profileRepository.getToken()
         val recruiterID: String = profileRepository.getUserId()
         if(token.equals("")) {
-            errorString.postValue("Invalid Token. Please log in again.")
+            errorString.postValue(Event(INVALID_TOKEN))
             return
         }
         if(recruiterID.equals("")){
-            errorString.postValue("Invalid User ID. Please log in again.")
+            errorString.postValue(Event("Invalid User ID. Please log in again."))
             return
         }
         viewModelScope.launch {
             try {
                 responseGetOffersByRecruiter.postValue(recruiterRepository.getOffersByRecruiter("Bearer "+token, recruiterID))
             } catch(e: Exception){
-
-                //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
-                errorString.postValue("Haha! You got an error!!" + e.localizedMessage)
-
-                //Show Toast with Application Context. No extra Observers.
-                (app as MyApplication).showToast(e.localizedMessage)
+                handleError(e)
             }
         }
     }
@@ -59,19 +55,14 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
     fun getOfferByIdRecruiter(offerID:String){
         val token = profileRepository.getToken()
         if(token.equals("")) {
-            errorString.postValue("Invalid Token. Please log in again.")
+            errorString.postValue(Event(INVALID_TOKEN))
             return
         }
         viewModelScope.launch {
             try {
                 responseGetOfferByIdRecruiter.postValue(recruiterRepository.getOfferByIdRecruiter("Bearer "+token, offerID))
             } catch(e: Exception){
-
-                //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
-                errorString.postValue("Haha! You got an error!!" + e.localizedMessage)
-
-                //Show Toast with Application Context. No extra Observers.
-                (app as MyApplication).showToast(e.localizedMessage)
+                handleError(e)
             }
         }
     }
@@ -79,20 +70,14 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
     fun getOfferApplicants(offerID:String){
         val token = profileRepository.getToken()
         if(token.equals("")) {
-            errorString.postValue("Invalid Token. Please log in again.")
+            errorString.postValue(Event(INVALID_TOKEN))
             return
         }
         viewModelScope.launch {
             try {
                 responseGetOfferApplicants.postValue(recruiterRepository.getOfferApplicants("Bearer "+token, offerID))
             } catch(e: Exception){
-
-                e.printStackTrace()
-                //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
-                errorString.postValue("Haha! You got an error!!" + e.localizedMessage)
-
-                //Show Toast with Application Context. No extra Observers.
-                (app as MyApplication).showToast(e.localizedMessage)
+                handleError(e)
             }
         }
     }
@@ -100,19 +85,14 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
     fun updateOffer(offerID:String, bodyUpdateOffer: BodyUpdateOffer){
         val token = profileRepository.getToken()
         if(token.equals("")) {
-            errorString.postValue("Invalid Token. Please log in again.")
+            errorString.postValue(Event(INVALID_TOKEN))
             return
         }
         viewModelScope.launch {
             try {
-                responseUpdateOffer.postValue(recruiterRepository.updateOffer("Bearer "+token, offerID, bodyUpdateOffer))
+                responseUpdateOffer.postValue(Event(recruiterRepository.updateOffer("Bearer "+token, offerID, bodyUpdateOffer)))
             } catch(e: Exception){
-
-                //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
-                errorString.postValue("Haha! You got an error!!" + e.localizedMessage)
-
-                //Show Toast with Application Context. No extra Observers.
-                (app as MyApplication).showToast(e.localizedMessage)
+                handleError(e)
             }
         }
     }
@@ -120,19 +100,14 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
     fun toggleVisibility(offerID:String, bodyToggleVisibility: BodyToggleVisibility){
         val token = profileRepository.getToken()
         if(token.equals("")) {
-            errorString.postValue("Invalid Token. Please log in again.")
+            errorString.postValue(Event(INVALID_TOKEN))
             return
         }
         viewModelScope.launch {
             try {
-                responseToggleVisibility.postValue(recruiterRepository.toggleVisibility("Bearer "+token, offerID, bodyToggleVisibility))
+                responseToggleVisibility.postValue(Event(recruiterRepository.toggleVisibility("Bearer "+token, offerID, bodyToggleVisibility)))
             } catch(e: Exception){
-
-                //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
-                errorString.postValue("Haha! You got an error!!" + e.localizedMessage)
-
-                //Show Toast with Application Context. No extra Observers.
-                (app as MyApplication).showToast(e.localizedMessage)
+                handleError(e)
             }
         }
     }
@@ -140,19 +115,14 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
     fun deleteOffer(offerID:String){
         val token = profileRepository.getToken()
         if(token.equals("")) {
-            errorString.postValue("Invalid Token. Please log in again.")
+            errorString.postValue(Event(INVALID_TOKEN))
             return
         }
         viewModelScope.launch {
             try {
-                responseDeleteOffer.postValue(recruiterRepository.deleteOffer("Bearer "+token, offerID))
+                responseDeleteOffer.postValue(Event(recruiterRepository.deleteOffer("Bearer "+token, offerID)))
             } catch(e: Exception){
-
-                //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
-                errorString.postValue("Haha! You got an error!!" + e.localizedMessage)
-
-                //Show Toast with Application Context. No extra Observers.
-                (app as MyApplication).showToast(e.localizedMessage)
+                handleError(e)
             }
         }
     }
@@ -160,21 +130,14 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
     fun getApplicationById(applicationID:String){
         val token = profileRepository.getToken()
         if(token.equals("")) {
-            errorString.postValue("Invalid Token. Please log in again.")
+            errorString.postValue(Event(INVALID_TOKEN))
             return
         }
         viewModelScope.launch {
             try {
                 responseGetApplicationById.postValue(recruiterRepository.getApplicationById("Bearer "+token, applicationID))
             } catch(e: Exception){
-
-                e.printStackTrace()
-
-                //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
-                errorString.postValue("Haha! You got an error!!" + e.localizedMessage)
-
-                //Show Toast with Application Context. No extra Observers.
-                (app as MyApplication).showToast(e.localizedMessage)
+                handleError(e)
             }
         }
     }
@@ -182,19 +145,14 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
     fun markSeen(applicationID:String, bodyMarkAsSeen: BodyMarkAsSeen){
         val token = profileRepository.getToken()
         if(token.equals("")) {
-            errorString.postValue("Invalid Token. Please log in again.")
+            errorString.postValue(Event(INVALID_TOKEN))
             return
         }
         viewModelScope.launch {
             try {
-                responseMarkAsSeen.postValue(recruiterRepository.markSeen("Bearer "+token, applicationID, bodyMarkAsSeen))
+                responseMarkAsSeen.postValue(Event(recruiterRepository.markSeen("Bearer "+token, applicationID, bodyMarkAsSeen)))
             } catch(e: Exception){
-
-                //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
-                errorString.postValue("Haha! You got an error!!" + e.localizedMessage)
-
-                //Show Toast with Application Context. No extra Observers.
-                (app as MyApplication).showToast(e.localizedMessage)
+                handleError(e)
             }
         }
     }
@@ -202,21 +160,23 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
     fun markSelected(applicationID:String, bodyMarkAsSelected: BodyMarkAsSelected){
         val token = profileRepository.getToken()
         if(token.equals("")) {
-            errorString.postValue("Invalid Token. Please log in again.")
+            errorString.postValue(Event(INVALID_TOKEN))
             return
         }
         viewModelScope.launch {
             try {
-                responseMarkAsSelected.postValue(recruiterRepository.markSelected("Bearer "+token, applicationID, bodyMarkAsSelected))
+                responseMarkAsSelected.postValue(Event(recruiterRepository.markSelected("Bearer "+token, applicationID, bodyMarkAsSelected)))
             } catch(e: Exception){
-
-                //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
-                errorString.postValue("Haha! You got an error!!" + e.localizedMessage)
-
-                //Show Toast with Application Context. No extra Observers.
-                (app as MyApplication).showToast(e.localizedMessage)
+                handleError(e)
             }
         }
+    }
+
+    fun handleError(e: Exception){
+        e.printStackTrace()
+
+        //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
+        errorString.postValue(Event("Haha! You got an error!!" + e.localizedMessage))
     }
 
     /*
@@ -231,4 +191,8 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
     fun responseGetApplicationById() : LiveData<ResponseGetApplicationByIdRecruiter> = responseGetApplicationById
     fun responseMarkAsSeen() : LiveData<ResponseMarkAsSeen> = responseMarkAsSeen
     fun responseMarkAsSelected(): LiveData<ResponseMarkAsSelected> = responseMarkAsSelected*/
+
+    companion object {
+        const val INVALID_TOKEN = "Invalid Token. Please log in again.";
+    }
 }

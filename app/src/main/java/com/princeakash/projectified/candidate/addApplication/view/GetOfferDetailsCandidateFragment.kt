@@ -48,8 +48,10 @@ class GetOfferDetailsCandidateFragment : Fragment(){
 
 
         candidateAddApplicationsViewModel.errorString.observe(viewLifecycleOwner, {
-            error = it
-            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+            it?.getContentIfNotHandled()?.let{
+                error = it
+                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+            }
         })
 
         textViewExpectations = v.textViewExpectationData

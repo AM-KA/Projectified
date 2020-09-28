@@ -107,12 +107,16 @@ class AddOfferFragment : Fragment() {
         recruiterAddOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterAddOffersViewModel::class.java)
 
         recruiterAddOffersViewModel!!.responseAddOffer.observe(viewLifecycleOwner, {
-            responseAddOffer = it
+            it?.getContentIfNotHandled()?.let{
+                responseAddOffer = it
+            }
         })
 
         recruiterAddOffersViewModel!!.errorString.observe(viewLifecycleOwner, {
-            error = it
-            Toast.makeText(context, error, LENGTH_SHORT).show()
+            it?.getContentIfNotHandled()?.let{
+                error = it
+                Toast.makeText(context, error, LENGTH_SHORT).show()
+            }
         })
 
         loadRecruiterDetails()

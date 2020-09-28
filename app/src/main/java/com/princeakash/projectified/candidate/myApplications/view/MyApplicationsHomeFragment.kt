@@ -47,8 +47,10 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
             recyclerViewApplications.adapter?.notifyDataSetChanged()
         })
         candidateExistingApplicationViewModel!!.errorString.observe(viewLifecycleOwner, {
-            errorString = it
-            Toast.makeText(this@MyApplicationsHomeFragment.context, errorString, LENGTH_SHORT).show()
+            it?.getContentIfNotHandled()?.let{
+                errorString = it
+                Toast.makeText(this@MyApplicationsHomeFragment.context, errorString, LENGTH_SHORT).show()
+            }
         })
 
         //Start fetching applications list
