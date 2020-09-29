@@ -35,7 +35,7 @@ class MyApplicationsAdapter(var applicationList : List<ApplicationCardModelCandi
 
     override fun onBindViewHolder(holder: MyApplicationsViewHolder, position: Int) {
         holder.textViewPost.text = applicationList?.get(position)?.offer_name
-        holder.textViewCollege.text= applicationList?.get(position)?.college_name
+        holder.textViewCollege.text= applicationList?.get(position)?.collegeName
         holder.textViewDate.text = applicationList?.get(position)?.float_date.toString()
     }
 

@@ -1,6 +1,7 @@
 package com.princeakash.projectified.recruiter.myOffers.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,8 @@ import com.princeakash.projectified.recruiter.myOffers.view.MyOfferApplicationFr
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterExistingOffersViewModel
 import kotlinx.android.synthetic.main.frag_candidates.*
 import kotlinx.android.synthetic.main.frag_candidates.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferApplicantListener{
 
@@ -25,6 +28,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
     private var applicantList: ArrayList<ApplicantCardModel>? = ArrayList()
     private var responseMarkAsSeen: ResponseMarkAsSeen? = null
     private var responseMarkAsSelected: ResponseMarkAsSelected? = null
+    private var responseGetOfferApplicants: ResponseGetOfferApplicants? = null
 
     private var offerId: String? = null
 
@@ -33,6 +37,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
         recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
 
         recruiterExistingOffersViewModel!!.responseGetOfferApplicants.observe(viewLifecycleOwner, {
+            responseGetOfferApplicants = it
             applicantList = it.applicants as ArrayList<ApplicantCardModel>
             recyclerViewApplicants.adapter = MyOfferApplicantsAdapter(applicantList, this)
         })
@@ -45,20 +50,54 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
         })
 
         recruiterExistingOffersViewModel!!.responseMarkAsSeen.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let{
-                responseMarkAsSeen = it
+            it?.getContentIfNotHandled()?.let { iter ->
+                responseMarkAsSeen = iter
+
+                Log.d(TAG, "onCreateView: Entered seen")
                 //Take action as per response
+
+                Log.d(TAG, "onCreateView: "+iter.application_id)
+                //Search for id
+                applicantList?.let {
+                    Log.d(TAG, "onCreateView: List not null")
+                    for (listItem in it) {
+                        if (listItem.application_id.equals(iter.application_id)) {
+                            listItem.is_Seen = true
+                            Log.d(TAG, "onCreateView: Mark as seen is being changed")
+                            responseGetOfferApplicants?.applicants = it
+                            recruiterExistingOffersViewModel!!.responseGetOfferApplicants.postValue(responseGetOfferApplicants)
+                            break
+                        }
+                    }
+                }
             }
         })
 
         recruiterExistingOffersViewModel!!.responseMarkAsSelected.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let{
-                responseMarkAsSelected = it
+            it?.getContentIfNotHandled()?.let { iter ->
+                responseMarkAsSelected = iter
+
+                Log.d(TAG, "onCreateView: Entered selected")
                 //Take action as per response
+
+                Log.d(TAG, "onCreateView: "+iter.application_id)
+                //Search for id
+                applicantList?.let {
+                    Log.d(TAG, "onCreateView: List not null")
+                    for (listItem in it) {
+                        if (listItem.application_id.equals(iter.application_id)) {
+                            listItem.is_Selected = true
+                            Log.d(TAG, "onCreateView: Mark as selected is being changed")
+                            responseGetOfferApplicants?.applicants = it
+                            recruiterExistingOffersViewModel!!.responseGetOfferApplicants.postValue(responseGetOfferApplicants)
+                            break
+                        }
+                    }
+                }
             }
         })
         if(savedInstanceState == null){
-            offerId = arguments?.getString(OFFER_ID)
+            offerId = requireArguments().getString(OFFER_ID)
             offerId?.let{
                 recruiterExistingOffersViewModel!!.getOfferApplicants(it)
             }
@@ -107,5 +146,6 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
 
     companion object {
         val OFFER_ID = "OfferId"
+        private const val TAG = "MyOfferApplicantsFragme"
     }
 }

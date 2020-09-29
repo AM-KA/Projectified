@@ -90,7 +90,7 @@ class AddOfferFragment : Fragment() {
         val offerName = editTextOfferName!!.text.toString()
         val requirements = editTextRequirements!!.text.toString()
         val skills = editTextSkills!!.text.toString()
-        val expectation = editTextSkills!!.text.toString()
+        val expectation = editTextExpectation!!.text.toString()
         recruiterAddOffersViewModel!!.addOffer(offerName, domainName!!, requirements, skills, expectation)
     }
 
