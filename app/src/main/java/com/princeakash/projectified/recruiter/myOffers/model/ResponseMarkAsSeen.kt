@@ -1,5 +1,6 @@
 package com.princeakash.projectified.recruiter.myOffers.model
 
 data class ResponseMarkAsSeen (
-        var message:String
+        var message:String,
+        var application_id: String?
 )

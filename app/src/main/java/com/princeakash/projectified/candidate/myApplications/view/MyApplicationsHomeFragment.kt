@@ -35,20 +35,17 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.frag_myapplication, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         candidateExistingApplicationViewModel= ViewModelProvider(requireParentFragment()).get(CandidateExistingApplicationViewModel::class.java)
         candidateExistingApplicationViewModel!!.responseGetApplicationByCandidate.observe(viewLifecycleOwner, {
-            applicationList = it?.Application as ArrayList<ApplicationCardModelCandidate>
-            recyclerViewApplications.adapter?.notifyDataSetChanged()
+            applicationList = it?.applications as ArrayList<ApplicationCardModelCandidate>
+            recyclerViewApplications.adapter = MyApplicationsAdapter(applicationList, this@MyApplicationsHomeFragment)
         })
         candidateExistingApplicationViewModel!!.errorString.observe(viewLifecycleOwner, {
-            errorString = it
-            Toast.makeText(this@MyApplicationsHomeFragment.context, errorString, LENGTH_SHORT).show()
+            it?.getContentIfNotHandled()?.let{
+                errorString = it
+                Toast.makeText(this@MyApplicationsHomeFragment.context, errorString, LENGTH_SHORT).show()
+            }
         })
 
         //Start fetching applications list
@@ -56,11 +53,16 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
             candidateExistingApplicationViewModel!!.getApplicationsByCandidate()
             detailsViewed = false
         }
+        return inflater.inflate(R.layout.frag_myapplication, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         view.recyclerViewApplications.apply {
             layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-            setHasFixedSize(true)
             adapter = MyApplicationsAdapter(applicationList,this@MyApplicationsHomeFragment)
+            setHasFixedSize(true)
         }
     }
 
@@ -76,7 +78,7 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
         val bundle = Bundle()
         bundle.putString(APPLICATION_IDC, applicationList.get(itemPosition).application_id)
         parentFragmentManager.beginTransaction()
-                .add(R.id.fragment_applications, MyApplicationDetailsFragment::class.java, bundle, "MyApplicationDetailsFragment")
+                .replace(R.id.fragment_applications, MyApplicationDetailsFragment::class.java, bundle, "MyApplicationDetailsFragment")
                 .addToBackStack(null)
                 .commit()
     }

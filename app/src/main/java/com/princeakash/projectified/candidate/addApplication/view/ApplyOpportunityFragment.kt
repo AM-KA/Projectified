@@ -53,12 +53,17 @@ class ApplyOpportunityFragment : Fragment() {
 
         candidateAddApplicationViewModel= ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
         candidateAddApplicationViewModel.responseAddApplication.observe(viewLifecycleOwner, {
-            responseAddApplication = it
+            it?.getContentIfNotHandled()?.let {
+                responseAddApplication = it
+                Toast.makeText(context, it.message, LENGTH_SHORT).show()
+            }
         })
 
         candidateAddApplicationViewModel.errorString.observe(viewLifecycleOwner, {
-            error = it
-            Toast.makeText(context, error, LENGTH_SHORT).show()
+            it?.getContentIfNotHandled()?.let {
+                error = it
+                Toast.makeText(context, error, LENGTH_SHORT).show()
+            }
         })
 
         val view = inflater.inflate(R.layout.frag_apply_opportunity_self, container, false)

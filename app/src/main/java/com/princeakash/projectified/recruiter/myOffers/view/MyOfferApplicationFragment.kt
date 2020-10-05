@@ -72,20 +72,24 @@ class MyOfferApplicationFragment : Fragment() {
         })
 
         recruiterExistingOffersViewModel.errorString.observe(viewLifecycleOwner, {
-            error = it
-            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+            it?.getContentIfNotHandled()?.let{
+                error = it
+                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+            }
         })
 
         recruiterExistingOffersViewModel.responseMarkAsSeen.observe(viewLifecycleOwner, {
-            responseMarkAsSeen = it
-
-            //Take action as per response
+            it?.getContentIfNotHandled()?.let{
+                responseMarkAsSeen = it
+                //Take action as per response
+            }
         })
 
         recruiterExistingOffersViewModel.responseMarkAsSelected.observe(viewLifecycleOwner, {
-            responseMarkAsSelected = it
-
-            //Take action as per response
+            it?.getContentIfNotHandled()?.let{
+                responseMarkAsSelected = it
+                //Take action as per response
+            }
         })
 
 

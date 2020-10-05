@@ -45,8 +45,10 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
             view.recyclerViewOffers.adapter = MyOffersAdapter(offerList, this@MyOfferHomeFragment)
         })
         recruiterExistingOffersViewModel!!.errorString.observe(viewLifecycleOwner, {
-            errorString = it
-            Toast.makeText(this@MyOfferHomeFragment.context, errorString, LENGTH_SHORT).show()
+            it?.getContentIfNotHandled()?.let{
+                errorString = it
+                Toast.makeText(this@MyOfferHomeFragment.context, errorString, LENGTH_SHORT).show()
+            }
         })
 
         //Start fetching offer list

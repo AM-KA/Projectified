@@ -67,21 +67,43 @@ class MyApplicationDetailsFragment : Fragment(){
         })
 
         candidateExistingApplicationViewModel!!.responseUpdateApplication.observe(viewLifecycleOwner, {
-            responseUpdateApplication = it
-            //TODO: Show Toast and start ProgressBar
-            fetchApplicationDetails()
+            it?.getContentIfNotHandled()?.let{
+                responseUpdateApplication = it
+                //TODO: Show Toast and start ProgressBar
+                fetchApplicationDetails()
+            }
         })
 
         candidateExistingApplicationViewModel!!.responseDeleteApplication.observe(viewLifecycleOwner, {
-            responseDeleteApplication= it
-            //TODO: Show Toast
-            parentFragmentManager.popBackStackImmediate()
+            it?.getContentIfNotHandled()?.let{
+                responseDeleteApplication= it
+                //TODO: Show Toast
+                parentFragmentManager.popBackStackImmediate()
+            }
         })
 
         candidateExistingApplicationViewModel!!.errorString.observe(viewLifecycleOwner, {
-            error = it
-            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+            it?.getContentIfNotHandled()?.let{
+                error = it
+                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+            }
         })
+
+        if(savedInstanceState == null) {
+            //First LoadUp of Fragment
+            applicationId = requireArguments().getString(APPLICATION_IDC)
+            fetchApplicationDetails()
+        }
+        else{
+            //Restore state
+            //responseGetApplicationDetailsByIdCandidate = savedInstanceState.getSerializable(RESPONSE_GET_APPLICATIONS_DETAILS) as ResponseGetApplicationDetailsByIdCandidate
+            applicationId = savedInstanceState.getString(APPLICATION_IDC)
+            editable = savedInstanceState.getBoolean(EDITABLE_STATUS)
+            responseGetApplicationDetailsByIdCandidate?.let {
+                populateViews()
+            }
+            setEditable()
+        }
     }
 
 
@@ -101,24 +123,6 @@ class MyApplicationDetailsFragment : Fragment(){
         imageViewSelected=v.imageViewSelected
         buttonDeleteApplication=v.buttonDeleteApplication
         buttonUpdateDetails=v.buttonUpdateDetails
-
-        if(savedInstanceState == null) {
-            //First LoadUp of Fragment
-            applicationId = requireArguments().getString(APPLICATION_IDC)
-            fetchApplicationDetails()
-        }
-        else{
-            //Restore state
-            //responseGetApplicationDetailsByIdCandidate = savedInstanceState.getSerializable(RESPONSE_GET_APPLICATIONS_DETAILS) as ResponseGetApplicationDetailsByIdCandidate
-            applicationId = savedInstanceState.getString(APPLICATION_IDC)
-            editable = savedInstanceState.getBoolean(EDITABLE_STATUS)
-            responseGetApplicationDetailsByIdCandidate?.let {
-                populateViews()
-            }
-            setEditable()
-        }
-
-
 
         buttonUpdateDetails?.setOnClickListener{
             editable = !editable
@@ -172,12 +176,12 @@ class MyApplicationDetailsFragment : Fragment(){
         editTextCourse?.setText(responseGetApplicationDetailsByIdCandidate?.application?.recruiter_course)
         editTextPreviousWork?.setText(responseGetApplicationDetailsByIdCandidate?.application?.previousWork)
         editTextResume?.setText(responseGetApplicationDetailsByIdCandidate?.application?.resume)
-        if(responseGetApplicationDetailsByIdCandidate?.application?.is_seen!!)
+        if(responseGetApplicationDetailsByIdCandidate?.application?.is_Seen!!)
             imageViewSeen?.setImageResource(R.drawable.ic_baseline_favorite_24)
         else
             imageViewSeen?.setImageResource((R.drawable.ic_outline_favorite_border_24))
 
-        if(responseGetApplicationDetailsByIdCandidate?.application?.is_selected!!)
+        if(responseGetApplicationDetailsByIdCandidate?.application?.is_Selected!!)
             imageViewSelected?.setImageResource(R.drawable.ic_baseline_done_24)
         else
             imageViewSelected?.setImageResource((R.drawable.ic_baseline_done_outline_24))

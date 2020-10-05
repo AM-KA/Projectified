@@ -69,8 +69,10 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
         })
 
         candidateAddApplicationViewModel.errorString.observe(viewLifecycleOwner, {
-            errorString = it
-            Toast.makeText(this@GetOffersByDomainFragment.context, errorString, Toast.LENGTH_SHORT).show()
+            it?.getContentIfNotHandled()?.let{
+                errorString = it
+                Toast.makeText(this@GetOffersByDomainFragment.context, errorString, Toast.LENGTH_SHORT).show()
+            }
         })
 
         //Start fetching offer list

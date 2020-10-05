@@ -90,7 +90,7 @@ class AddOfferFragment : Fragment() {
         val offerName = editTextOfferName!!.text.toString()
         val requirements = editTextRequirements!!.text.toString()
         val skills = editTextSkills!!.text.toString()
-        val expectation = editTextSkills!!.text.toString()
+        val expectation = editTextExpectation!!.text.toString()
         recruiterAddOffersViewModel!!.addOffer(offerName, domainName!!, requirements, skills, expectation)
     }
 
@@ -107,12 +107,16 @@ class AddOfferFragment : Fragment() {
         recruiterAddOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterAddOffersViewModel::class.java)
 
         recruiterAddOffersViewModel!!.responseAddOffer.observe(viewLifecycleOwner, {
-            responseAddOffer = it
+            it?.getContentIfNotHandled()?.let{
+                responseAddOffer = it
+            }
         })
 
         recruiterAddOffersViewModel!!.errorString.observe(viewLifecycleOwner, {
-            error = it
-            Toast.makeText(context, error, LENGTH_SHORT).show()
+            it?.getContentIfNotHandled()?.let{
+                error = it
+                Toast.makeText(context, error, LENGTH_SHORT).show()
+            }
         })
 
         loadRecruiterDetails()
