@@ -56,13 +56,15 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
             try {
                 val response = profileRepository.logIn(bodyLogin)
                 setLoginStatus(true)
-                setToken(response.token)
-                setUserId(response.userID)
-                Log.d(TAG, "logIn: "+response.token)
-                //TODO: Fetch Profile and save to SharedPreference using setLocalProfile()
-                if(response.profileCompleted){
-                    val bodyProfile = response.profile
-                    setLocalProfile(bodyProfile!!)
+                if(response.code==200) {
+                    setToken(response.token!!)
+                    setUserId(response.userID!!)
+                    Log.d(TAG, "logIn: " + response.token)
+                    //TODO: Fetch Profile and save to SharedPreference using setLocalProfile()
+                    if (response.profileCompleted!!) {
+                        val bodyProfile = response.profile
+                        setLocalProfile(bodyProfile!!)
+                    }
                 }
                 responseLogin.postValue(Event(response))
             } catch (e: Exception) {

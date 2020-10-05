@@ -1,8 +1,9 @@
 package com.princeakash.projectified.recruiter.myOffers.model
 
 data class ResponseGetApplicationByIdRecruiter(
+        var code: Int,
         var message: String,
-        var application: ApplicationModel
+        var application: ApplicationModel?
 )
 
 data class ApplicationModel(

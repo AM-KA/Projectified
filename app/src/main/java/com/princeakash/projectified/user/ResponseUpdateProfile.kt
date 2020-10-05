@@ -1,3 +1,6 @@
 package com.princeakash.projectified.user
 
-data class ResponseUpdateProfile(var message:String)
+data class ResponseUpdateProfile(
+        var code: Int,
+        var message:String
+)

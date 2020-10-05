@@ -3,8 +3,9 @@ package com.princeakash.projectified.recruiter.myOffers.model
 import java.io.Serializable
 
 data class ResponseGetOfferByIdRecruiter(
+        var code: Int,
         var message:String,
-        var offer: Offer
+        var offer: Offer?
 ) : Serializable
 {
     data class Offer(

@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.princeakash.projectified.R
 import kotlinx.android.synthetic.main.card_faq.view.*
 
-class FaqAdapter(val faqList: ArrayList<FaqModel>): RecyclerView.Adapter<FaqAdapter.FaqViewHolder>() {
+private const val TAG = "FaqAdapter"
+class FaqAdapter(val faqList: List<FaqModel>): RecyclerView.Adapter<FaqAdapter.FaqViewHolder>() {
     class FaqViewHolder(val itemView: View): RecyclerView.ViewHolder(itemView){
         val textViewQuestion: TextView = itemView.findViewById(R.id.textViewQuestion)
         val textViewAnswer: TextView = itemView.findViewById(R.id.textViewAnswer)

@@ -62,9 +62,9 @@ class LoginFragment : Fragment() {
                                 if(responseLogin.code!=200){
                                         Toast.makeText(context, responseLogin.message, LENGTH_SHORT).show()
                                 }else{
-                                        profileViewModel.setToken(responseLogin.token)
+                                        profileViewModel.setToken(responseLogin.token!!)
                                         profileViewModel.setLoginStatus(true)
-                                        if(responseLogin.profileCompleted){
+                                        if(responseLogin.profileCompleted!!){
                                                 //Navigate to main activity
                                                 val intent = Intent(activity, MainActivity::class.java)
                                                 startActivity(intent)

@@ -1,5 +1,7 @@
 package com.princeakash.projectified.Faq
 
-class ResponseGetFaq(
-        val faqList: ArrayList<FaqModel>
+data class ResponseGetFaq(
+        val code: Int,
+        val message: String,
+        val faqList: List<FaqModel>
 )

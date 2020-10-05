@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.lifecycle.ViewModelProvider
 import com.princeakash.projectified.R
 import com.princeakash.projectified.recruiter.myOffers.model.*
@@ -111,26 +112,35 @@ class MyOfferApplicationFragment : Fragment() {
 
     private fun populateViews() {
         responseGetApplicationByIdRecruiter?.let {
-            textViewName?.text = it.application.applicant_name
-            textViewCollege?.text = it.application.applicant_collegeName
-            textViewCourse?.text = it.application.applicant_course
-            textViewSemester?.text = it.application.applicant_semester
-            textViewPhone?.text = it.application.applicant_phone
-            textViewPreviousWork?.text = it.application.previousWork
-            textViewResume?.text = it.application.resume
+            if(it.code==200) {
+                textViewName?.text = it.application?.applicant_name
+                textViewCollege?.text = it.application?.applicant_collegeName
+                textViewCourse?.text = it.application?.applicant_course
+                textViewSemester?.text = it.application?.applicant_semester
+                textViewPhone?.text = it.application?.applicant_phone
+                textViewPreviousWork?.text = it.application?.previousWork
+                textViewResume?.text = it.application?.resume
+            }
+            else{
+                Toast.makeText(context, it.message, LENGTH_SHORT)
+            }
         }
     }
 
     private fun markSeen() {
         responseGetApplicationByIdRecruiter?.let {
-            val status = it.application.is_Seen
+            var status = true
+            if(it.application != null)
+                status = it.application?.is_Seen!!
             recruiterExistingOffersViewModel.markSeen(applicationID, BodyMarkAsSeen(!status))
         }
     }
 
     private fun markSelected() {
         responseGetApplicationByIdRecruiter?.let {
-            val status = it.application.is_Selected
+            var status = true
+            if(it.application != null)
+                status = it.application?.is_Selected!!
             recruiterExistingOffersViewModel.markSelected(applicationID, BodyMarkAsSelected(!status))
         }
     }
