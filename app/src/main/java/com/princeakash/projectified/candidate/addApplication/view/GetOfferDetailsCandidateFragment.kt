@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.princeakash.projectified.R
@@ -38,7 +39,7 @@ class GetOfferDetailsCandidateFragment : Fragment(){
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val v = inflater.inflate(R.layout.frag_apply_opportunity_view, container, false)
-
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Offer Details"
         candidateAddApplicationsViewModel= ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
 
         candidateAddApplicationsViewModel.responseGetOfferById.observe(viewLifecycleOwner, {

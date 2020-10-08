@@ -1,10 +1,12 @@
 package com.princeakash.projectified.candidate.myApplications.view
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -201,8 +203,14 @@ class MyApplicationDetailsFragment : Fragment(){
     }
 
     private fun deleteApplication(){
-        //TODO: Add DialogBox
-        candidateExistingApplicationViewModel!!.deleteApplication(applicationId!!)
+        AlertDialog.Builder(requireContext())
+                .setTitle("Confirm Delete")
+                .setMessage("Are you sure you want to delete this application? You cannot undo this action later.")
+                .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
+                    candidateExistingApplicationViewModel!!.deleteApplication(applicationId!!)
+                })
+                .setNegativeButton("No", DialogInterface.OnClickListener { dialog, which ->  })
+                .create().show()
     }
 
     companion object {

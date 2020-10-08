@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -45,6 +46,7 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
         val view = inflater.inflate(R.layout.frag_available_offers, container, false)
         recyclerView = view.findViewById(R.id.recyclerViewOffers)
         recyclerView.layoutManager = LinearLayoutManager(requireActivity(), VERTICAL, false)
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Offers"
         return view
     }
 
@@ -99,7 +101,8 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
         val bundle = Bundle()
         bundle.putString(DOMAIN_NAME, domainName)
         parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_apply, AddOfferFragment::class.java, bundle, "GetOfferDetailsCandidateFragment")
+                .replace(R.id.fragment_apply, AddOfferFragment::class.java, bundle, "AddOfferFragment")
+                .addToBackStack("AddOffer")
                 .commit()
     }
     companion object {

@@ -1,5 +1,6 @@
 package com.princeakash.projectified.recruiter.addOffer.view
 
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +11,8 @@ import android.widget.TextView
 
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
@@ -67,6 +70,7 @@ class AddOfferFragment : Fragment() {
         buttonEnlist!!.setOnClickListener {
             validateParameters()
         }
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Add Offer"
         return view
     }
 
@@ -91,7 +95,14 @@ class AddOfferFragment : Fragment() {
         val requirements = editTextRequirements!!.text.toString()
         val skills = editTextSkills!!.text.toString()
         val expectation = editTextExpectation!!.text.toString()
-        recruiterAddOffersViewModel!!.addOffer(offerName, domainName!!, requirements, skills, expectation)
+        AlertDialog.Builder(requireContext())
+                .setTitle("Confirm")
+                .setMessage("Are you sure you want to float this offer?")
+                .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
+                    recruiterAddOffersViewModel.addOffer(offerName, domainName!!, requirements, skills, expectation)
+                })
+                .setNegativeButton("No", DialogInterface.OnClickListener { dialog, which ->  })
+                .create().show()
     }
 
     /*

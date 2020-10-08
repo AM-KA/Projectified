@@ -1,6 +1,7 @@
 package com.princeakash.projectified.recruiter.myOffers.view
 
 import android.app.Activity
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import android.widget.CompoundButton
 import android.widget.Switch
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -212,8 +214,14 @@ class MyOfferDetailsFragment() : Fragment() {
     }
 
     fun delistOpportunity(){
-        //TODO: Add DialogBox
-        recruiterExistingOffersViewModel!!.deleteOffer(offerId!!)
+        AlertDialog.Builder(requireContext())
+                .setTitle("Confirm Delete")
+                .setMessage("Are you sure you want to delete this offer? You cannot undo this action later.")
+                .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
+                    recruiterExistingOffersViewModel!!.deleteOffer(offerId!!)
+                })
+                .setNegativeButton("No", DialogInterface.OnClickListener { dialog, which ->  })
+                .create().show()
     }
 
     companion object {

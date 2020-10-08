@@ -1,5 +1,6 @@
 package com.princeakash.projectified.candidate.addApplication.view
 
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,6 +10,8 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
@@ -88,6 +91,7 @@ class ApplyOpportunityFragment : Fragment() {
         }
 
         loadLocalProfile()
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Apply"
         return view
     }
 
@@ -103,7 +107,14 @@ class ApplyOpportunityFragment : Fragment() {
 
         val previousWork = editTextPreviousWork.text.toString()
         val resume = editTextResume.text.toString()
-        candidateAddApplicationViewModel.addApplication(resume,previousWork, offerId)
+        AlertDialog.Builder(requireContext())
+                .setTitle("Confirm Application")
+                .setMessage("Are you sure you want to apply for this offer with the filled details?")
+                .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
+                    candidateAddApplicationViewModel.addApplication(resume,previousWork, offerId)
+                })
+                .setNegativeButton("No", DialogInterface.OnClickListener { dialog, which ->  })
+                .create().show()
     }
 
     private fun loadLocalProfile(){
