@@ -34,7 +34,6 @@ class AddApplicationsFragment : Fragment() {
                             null,
                             "HomeFragment"
                     )
-                    .addToBackStack(null)
                     .commit()
         }
     }

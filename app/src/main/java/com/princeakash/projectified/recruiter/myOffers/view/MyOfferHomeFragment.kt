@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +34,7 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
         /*savedInstanceState?.let {
             offerList = savedInstanceState.getSerializable(OFFERS_LIST) as ArrayList<OfferCardModelRecruiter>
         }*/
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "My Offers"
         return inflater.inflate(R.layout.frag_my_offers, container, false)
     }
 
@@ -76,10 +78,11 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
         detailsViewed = true
         //Populate new fragment with details of offer.
         val bundle = Bundle()
-        bundle.putString(OFFER_ID, offerList.get(itemPosition).offer_id)
+        val offID = offerList.get(itemPosition).offer_id
+        bundle.putString(OFFER_ID, offID)
         parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_offers, MyOfferDetailsFragment::class.java, bundle, "MyOfferDetailsFragment")
-                .addToBackStack(null)
+                .addToBackStack("MyOfferDetails"+offID)
                 .commit()
     }
 

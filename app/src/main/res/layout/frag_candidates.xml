@@ -11,30 +11,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.05"/>
+        app:layout_constraintGuide_percent="0.00"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.95"/>
+        app:layout_constraintGuide_percent="1"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.05"/>
+        app:layout_constraintGuide_percent="0.02"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.95"/>
+        app:layout_constraintGuide_percent="1"/>
 
-    <com.google.android.material.appbar.MaterialToolbar
+    <!--<com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
@@ -44,15 +44,14 @@
         app:title="Candidate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"/>-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewApplicants"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="5dp"
         tools:listitem="@layout/card_my_offers_candidate"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/guideline3"
         app:layout_constraintBottom_toBottomOf="@id/guideline4"
         app:layout_constraintStart_toStartOf="@id/guideline1"
         app:layout_constraintEnd_toEndOf="@id/guideline2"/>

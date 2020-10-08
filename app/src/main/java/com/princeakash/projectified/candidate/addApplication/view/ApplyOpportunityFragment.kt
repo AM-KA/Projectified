@@ -114,6 +114,10 @@ class ApplyOpportunityFragment : Fragment() {
         textSemester.setText(profileModel.semester)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(OFFER_IDC, offerId)
+    }
     companion object{
         val OFFER_IDC = "offerId"
     }

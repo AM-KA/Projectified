@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -104,6 +105,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
         } else {
             offerId = savedInstanceState.getString(OFFER_ID)
         }
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Candidates"
         return inflater.inflate(R.layout.frag_candidates, container, false)
     }
 
@@ -127,6 +129,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
         bundle.putString(APPLICATION_ID, applicationID)
         parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_offers, MyOfferApplicationFragment::class.java, bundle, "MyOfferApplicationFragment")
+                .addToBackStack("MyOfferApplication"+offerId)
                 .commit()
     }
 

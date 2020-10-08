@@ -34,7 +34,6 @@ class MyOffersFragment : Fragment() {
                             null,
                             "MyOffersFragment"
                     )
-                    .addToBackStack(null)
                     .commit()
         }
     }

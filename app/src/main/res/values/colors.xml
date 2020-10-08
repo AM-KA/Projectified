@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#FADF00</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="bg">#f0f0f0</color>
+    <color name="bg2">#ffffff</color>
     <color name ="chipsSelected">#ADD8E6</color>
     <color name="cardHighlighter">#FAFAFA</color>
 </resources>

@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.princeakash.projectified.R
 import com.princeakash.projectified.recruiter.myOffers.model.*
@@ -49,6 +50,7 @@ class MyOfferApplicationFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Candidate Details"
         val v = inflater.inflate(R.layout.frag_candidate_details_recruiter, container, false)
         textViewName = v.textViewName
         textViewCollege = v.textViewCollege

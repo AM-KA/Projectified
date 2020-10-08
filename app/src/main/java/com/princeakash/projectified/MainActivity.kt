@@ -11,6 +11,8 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -42,6 +44,8 @@ class MainActivity : AppCompatActivity() {
 
         bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigation)
         navController = findNavController(R.id.fragment)
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.myOffersFragment, R.id.myApplicationsFragment, R.id.profileFragment))
+        setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNavigationView.setupWithNavController(navController)
 
         val drawerToggle: ActionBarDrawerToggle = object : ActionBarDrawerToggle(

@@ -52,6 +52,7 @@ class HomeFragment : Fragment(), HomeListener {
         parentFragmentManager
                 .beginTransaction()
                 .replace(R.id.fragment_apply, GetOffersByDomainFragment::class.java, bundle, "GetOffersByDomain:$domainArg")
+                .addToBackStack("GetOffersByDomain:$domainArg")
                 .commit()
     }
 }

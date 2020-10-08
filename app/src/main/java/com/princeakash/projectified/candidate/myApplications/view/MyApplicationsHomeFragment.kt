@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -53,6 +54,7 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
             candidateExistingApplicationViewModel!!.getApplicationsByCandidate()
             detailsViewed = false
         }
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "My Applications"
         return inflater.inflate(R.layout.frag_myapplication, container, false)
     }
 
@@ -79,7 +81,7 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
         bundle.putString(APPLICATION_IDC, applicationList.get(itemPosition).application_id)
         parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_applications, MyApplicationDetailsFragment::class.java, bundle, "MyApplicationDetailsFragment")
-                .addToBackStack(null)
+                .addToBackStack("MyAppliDetails")
                 .commit()
     }
 

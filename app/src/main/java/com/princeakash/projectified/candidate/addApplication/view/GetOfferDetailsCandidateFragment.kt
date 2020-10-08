@@ -81,7 +81,7 @@ class GetOfferDetailsCandidateFragment : Fragment(){
 
             parentFragmentManager.beginTransaction()
                         .replace(R.id.fragment_apply, ApplyOpportunityFragment::class.java, bundle, "ApplyOpportunityFragment")
-                        .addToBackStack(null)
+                        .addToBackStack("ApplyOpportunity")
                         .commit()
             }
 
@@ -90,7 +90,7 @@ class GetOfferDetailsCandidateFragment : Fragment(){
 
             parentFragmentManager.beginTransaction()
                     .replace(R.id.fragment_apply, HomeFragment::class.java, null, "Home Fragment")
-                    .addToBackStack(null)
+                    .addToBackStack("HomeFragment")
                     .commit()
 
         }

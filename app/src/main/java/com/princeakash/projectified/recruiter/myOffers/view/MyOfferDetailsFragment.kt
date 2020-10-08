@@ -1,5 +1,6 @@
 package com.princeakash.projectified.recruiter.myOffers.view
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,7 +11,9 @@ import android.widget.CompoundButton
 import android.widget.Switch
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
 import com.princeakash.projectified.recruiter.myOffers.model.*
@@ -24,7 +27,7 @@ class MyOfferDetailsFragment() : Fragment() {
     private var editTextRequirements: TextInputEditText? = null
     private var editTextSkills: TextInputEditText? = null
     private var editTextExpectations: TextInputEditText? = null
-    private var switchVisibility: Switch? = null
+    private var switchVisibility: SwitchMaterial? = null
     private var buttonEditDetails: Button? = null
     private var buttonViewApplicants:Button? = null
     private var buttonDelist:Button? = null
@@ -47,7 +50,7 @@ class MyOfferDetailsFragment() : Fragment() {
                               savedInstanceState: Bundle?): View? {
 
         val v = inflater.inflate(R.layout.frag_my_offer_details, container, false)
-
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Offer Details"
         editTextOfferName = v.editTextOfferName
         editTextExpectations = v.editTextExpectation
         editTextSkills = v.editTextSkills
@@ -143,7 +146,7 @@ class MyOfferDetailsFragment() : Fragment() {
         bundle.putString(OFFER_ID, offerId)
         parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_offers, MyOfferApplicantsFragment::class.java, bundle, "MyOfferApplicantsFragment")
-                .addToBackStack(null)
+                .addToBackStack("MyOfferApplicants"+offerId)
                 .commit()
     }
 

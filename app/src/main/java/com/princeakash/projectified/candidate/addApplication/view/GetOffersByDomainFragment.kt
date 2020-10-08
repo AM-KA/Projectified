@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.addApplication.model.GetOffersByDomainAdapter
 import com.princeakash.projectified.candidate.addApplication.viewModel.CandidateAddApplicationViewModel
@@ -43,12 +44,6 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.frag_available_offers, container, false)
         recyclerView = view.findViewById(R.id.recyclerViewOffers)
-        /*recyclerView.apply {
-            this.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-            Log.d(TAG, "onViewCreated: Setup adapter")
-            this.adapter = GetOffersByDomainAdapter(offerList, this@GetOffersByDomainFragment)
-        }*/
-        //offerList.add(OfferCardModelCandidate("1", "Hello", "Namaste", "20-10-2010", "ISM"))
         recyclerView.layoutManager = LinearLayoutManager(requireActivity(), VERTICAL, false)
         return view
     }
@@ -56,9 +51,7 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //recyclerView.isNestedScrollingEnabled = true
-
-        view.findViewById<Button>(R.id.buttonAddOffer).setOnClickListener {
+        view.findViewById<FloatingActionButton>(R.id.buttonAddOffer).setOnClickListener {
             proceedToAddOffer()
         }
 
@@ -98,7 +91,7 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
         Log.d(TAG, "onViewDetailsClick: " + offerList.get(itemPosition).offer_id)
         parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_apply, GetOfferDetailsCandidateFragment::class.java, bundle, "GetOfferDetailsCandidateFragment")
-                //.addToBackStack(null)
+                .addToBackStack("GetOfferDetailsCandi")
                 .commit()
     }
 

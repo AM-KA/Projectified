@@ -3,8 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <com.google.android.material.appbar.AppBarLayout
+    <!--<com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +18,7 @@
             app:title="Offer Details"
             app:layout_scrollFlags="scroll|enterAlways|snap" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>-->
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -33,14 +34,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.05"/>
+                app:layout_constraintGuide_percent="0.0"/>
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.95"/>
+                app:layout_constraintGuide_percent="1"/>
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline3"
@@ -54,13 +55,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.95"/>
+                app:layout_constraintGuide_percent="1"/>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardViewOpportunityDetails"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp"
+                app:cardCornerRadius="10dp"
                 android:background="@drawable/bg_stroke"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
                 app:layout_constraintEnd_toEndOf="@id/guideline2"
@@ -117,6 +118,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Opportunity Details"
+                        style="@style/CardInfoHead"
                         app:layout_constraintStart_toStartOf="@id/guideline5"
                         app:layout_constraintTop_toTopOf="@id/guideline7"/>
 
@@ -186,7 +188,7 @@
                 android:id="@+id/cardViewRecruiterDetails"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp"
+                app:cardCornerRadius="10dp"
                 android:background="@drawable/bg_stroke"
                 android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
@@ -197,7 +199,6 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-
 
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline11"
@@ -247,6 +248,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Recruiter Details"
+                        style="@style/CardInfoHead"
                         app:layout_constraintStart_toStartOf="@id/guideline11"
                         app:layout_constraintTop_toBottomOf="@id/guideline13" />
 
