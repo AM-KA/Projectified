@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.RelativeLayout
 import android.widget.TextView
 
 import android.widget.Toast
@@ -33,6 +34,8 @@ class AddOfferFragment : Fragment() {
     private lateinit var textViewCollege: TextView
     private lateinit var textViewCourse: TextView
     private lateinit var textViewSemester: TextView
+    private lateinit var progressCircularLayout: RelativeLayout
+
     private var buttonEnlist: Button? = null
 
     //ViewModels
@@ -48,9 +51,9 @@ class AddOfferFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if(savedInstanceState==null)
-            domainName = requireArguments().getString(DOMAIN_NAME);
+            domainName = requireArguments().getString(DOMAIN_NAME)
         else
-            domainName = savedInstanceState.getString(DOMAIN_NAME);
+            domainName = savedInstanceState.getString(DOMAIN_NAME)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -66,6 +69,7 @@ class AddOfferFragment : Fragment() {
         textViewCourse = view.textViewCourseData
         textViewSemester = view.textViewSemesterData
         buttonEnlist = view.EnlistButton
+        progressCircularLayout = view.progress_circular_layout
 
         buttonEnlist!!.setOnClickListener {
             validateParameters()
@@ -98,10 +102,11 @@ class AddOfferFragment : Fragment() {
         AlertDialog.Builder(requireContext())
                 .setTitle("Confirm")
                 .setMessage("Are you sure you want to float this offer?")
-                .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
+                .setPositiveButton("Yes") { dialog, which ->
+                    progressCircularLayout.visibility = View.VISIBLE
                     recruiterAddOffersViewModel.addOffer(offerName, domainName!!, requirements, skills, expectation)
-                })
-                .setNegativeButton("No", DialogInterface.OnClickListener { dialog, which ->  })
+                }
+                .setNegativeButton("No") { dialog, which -> }
                 .create().show()
     }
 
@@ -117,14 +122,17 @@ class AddOfferFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         recruiterAddOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterAddOffersViewModel::class.java)
 
-        recruiterAddOffersViewModel!!.responseAddOffer.observe(viewLifecycleOwner, {
+        recruiterAddOffersViewModel.responseAddOffer.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
+                progressCircularLayout.visibility = View.INVISIBLE
                 responseAddOffer = it
+                // TODO: Show Toast
             }
         })
 
-        recruiterAddOffersViewModel!!.errorString.observe(viewLifecycleOwner, {
+        recruiterAddOffersViewModel.errorString.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
+                progressCircularLayout.visibility = View.INVISIBLE
                 error = it
                 Toast.makeText(context, error, LENGTH_SHORT).show()
             }
@@ -134,11 +142,13 @@ class AddOfferFragment : Fragment() {
     }
 
     private fun loadRecruiterDetails() {
+        progressCircularLayout.visibility = View.VISIBLE
         recruiterAddOffersViewModel.getLocalProfile()?.let {
             textViewName.setText(it.name)
             textViewCollege.setText(it.collegeName)
             textViewCourse.setText(it.course)
             textViewSemester.setText(it.semester)
         }
+        progressCircularLayout.visibility = View.INVISIBLE
     }
 }

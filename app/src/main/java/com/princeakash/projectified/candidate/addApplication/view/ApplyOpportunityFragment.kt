@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
@@ -17,8 +18,6 @@ import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.addApplication.model.ResponseAddApplication
 import com.princeakash.projectified.candidate.addApplication.viewModel.CandidateAddApplicationViewModel
-import com.princeakash.projectified.user.BodySignUp
-import com.princeakash.projectified.user.view.SignUp
 import kotlinx.android.synthetic.main.frag_apply_opportunity_self.view.*
 
 
@@ -34,6 +33,7 @@ class ApplyOpportunityFragment : Fragment() {
     private lateinit var buttonApply:Button
     private lateinit var buttonCancel:Button
     private lateinit var offerId:String
+    private lateinit var progressCircularLayout: RelativeLayout
 
     //ViewModels
     private lateinit var candidateAddApplicationViewModel: CandidateAddApplicationViewModel
@@ -53,10 +53,31 @@ class ApplyOpportunityFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.frag_apply_opportunity_self, container, false)
 
+        textName = view.textViewName
+        textCollege= view.textViewCollege
+        textCourse= view.textViewCourse
+        textSemester = view.textViewSemester
+        editTextPreviousWork =view.editTextPreviousWork
+        editTextResume= view.editTextResume
+        buttonApply=view.buttonSubmit
+        buttonCancel= view.buttonCancel
+        progressCircularLayout = view.progress_circular_layout
+
+        buttonApply.setOnClickListener {
+            validateParameters()
+        }
+        buttonCancel.setOnClickListener{
+            parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_apply, HomeFragment::class.java, null, "HomeFragment")
+                    .addToBackStack(null)
+                    .commit()
+        }
         candidateAddApplicationViewModel= ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
         candidateAddApplicationViewModel.responseAddApplication.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
+                progressCircularLayout.visibility = View.INVISIBLE
                 responseAddApplication = it
                 Toast.makeText(context, it.message, LENGTH_SHORT).show()
             }
@@ -68,27 +89,6 @@ class ApplyOpportunityFragment : Fragment() {
                 Toast.makeText(context, error, LENGTH_SHORT).show()
             }
         })
-
-        val view = inflater.inflate(R.layout.frag_apply_opportunity_self, container, false)
-
-        textName = view.textViewName
-        textCollege= view.textViewCollege
-        textCourse= view.textViewCourse
-        textSemester = view.textViewSemester
-        editTextPreviousWork =view.editTextPreviousWork
-        editTextResume= view.editTextResume
-        buttonApply=view.buttonSubmit
-        buttonCancel= view.buttonCancel
-        buttonApply.setOnClickListener {
-
-            validateParameters()
-        }
-        buttonCancel.setOnClickListener{
-            parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_apply, HomeFragment::class.java, null, "HomeFragment")
-                    .addToBackStack(null)
-                    .commit()
-        }
 
         loadLocalProfile()
         (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Apply"
@@ -110,19 +110,22 @@ class ApplyOpportunityFragment : Fragment() {
         AlertDialog.Builder(requireContext())
                 .setTitle("Confirm Application")
                 .setMessage("Are you sure you want to apply for this offer with the filled details?")
-                .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
-                    candidateAddApplicationViewModel.addApplication(resume,previousWork, offerId)
-                })
-                .setNegativeButton("No", DialogInterface.OnClickListener { dialog, which ->  })
+                .setPositiveButton("Yes") { dialog, which ->
+                    progressCircularLayout.visibility = View.VISIBLE
+                    candidateAddApplicationViewModel.addApplication(resume, previousWork, offerId)
+                }
+                .setNegativeButton("No") { dialog, which -> }
                 .create().show()
     }
 
     private fun loadLocalProfile(){
+        progressCircularLayout.visibility = View.VISIBLE
         val profileModel = candidateAddApplicationViewModel.getLocalProfile()!!
         textName.setText(profileModel.name)
         textCollege.setText(profileModel.collegeName)
         textCourse.setText(profileModel.course)
         textSemester.setText(profileModel.semester)
+        progressCircularLayout.visibility = View.INVISIBLE
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

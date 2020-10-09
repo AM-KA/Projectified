@@ -3,6 +3,7 @@ package com.princeakash.projectified.Faq
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,7 +28,7 @@ class FaqActivity : AppCompatActivity(), NewFaqDialogFragment.NewFaqDialogListen
         setContentView(R.layout.fragment_all_faq)
         recyclerViewFaq = findViewById(R.id.recyclerViewFaq)
         fab = findViewById(R.id.fab)
-
+        window?.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
         faqViewModel = ViewModelProvider(this).get(FaqViewModel::class.java)
         faqViewModel!!.responseGetFaq.observe(this, {
             it?.getContentIfNotHandled()?.let {
@@ -44,7 +45,7 @@ class FaqActivity : AppCompatActivity(), NewFaqDialogFragment.NewFaqDialogListen
             }
         })
         faqViewModel!!.errorString.observe(this, {
-            error = it;
+            error = it
             Toast.makeText(this, error, Toast.LENGTH_LONG).show()
         })
 

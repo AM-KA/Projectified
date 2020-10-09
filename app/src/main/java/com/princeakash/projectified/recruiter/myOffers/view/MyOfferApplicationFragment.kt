@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
@@ -24,6 +25,7 @@ class MyOfferApplicationFragment : Fragment() {
     private var error: String? = null
     private var responseMarkAsSeen: ResponseMarkAsSeen? = null
     private var responseMarkAsSelected: ResponseMarkAsSelected? = null
+    private lateinit var progressCircularLayout: RelativeLayout
 
     //Application related data
     private lateinit var applicationID: String
@@ -61,7 +63,7 @@ class MyOfferApplicationFragment : Fragment() {
         textViewResume = v.textViewResumeDescription
         imageViewSeen = v.imageViewSeen
         imageViewSelected = v.imageViewSelected
-
+        progressCircularLayout = v.progress_circular_layout
         return v
     }
 
@@ -76,13 +78,15 @@ class MyOfferApplicationFragment : Fragment() {
 
         recruiterExistingOffersViewModel.errorString.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
+                progressCircularLayout.visibility = View.INVISIBLE
                 error = it
-                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, error, LENGTH_SHORT).show()
             }
         })
 
         recruiterExistingOffersViewModel.responseMarkAsSeen.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
+                progressCircularLayout.visibility = View.INVISIBLE
                 responseMarkAsSeen = it
                 //Take action as per response
             }
@@ -90,6 +94,7 @@ class MyOfferApplicationFragment : Fragment() {
 
         recruiterExistingOffersViewModel.responseMarkAsSelected.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
+                progressCircularLayout.visibility = View.INVISIBLE
                 responseMarkAsSelected = it
                 //Take action as per response
             }
@@ -103,7 +108,7 @@ class MyOfferApplicationFragment : Fragment() {
         imageViewSelected?.setOnClickListener {
             markSelected()
         }
-
+        progressCircularLayout.visibility = View.VISIBLE
         recruiterExistingOffersViewModel.getApplicationById(applicationID)
     }
 
@@ -126,6 +131,7 @@ class MyOfferApplicationFragment : Fragment() {
             else{
                 Toast.makeText(context, it.message, LENGTH_SHORT)
             }
+            progressCircularLayout.visibility = View.INVISIBLE
         }
     }
 
@@ -134,6 +140,7 @@ class MyOfferApplicationFragment : Fragment() {
             var status = true
             if(it.application != null)
                 status = it.application?.is_Seen!!
+            progressCircularLayout.visibility = View.VISIBLE
             recruiterExistingOffersViewModel.markSeen(applicationID, BodyMarkAsSeen(!status))
         }
     }
@@ -143,6 +150,7 @@ class MyOfferApplicationFragment : Fragment() {
             var status = true
             if(it.application != null)
                 status = it.application?.is_Selected!!
+            progressCircularLayout.visibility = View.VISIBLE
             recruiterExistingOffersViewModel.markSelected(applicationID, BodyMarkAsSelected(!status))
         }
     }
