@@ -1,7 +1,9 @@
 package com.princeakash.projectified
 
+import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.google.firebase.FirebaseApp
 import com.princeakash.projectified.user.view.SplashScreenFragment
 
 class InitialActivity : AppCompatActivity() {
@@ -12,6 +14,7 @@ class InitialActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_initial, SplashScreenFragment(), "Splash")
                     .commit()
+
         }
     }
 }

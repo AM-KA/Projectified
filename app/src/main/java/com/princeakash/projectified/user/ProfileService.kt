@@ -16,4 +16,6 @@ interface ProfileService {
     @PATCH("profile/{profileID}")
     suspend fun updateProfile(@Header("Authorization") token: String, @Body bodyUpdateProfile: BodyUpdateProfile, @Path("profileID") profileID:String) :  ResponseUpdateProfile
 
+    @POST("user/checksignup")
+    suspend fun checksignup(@Body bodySignUp: BodySignUp) : ResponseSignUp
 }

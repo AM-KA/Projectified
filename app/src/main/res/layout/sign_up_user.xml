@@ -54,28 +54,6 @@
         app:layout_constraintGuide_percent="0.95" />
 
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:layout_margin="5dp"
-        android:background="@drawable/customdrawable"
-        android:backgroundTint="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:title="Sign Up" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@mipmap/ic_launcher_round"
-        app:layout_constraintBottom_toBottomOf="@id/guideline4"
-        app:layout_constraintEnd_toEndOf="@id/guideline2"
-        app:layout_constraintStart_toStartOf="@id/guideline1"
-        app:layout_constraintTop_toBottomOf="@id/guideline3"
-        app:layout_constraintVertical_bias="0.13" />
-
 
     <EditText
         android:id="@+id/editTextFullName1"

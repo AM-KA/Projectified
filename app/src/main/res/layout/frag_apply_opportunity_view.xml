@@ -188,8 +188,13 @@
                 android:id="@+id/cardViewRecruiterDetails"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+<<<<<<< Updated upstream
                 app:cardCornerRadius="10dp"
                 android:background="@drawable/bg_stroke"
+=======
+                app:cardCornerRadius="20dp"
+                android:background="@drawable/view_pagerdesign"
+>>>>>>> Stashed changes
                 android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
                 app:layout_constraintEnd_toEndOf="@id/guideline2"
