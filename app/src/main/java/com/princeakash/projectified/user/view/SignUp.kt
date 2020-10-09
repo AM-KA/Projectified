@@ -13,13 +13,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.princeakash.projectified.R
 import com.princeakash.projectified.user.BodySignUp
+import com.princeakash.projectified.user.LoginBody
 import com.princeakash.projectified.user.ProfileViewModel
 import com.princeakash.projectified.user.ResponseSignUp
+import com.princeakash.projectified.user.view.VerifyOtpFragment.Companion.E_MAIL
+import com.princeakash.projectified.user.view.VerifyOtpFragment.Companion.N_AME
+import com.princeakash.projectified.user.view.VerifyOtpFragment.Companion.PASS_WORD
+import com.princeakash.projectified.user.view.VerifyOtpFragment.Companion.PHONE_NO
 import kotlinx.android.synthetic.main.frag_myapplicationdetail.view.*
 import kotlinx.android.synthetic.main.sign_up_user.*
 import kotlinx.android.synthetic.main.sign_up_user.view.*
 import kotlinx.android.synthetic.main.signin_user.view.*
-import kotlinx.android.synthetic.main.signin_user.view.SignUpButton
+
 
 
 class SignUp : Fragment(){
@@ -30,12 +35,20 @@ class SignUp : Fragment(){
     private lateinit var editTextPassword:EditText
     private lateinit var editTextReEnterPassword:EditText
     private var SignUpButton: Button? = null
+    private lateinit var phoneNumber:String
+    private lateinit var email:String
+    private lateinit var name:String
+    private lateinit var password:String
 
-    //View Models and Fun Objects
+    ///View Models and Fun Objects
 
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var errorString: String
+    private lateinit var responsechecksignUp:ResponseSignUp
     private var errorShown = false
+    private var code:Int=0
+
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -63,13 +76,38 @@ class SignUp : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
-        profileViewModel.responseSignUp.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { Toast.makeText(context, it.message, LENGTH_SHORT).show(); }
-        })
-        profileViewModel.errorString().observe(viewLifecycleOwner, {
+        profileViewModel.responsecheckSignUp.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
-                Toast.makeText(context, it, LENGTH_SHORT).show()
+                responsechecksignUp = it
+                code = it.code
+                if (code == 300) {
+                    Toast.makeText(context, "You had already signed Up.Please Login to Continue ", LENGTH_SHORT).show()
+                }
+                else if(code==200)
+                {
+                    val bundle = Bundle()
+                    bundle.putString(PHONE_NO,phoneNumber)
+                    bundle.putString(E_MAIL,email)
+                    bundle.putString(PASS_WORD,password)
+                    bundle.putString(N_AME,name)
+
+                    parentFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_initial, VerifyOtpFragment::class.java,bundle, "verify")
+                            //.addToBackStack(null)
+                            .commit()
+
+                }
+                else {
+                    Toast.makeText(context,
+                            "Error", LENGTH_SHORT).show()
+                }
+            profileViewModel.errorString().observe(viewLifecycleOwner, {
+                it?.getContentIfNotHandled()?.let {
+                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                }
+            })
             }
         })
     }
@@ -97,15 +135,14 @@ class SignUp : Fragment(){
             return
         }
 
-        val phoneNumber =editTextPhone!!.text!!.toString()
-        val email = editTextEmail!!.text!!.toString()
-        val password = editTextPassword!!.text!!.toString()
-        val name= editTextName!!.text!!.toString()
-
-        val signUp = BodySignUp(name, email, phoneNumber,password)
-        profileViewModel.signUp(signUp)
+         phoneNumber =editTextPhone!!.text!!.toString()
+         email = editTextEmail!!.text!!.toString()
+         password = editTextPassword!!.text!!.toString()
+         name= editTextName!!.text!!.toString()
 
 
+        val cheksignUp = BodySignUp(name, email, phoneNumber,password)
+        profileViewModel.checksignup(cheksignUp)
 
 
     }
@@ -115,3 +152,6 @@ class SignUp : Fragment(){
         super.onSaveInstanceState(outState)
     }
 }
+
+
+

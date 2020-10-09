@@ -36,11 +36,33 @@
         app:layout_constraintGuide_percent="0.95"/>
 
 
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@drawable/customdrawable"
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_margin="5dp"
+        app:title="Verify Phone Number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/ic_launcher_round"
+        app:layout_constraintEnd_toEndOf="@id/guideline2"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
+        app:layout_constraintTop_toBottomOf="@id/guideline3"
+        app:layout_constraintBottom_toBottomOf="@id/guideline4"
+        app:layout_constraintVertical_bias="0.2"/>
+
     <EditText
-        android:id="@+id/editTextEmail"
+        android:id="@+id/enterOtp"
         android:layout_width="300dp"
         android:layout_height="60dp"
-        android:hint="Email"
+        android:hint="Enter Otp"
         android:padding="20dp"
         app:layout_constraintVertical_bias="0.5"
         app:layout_constraintTop_toBottomOf="@id/guideline3"
@@ -50,52 +72,31 @@
         app:layout_constraintStart_toEndOf="@id/guideline1"
         android:inputType="text"/>
 
-    <EditText
-        android:id="@+id/editTextPassword"
-        android:layout_width="300dp"
+    <Button
+        android:id="@+id/VerifyButton"
+        android:layout_width="200dp"
         android:layout_height="60dp"
-        app:layout_constraintVertical_bias="0.65"
-        android:paddingLeft="20dp"
-        android:hint="Password"
+        app:layout_constraintVertical_bias="0.680"
         app:layout_constraintTop_toBottomOf="@id/guideline3"
         app:layout_constraintEnd_toEndOf="@id/guideline2"
         app:layout_constraintBottom_toTopOf="@id/guideline4"
-        android:background="@drawable/design_input"
+        android:background="@drawable/buttons"
+        android:text="Verify"
+        android:textAllCaps="false"
+        android:fontFamily="@font/roboto"
+        android:textSize="20dp"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@id/guideline1"
+        />
+    <ProgressBar
+        android:id="@+id/ProgressBar"
+        android:layout_width="300dp"
+        android:layout_height="80dp"
+        android:padding="20dp"
+        app:layout_constraintVertical_bias="0.02"
+        app:layout_constraintTop_toBottomOf="@id/VerifyButton"
+        app:layout_constraintEnd_toEndOf="@id/guideline2"
+        app:layout_constraintBottom_toTopOf="@id/guideline4"
         app:layout_constraintStart_toEndOf="@id/guideline1"
         android:inputType="text"/>
-
-    <Button
-        android:id="@+id/LogInButton"
-        android:layout_width="200dp"
-        android:layout_height="60dp"
-        app:layout_constraintVertical_bias="0.80"
-        app:layout_constraintTop_toBottomOf="@id/guideline3"
-        app:layout_constraintEnd_toEndOf="@id/guideline2"
-        app:layout_constraintBottom_toTopOf="@id/guideline4"
-        android:background="@drawable/buttons"
-        android:text="Login"
-        android:textAllCaps="false"
-        android:fontFamily="@font/roboto"
-        android:textSize="20dp"
-        android:textColor="#FFFFFF"
-        app:layout_constraintStart_toEndOf="@id/guideline1"
-        />
-    <Button
-        android:id="@+id/ButtonSignUp"
-        android:layout_width="200dp"
-        android:layout_height="60dp"
-        app:layout_constraintVertical_bias="0.90"
-        app:layout_constraintTop_toBottomOf="@id/guideline3"
-        app:layout_constraintEnd_toEndOf="@id/guideline2"
-        app:layout_constraintBottom_toTopOf="@id/guideline4"
-        android:background="@drawable/buttons"
-        android:text="SignUp"
-        android:textAllCaps="false"
-        android:fontFamily="@font/roboto"
-        android:textSize="20dp"
-        android:textColor="#FFFFFF"
-        app:layout_constraintStart_toEndOf="@id/guideline1"
-        />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

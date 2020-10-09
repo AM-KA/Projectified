@@ -3,6 +3,7 @@ package com.princeakash.projectified
 import android.app.Application
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import com.google.firebase.FirebaseApp
 import com.princeakash.projectified.Faq.FaqRepository
 import com.princeakash.projectified.candidate.CandidateRepository
 import com.princeakash.projectified.recruiter.RecruiterRepository
@@ -41,11 +42,13 @@ class MyApplication: Application(){
 
     //Storing static values
     companion object{
-        val BASE_URL = "http://192.168.43.139:3000/"
+        val BASE_URL = "http://192.168.1.101:3000/"
     }
 
     override fun onCreate() {
         super.onCreate()
+
+        FirebaseApp.initializeApp(this);
         moshi = Moshi.Builder()
                 .add(CustomDateAdapter())
                 .add(KotlinJsonAdapterFactory())
@@ -60,5 +63,8 @@ class MyApplication: Application(){
         candidateRepository = CandidateRepository(retrofit)
         faqRepository = FaqRepository(retrofit)
 
-    }
+
+
+
+        }
 }

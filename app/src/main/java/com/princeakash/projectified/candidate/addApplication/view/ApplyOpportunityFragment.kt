@@ -25,15 +25,16 @@ import kotlinx.android.synthetic.main.frag_apply_opportunity_self.view.*
 class ApplyOpportunityFragment : Fragment() {
 
     //Views
-    private lateinit var textName:TextView
+    private lateinit var textName: TextView
     private lateinit var textCollege: TextView
     private lateinit var textCourse: TextView
     private lateinit var textSemester: TextView
-    private lateinit var editTextPreviousWork:TextInputEditText
-    private lateinit var editTextResume:TextInputEditText
-    private lateinit var buttonApply:Button
-    private lateinit var buttonCancel:Button
-    private lateinit var offerId:String
+    private lateinit var editTextPreviousWork: TextInputEditText
+    private lateinit var editTextResume: TextInputEditText
+    private lateinit var buttonApply: Button
+    private lateinit var buttonCancel: Button
+    private lateinit var offerId: String
+    private var code:Int=0
 
     //ViewModels
     private lateinit var candidateAddApplicationViewModel: CandidateAddApplicationViewModel
@@ -45,7 +46,7 @@ class ApplyOpportunityFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        offerId = if(savedInstanceState==null)
+        offerId = if (savedInstanceState == null)
             requireArguments().getString(OFFER_IDC)!!
         else
             savedInstanceState.getString(OFFER_IDC)!!
@@ -54,11 +55,18 @@ class ApplyOpportunityFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        candidateAddApplicationViewModel= ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
+        candidateAddApplicationViewModel = ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
         candidateAddApplicationViewModel.responseAddApplication.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 responseAddApplication = it
-                Toast.makeText(context, it.message, LENGTH_SHORT).show()
+                code = it.code
+                if (code == 300) {
+                    Toast.makeText(context, "ALREADY APPLIED FOR THIS POSITION", LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context,
+                            "APPLIED SUCCESFULLY", LENGTH_SHORT).show()
+                }
+
             }
         })
 
@@ -72,18 +80,18 @@ class ApplyOpportunityFragment : Fragment() {
         val view = inflater.inflate(R.layout.frag_apply_opportunity_self, container, false)
 
         textName = view.textViewName
-        textCollege= view.textViewCollege
-        textCourse= view.textViewCourse
+        textCollege = view.textViewCollege
+        textCourse = view.textViewCourse
         textSemester = view.textViewSemester
-        editTextPreviousWork =view.editTextPreviousWork
-        editTextResume= view.editTextResume
-        buttonApply=view.buttonSubmit
-        buttonCancel= view.buttonCancel
+        editTextPreviousWork = view.editTextPreviousWork
+        editTextResume = view.editTextResume
+        buttonApply = view.buttonSubmit
+        buttonCancel = view.buttonCancel
         buttonApply.setOnClickListener {
 
             validateParameters()
         }
-        buttonCancel.setOnClickListener{
+        buttonCancel.setOnClickListener {
             parentFragmentManager.beginTransaction()
                     .replace(R.id.fragment_apply, HomeFragment::class.java, null, "HomeFragment")
                     .addToBackStack(null)
@@ -96,17 +104,18 @@ class ApplyOpportunityFragment : Fragment() {
     }
 
     private fun validateParameters() {
-        if(editTextPreviousWork.text.isNullOrEmpty()){
+        if (editTextPreviousWork.text.isNullOrEmpty()) {
             editTextPreviousWork.error = "Enter previous Work."
             return
         }
-        if(editTextResume.text.isNullOrEmpty()){
+        if (editTextResume.text.isNullOrEmpty()) {
             editTextResume.error = "Enter Resume."
             return
         }
 
         val previousWork = editTextPreviousWork.text.toString()
         val resume = editTextResume.text.toString()
+<<<<<<< Updated upstream
         AlertDialog.Builder(requireContext())
                 .setTitle("Confirm Application")
                 .setMessage("Are you sure you want to apply for this offer with the filled details?")
@@ -115,9 +124,16 @@ class ApplyOpportunityFragment : Fragment() {
                 })
                 .setNegativeButton("No", DialogInterface.OnClickListener { dialog, which ->  })
                 .create().show()
+=======
+
+
+
+        candidateAddApplicationViewModel.addApplication(resume, previousWork, offerId)
+
+>>>>>>> Stashed changes
     }
 
-    private fun loadLocalProfile(){
+    private fun loadLocalProfile() {
         val profileModel = candidateAddApplicationViewModel.getLocalProfile()!!
         textName.setText(profileModel.name)
         textCollege.setText(profileModel.collegeName)
@@ -125,11 +141,15 @@ class ApplyOpportunityFragment : Fragment() {
         textSemester.setText(profileModel.semester)
     }
 
+<<<<<<< Updated upstream
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(OFFER_IDC, offerId)
     }
     companion object{
+=======
+    companion object {
+>>>>>>> Stashed changes
         val OFFER_IDC = "offerId"
     }
 }

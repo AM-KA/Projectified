@@ -66,3 +66,5 @@ class SplashScreenFragment : Fragment() {
         requireActivity().finish()
     }
 }
+
+

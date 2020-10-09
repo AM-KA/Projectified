@@ -21,6 +21,7 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
     var responseLogin: MutableLiveData<Event<ResponseLogin>> = MutableLiveData()
     var responseCreateProfile: MutableLiveData<Event<ResponseCreateProfile>> = MutableLiveData()
     var responseUpdateProfile: MutableLiveData<Event<ResponseUpdateProfile>> = MutableLiveData()
+    var responsecheckSignUp : MutableLiveData<Event<ResponseSignUp>> = MutableLiveData()
 
 
     //Functions based on
@@ -50,7 +51,24 @@ class ProfileViewModel(app: Application): AndroidViewModel(app) {
             }
         }
     }
+    fun checksignup(bodySignUp: BodySignUp)
+    {
+        viewModelScope.launch {
+            try{
+            val response =profileRepository.checksignUp(bodySignUp)
+            if(response.code==200)
+                responsecheckSignUp.postValue((Event(response)))
+                if(response.code==300)
+                    responsecheckSignUp.postValue((Event(response)))
+            else
 
+                errorString.postValue(Event(response.message))
+        }
+         catch (e: Exception) {
+        handleError(e)
+    }
+    }
+}
     fun logIn(bodyLogin: LoginBody) {
         viewModelScope.launch {
             try {

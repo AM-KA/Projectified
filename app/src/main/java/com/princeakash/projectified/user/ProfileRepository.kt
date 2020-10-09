@@ -25,6 +25,8 @@ class ProfileRepository(retrofit: Retrofit, app: MyApplication) {
 
     suspend fun logIn(bodyLogin: LoginBody) = profileService.logIn(bodyLogin)
 
+    suspend fun checksignUp(bodySignUp: BodySignUp)= profileService.checksignup(bodySignUp)
+
     suspend fun createProfile(token: String,bodyCreateProfile: BodyCreateProfile)  = profileService.createProfile(token, bodyCreateProfile)
 
     suspend fun updateProfile(token: String,bodyUpdateProfile: BodyUpdateProfile): ResponseUpdateProfile{
