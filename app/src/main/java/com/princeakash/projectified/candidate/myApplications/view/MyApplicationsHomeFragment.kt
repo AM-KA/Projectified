@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,7 @@ import kotlinx.android.synthetic.main.frag_myapplication.view.*
 
 class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplicationsListener {
 
+    lateinit var progressCircularLayout: RelativeLayout
     var candidateExistingApplicationViewModel: CandidateExistingApplicationViewModel? = null
     var applicationList: ArrayList<ApplicationCardModelCandidate> = ArrayList()
     var errorString:String? = null
@@ -36,14 +38,17 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
+        val v = inflater.inflate(R.layout.frag_myapplication, container, false)
+        progressCircularLayout = v.progress_circular_layout
         candidateExistingApplicationViewModel= ViewModelProvider(requireParentFragment()).get(CandidateExistingApplicationViewModel::class.java)
         candidateExistingApplicationViewModel!!.responseGetApplicationByCandidate.observe(viewLifecycleOwner, {
             applicationList = it?.applications as ArrayList<ApplicationCardModelCandidate>
             recyclerViewApplications.adapter = MyApplicationsAdapter(applicationList, this@MyApplicationsHomeFragment)
+            progressCircularLayout.visibility = View.INVISIBLE
         })
         candidateExistingApplicationViewModel!!.errorString.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
+                progressCircularLayout.visibility = View.INVISIBLE
                 errorString = it
                 Toast.makeText(this@MyApplicationsHomeFragment.context, errorString, LENGTH_SHORT).show()
             }
@@ -51,16 +56,16 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
 
         //Start fetching applications list
         if(savedInstanceState == null || savedInstanceState.getBoolean(DETAILS_VIEWED)) {
+            progressCircularLayout.visibility = View.VISIBLE
             candidateExistingApplicationViewModel!!.getApplicationsByCandidate()
             detailsViewed = false
         }
         (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "My Applications"
-        return inflater.inflate(R.layout.frag_myapplication, container, false)
+        return v
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         view.recyclerViewApplications.apply {
             layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
             adapter = MyApplicationsAdapter(applicationList,this@MyApplicationsHomeFragment)

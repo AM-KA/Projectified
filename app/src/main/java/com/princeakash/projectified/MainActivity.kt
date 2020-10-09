@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.kk)
-
+        window?.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
 
         toolbar = findViewById(R.id.toolbar)
@@ -70,7 +71,6 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.Ratings -> {
 
-
             }
             R.id.LogOut -> {
                 profileViewModel.setLoginStatus(false)
@@ -86,12 +86,11 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             R.id.Help -> {
-
                 val address = "amkafoundation@gmail.com"
                 //TODO("Gmail of amka Foundation ")
                 val subject: String = "App Review: Projectified"
                 val intent = Intent(Intent.ACTION_SENDTO).apply {
-                    data = Uri.parse("mailto:")
+                    data = Uri.parse("mailto:$address")
                     putExtra(Intent.EXTRA_EMAIL, address)
                     putExtra(Intent.EXTRA_SUBJECT, subject)
                 }
@@ -99,8 +98,6 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
             }
-
-
         }
         return true
     }

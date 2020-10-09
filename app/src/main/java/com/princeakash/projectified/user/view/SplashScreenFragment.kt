@@ -55,10 +55,8 @@ class SplashScreenFragment : Fragment() {
     }
 
     fun takeToLogin(){
-        parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_initial, LoginFragment(), "Login")
-                //.addToBackStack(null)
-                .commit()
+          startActivity(Intent(requireActivity(), LoginSignupScreens::class.java))
+          requireActivity().finish()
     }
 
     fun takeToHome(){

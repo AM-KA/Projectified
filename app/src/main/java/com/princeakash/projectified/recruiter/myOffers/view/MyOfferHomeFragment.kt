@@ -44,11 +44,13 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
         recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
         recruiterExistingOffersViewModel!!.responseGetOffersByRecruiter.observe(viewLifecycleOwner, {
             offerList = it?.offers as ArrayList<OfferCardModelRecruiter>
+            view.progress_circular_layout.visibility = View.INVISIBLE
             view.recyclerViewOffers.adapter = MyOffersAdapter(offerList, this@MyOfferHomeFragment)
         })
         recruiterExistingOffersViewModel!!.errorString.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 errorString = it
+                view.progress_circular_layout.visibility = View.INVISIBLE
                 Toast.makeText(this@MyOfferHomeFragment.context, errorString, LENGTH_SHORT).show()
             }
         })

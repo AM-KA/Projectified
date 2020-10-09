@@ -7,10 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CompoundButton
-import android.widget.Switch
-import android.widget.Toast
+import android.widget.*
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -31,8 +28,9 @@ class MyOfferDetailsFragment() : Fragment() {
     private var editTextExpectations: TextInputEditText? = null
     private var switchVisibility: SwitchMaterial? = null
     private var buttonEditDetails: Button? = null
-    private var buttonViewApplicants:Button? = null
-    private var buttonDelist:Button? = null
+    private var buttonViewApplicants: Button? = null
+    private var buttonDelist: Button? = null
+    private lateinit var progressCircularLayout: RelativeLayout
 
     //Determines whether textviews are editable or not
     private var editable = false
@@ -41,9 +39,9 @@ class MyOfferDetailsFragment() : Fragment() {
     private var recruiterExistingOffersViewModel: RecruiterExistingOffersViewModel? = null
     private var responseGetOfferByIdRecruiter: ResponseGetOfferByIdRecruiter? = null
     private var responseDeleteOffer: ResponseDeleteOffer? = null
-    private var responseUpdateOffer: ResponseUpdateOffer?= null
+    private var responseUpdateOffer: ResponseUpdateOffer? = null
     private var responseToggleVisibility: ResponseToggleVisibility? = null
-    private var error:String? = null
+    private var error: String? = null
 
     //Offer Data
     private var offerId: String? = null
@@ -61,24 +59,27 @@ class MyOfferDetailsFragment() : Fragment() {
         buttonEditDetails = v.buttonEditDetails
         buttonViewApplicants = v.buttonViewApplicants
         buttonDelist = v.buttonDelist
+        progressCircularLayout = v.progress_circular_layout
 
-        buttonDelist?.setOnClickListener{
+        buttonDelist?.setOnClickListener {
+            progressCircularLayout.visibility = View.VISIBLE
             delistOpportunity()
         }
 
-        buttonEditDetails?.setOnClickListener{
+        buttonEditDetails?.setOnClickListener {
             editable = !editable
             setEditable()
-            if(!editable)
-               updateOffer()
+            if (!editable)
+                updateOffer()
         }
 
-        buttonViewApplicants?.setOnClickListener{
+        buttonViewApplicants?.setOnClickListener {
             viewApplicants()
         }
 
         switchVisibility?.setOnCheckedChangeListener { buttonView: CompoundButton?, isChecked: Boolean ->
             run {
+                progressCircularLayout.visibility = View.VISIBLE
                 recruiterExistingOffersViewModel!!.toggleVisibility(offerId!!, BodyToggleVisibility(isChecked))
             }
         }
@@ -97,22 +98,25 @@ class MyOfferDetailsFragment() : Fragment() {
         })
 
         recruiterExistingOffersViewModel!!.responseToggleVisibility.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let{
+            it?.getContentIfNotHandled()?.let {
+                progressCircularLayout.visibility = View.INVISIBLE
                 responseToggleVisibility = it
                 //TODO: Show Toast
             }
         })
 
         recruiterExistingOffersViewModel!!.responseUpdateOffer.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let{
+            it?.getContentIfNotHandled()?.let {
+                progressCircularLayout.visibility = View.INVISIBLE
                 responseUpdateOffer = it
-                //TODO: Show Toast and start ProgressBar
+                //TODO: Show Toast
                 fetchOfferDetails()
             }
         })
 
         recruiterExistingOffersViewModel!!.responseDeleteOffer.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let{
+            it?.getContentIfNotHandled()?.let {
+                progressCircularLayout.visibility = View.INVISIBLE
                 responseDeleteOffer = it
                 //TODO: Show Toast
                 parentFragmentManager.popBackStackImmediate()
@@ -120,18 +124,18 @@ class MyOfferDetailsFragment() : Fragment() {
         })
 
         recruiterExistingOffersViewModel!!.errorString.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let{
+            it?.getContentIfNotHandled()?.let {
+                progressCircularLayout.visibility = View.INVISIBLE
                 error = it
                 Toast.makeText(context, error, LENGTH_SHORT).show()
             }
         })
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             //First loadup of Fragment
             offerId = requireArguments().getString(OFFER_ID)
             fetchOfferDetails()
-        }
-        else{
+        } else {
             //Restore state
             //responseGetOfferByIdRecruiter = savedInstanceState.getSerializable(RESPONSE_GET_OFFER_DETAILS) as ResponseGetOfferByIdRecruiter
             offerId = savedInstanceState.getString(OFFER_ID)
@@ -148,27 +152,27 @@ class MyOfferDetailsFragment() : Fragment() {
         bundle.putString(OFFER_ID, offerId)
         parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_offers, MyOfferApplicantsFragment::class.java, bundle, "MyOfferApplicantsFragment")
-                .addToBackStack("MyOfferApplicants"+offerId)
+                .addToBackStack("MyOfferApplicants" + offerId)
                 .commit()
     }
 
     private fun updateOffer() {
-        if(editTextOfferName!!.text == null || editTextOfferName!!.text!!.equals("")) {
+        if (editTextOfferName!!.text == null || editTextOfferName!!.text!!.equals("")) {
             editTextOfferName!!.error = "Enter offer name."
             return
         }
 
-        if(editTextRequirements!!.text == null || editTextRequirements!!.text!!.equals("")) {
+        if (editTextRequirements!!.text == null || editTextRequirements!!.text!!.equals("")) {
             editTextRequirements!!.error = "Enter requirements."
             return
         }
 
-        if(editTextSkills!!.text == null || editTextSkills!!.text!!.equals("")) {
+        if (editTextSkills!!.text == null || editTextSkills!!.text!!.equals("")) {
             editTextSkills!!.error = "Enter skills."
             return
         }
 
-        if(editTextExpectations!!.text == null || editTextExpectations!!.text!!.equals("")) {
+        if (editTextExpectations!!.text == null || editTextExpectations!!.text!!.equals("")) {
             editTextExpectations!!.error = "Enter expectation."
             return
         }
@@ -178,11 +182,14 @@ class MyOfferDetailsFragment() : Fragment() {
         val skills = editTextSkills!!.text!!.toString()
         val expectation = editTextExpectations!!.text!!.toString()
 
-    val bodyUpdateOffer = BodyUpdateOffer(offerName, requirement, skills, expectation)
-    recruiterExistingOffersViewModel!!.updateOffer(offerId!!, bodyUpdateOffer)
-}
+        progressCircularLayout.visibility = View.VISIBLE
+        val bodyUpdateOffer = BodyUpdateOffer(offerName, requirement, skills, expectation)
+        recruiterExistingOffersViewModel!!.updateOffer(offerId!!, bodyUpdateOffer)
+    }
+
     private fun fetchOfferDetails() {
         //TODO:Start ProgressBar
+        progressCircularLayout.visibility = View.VISIBLE
         offerId?.let { recruiterExistingOffersViewModel!!.getOfferByIdRecruiter(it) }
     }
 
@@ -193,7 +200,7 @@ class MyOfferDetailsFragment() : Fragment() {
         outState.putBoolean(EDITABLE_STATUS, editable)
     }
 
-    fun populateViews(){
+    fun populateViews() {
         editTextOfferName?.setText(responseGetOfferByIdRecruiter?.offer?.offer_name)
         editTextRequirements?.setText(responseGetOfferByIdRecruiter?.offer?.requirements)
         editTextSkills?.setText(responseGetOfferByIdRecruiter?.offer?.skills)
@@ -201,26 +208,28 @@ class MyOfferDetailsFragment() : Fragment() {
         switchVisibility?.isChecked = (responseGetOfferByIdRecruiter?.offer?.is_visible != null) && (responseGetOfferByIdRecruiter?.offer?.is_visible == true)
     }
 
-    fun setEditable(){
+    fun setEditable() {
         editTextOfferName?.isEnabled = editable
         editTextExpectations?.isEnabled = editable
         editTextSkills?.isEnabled = editable
         editTextRequirements?.isEnabled = editable
-        if(editable){
+        if (editable) {
             buttonEditDetails?.text = "Save Details"
-        }else{
+        } else {
             buttonEditDetails?.text = "Edit Details"
         }
+        progressCircularLayout.visibility = View.INVISIBLE
     }
 
-    fun delistOpportunity(){
+    fun delistOpportunity() {
         AlertDialog.Builder(requireContext())
                 .setTitle("Confirm Delete")
                 .setMessage("Are you sure you want to delete this offer? You cannot undo this action later.")
-                .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
+                .setPositiveButton("Yes") { dialog, which ->
+                    progressCircularLayout.visibility = View.VISIBLE
                     recruiterExistingOffersViewModel!!.deleteOffer(offerId!!)
-                })
-                .setNegativeButton("No", DialogInterface.OnClickListener { dialog, which ->  })
+                }
+                .setNegativeButton("No") { dialog, which -> }
                 .create().show()
     }
 

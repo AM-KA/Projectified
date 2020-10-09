@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
@@ -22,29 +23,36 @@ import kotlinx.android.synthetic.main.frag_candidates.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferApplicantListener{
+class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferApplicantListener {
 
     private var recruiterExistingOffersViewModel: RecruiterExistingOffersViewModel? = null
-    private var error:String? = null
+    private var error: String? = null
     private var applicantList: ArrayList<ApplicantCardModel>? = ArrayList()
     private var responseMarkAsSeen: ResponseMarkAsSeen? = null
     private var responseMarkAsSelected: ResponseMarkAsSelected? = null
     private var responseGetOfferApplicants: ResponseGetOfferApplicants? = null
+    private lateinit var progressCircularLayout: RelativeLayout
 
     private var offerId: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
+        val v = inflater.inflate(R.layout.frag_candidates, container, false)
+        progressCircularLayout = v.progress_circular_layout
+
         recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
 
         recruiterExistingOffersViewModel!!.responseGetOfferApplicants.observe(viewLifecycleOwner, {
             responseGetOfferApplicants = it
             applicantList = it.applicants as ArrayList<ApplicantCardModel>
             recyclerViewApplicants.adapter = MyOfferApplicantsAdapter(applicantList, this)
+            progressCircularLayout.visibility = View.INVISIBLE
         })
 
         recruiterExistingOffersViewModel!!.errorString.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let{
+            it?.getContentIfNotHandled()?.let {
+                progressCircularLayout.visibility = View.INVISIBLE
                 error = it
                 Toast.makeText(context, error, LENGTH_SHORT).show()
             }
@@ -52,12 +60,13 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
 
         recruiterExistingOffersViewModel!!.responseMarkAsSeen.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { iter ->
+                progressCircularLayout.visibility = View.INVISIBLE
                 responseMarkAsSeen = iter
 
                 Log.d(TAG, "onCreateView: Entered seen")
                 //Take action as per response
 
-                Log.d(TAG, "onCreateView: "+iter.application_id)
+                Log.d(TAG, "onCreateView: " + iter.application_id)
                 //Search for id
                 applicantList?.let {
                     Log.d(TAG, "onCreateView: List not null")
@@ -66,6 +75,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
                             listItem.is_Seen = true
                             Log.d(TAG, "onCreateView: Mark as seen is being changed")
                             responseGetOfferApplicants?.applicants = it
+                            progressCircularLayout.visibility = View.VISIBLE
                             recruiterExistingOffersViewModel!!.responseGetOfferApplicants.postValue(responseGetOfferApplicants)
                             break
                         }
@@ -76,12 +86,13 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
 
         recruiterExistingOffersViewModel!!.responseMarkAsSelected.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { iter ->
+                progressCircularLayout.visibility = View.INVISIBLE
                 responseMarkAsSelected = iter
 
                 Log.d(TAG, "onCreateView: Entered selected")
                 //Take action as per response
 
-                Log.d(TAG, "onCreateView: "+iter.application_id)
+                Log.d(TAG, "onCreateView: " + iter.application_id)
                 //Search for id
                 applicantList?.let {
                     Log.d(TAG, "onCreateView: List not null")
@@ -90,6 +101,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
                             listItem.is_Selected = true
                             Log.d(TAG, "onCreateView: Mark as selected is being changed")
                             responseGetOfferApplicants?.applicants = it
+                            progressCircularLayout.visibility = View.VISIBLE
                             recruiterExistingOffersViewModel!!.responseGetOfferApplicants.postValue(responseGetOfferApplicants)
                             break
                         }
@@ -97,16 +109,16 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
                 }
             }
         })
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             offerId = requireArguments().getString(OFFER_ID)
-            offerId?.let{
+            offerId?.let {
                 recruiterExistingOffersViewModel!!.getOfferApplicants(it)
             }
         } else {
             offerId = savedInstanceState.getString(OFFER_ID)
         }
         (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Candidates"
-        return inflater.inflate(R.layout.frag_candidates, container, false)
+        return v
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -129,7 +141,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
         bundle.putString(APPLICATION_ID, applicationID)
         parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_offers, MyOfferApplicationFragment::class.java, bundle, "MyOfferApplicationFragment")
-                .addToBackStack("MyOfferApplication"+offerId)
+                .addToBackStack("MyOfferApplication" + offerId)
                 .commit()
     }
 
@@ -137,6 +149,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
         //Get the ApplicantCardModel
         val application_id = applicantList!!.get(itemPosition).application_id
         val currentStatus = applicantList!!.get(itemPosition).is_Seen
+        progressCircularLayout.visibility = View.VISIBLE
         recruiterExistingOffersViewModel!!.markSeen(application_id, BodyMarkAsSeen(!currentStatus))
     }
 
@@ -144,6 +157,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
         //Get the ApplicantCardModel
         val application_id = applicantList!!.get(itemPosition).application_id
         val currentStatus = applicantList!!.get(itemPosition).is_Selected
+        progressCircularLayout.visibility = View.VISIBLE
         recruiterExistingOffersViewModel!!.markSelected(application_id, BodyMarkAsSelected(!currentStatus))
     }
 

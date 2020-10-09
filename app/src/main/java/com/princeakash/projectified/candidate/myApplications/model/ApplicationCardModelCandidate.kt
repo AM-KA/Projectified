@@ -3,7 +3,7 @@ package com.princeakash.projectified.candidate.myApplications.model
 import java.util.*
 
 data class ApplicationCardModelCandidate (
-
+        var recruiter_name: String,
         var  offer_name: String,
         var  application_id: String,
         var  collegeName:String,

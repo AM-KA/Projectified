@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
@@ -34,7 +35,8 @@ class ApplyOpportunityFragment : Fragment() {
     private lateinit var buttonApply: Button
     private lateinit var buttonCancel: Button
     private lateinit var offerId: String
-    private var code:Int=0
+    private lateinit var progressCircularLayout: RelativeLayout
+    private var code: Int = 0
 
     //ViewModels
     private lateinit var candidateAddApplicationViewModel: CandidateAddApplicationViewModel
@@ -59,14 +61,7 @@ class ApplyOpportunityFragment : Fragment() {
         candidateAddApplicationViewModel.responseAddApplication.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 responseAddApplication = it
-                code = it.code
-                if (code == 300) {
-                    Toast.makeText(context, "ALREADY APPLIED FOR THIS POSITION", LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(context,
-                            "APPLIED SUCCESFULLY", LENGTH_SHORT).show()
-                }
-
+                Toast.makeText(context, it.message, LENGTH_SHORT).show()
             }
         })
 
@@ -115,41 +110,33 @@ class ApplyOpportunityFragment : Fragment() {
 
         val previousWork = editTextPreviousWork.text.toString()
         val resume = editTextResume.text.toString()
-<<<<<<< Updated upstream
         AlertDialog.Builder(requireContext())
                 .setTitle("Confirm Application")
                 .setMessage("Are you sure you want to apply for this offer with the filled details?")
-                .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
-                    candidateAddApplicationViewModel.addApplication(resume,previousWork, offerId)
-                })
-                .setNegativeButton("No", DialogInterface.OnClickListener { dialog, which ->  })
+                .setPositiveButton("Yes") { dialog, which ->
+                    progressCircularLayout.visibility = View.VISIBLE
+                    candidateAddApplicationViewModel.addApplication(resume, previousWork, offerId)
+                }
+                .setNegativeButton("No") { dialog, which -> }
                 .create().show()
-=======
-
-
-
-        candidateAddApplicationViewModel.addApplication(resume, previousWork, offerId)
-
->>>>>>> Stashed changes
     }
 
     private fun loadLocalProfile() {
+        progressCircularLayout.visibility = View.VISIBLE
         val profileModel = candidateAddApplicationViewModel.getLocalProfile()!!
         textName.setText(profileModel.name)
         textCollege.setText(profileModel.collegeName)
         textCourse.setText(profileModel.course)
         textSemester.setText(profileModel.semester)
+        progressCircularLayout.visibility = View.INVISIBLE
     }
 
-<<<<<<< Updated upstream
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(OFFER_IDC, offerId)
     }
-    companion object{
-=======
+
     companion object {
->>>>>>> Stashed changes
         val OFFER_IDC = "offerId"
     }
 }

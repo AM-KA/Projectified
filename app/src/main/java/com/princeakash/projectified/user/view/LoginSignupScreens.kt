@@ -67,7 +67,7 @@ class LoginSignupScreens : AppCompatActivity() {
 
             return when (position) {
                 0 -> return LoginFragment()
-                1 -> return SignUp()
+                1 -> return SignUpFrgment()
                 else
                 -> return LoginFragment()
             }

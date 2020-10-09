@@ -12,6 +12,7 @@ class MyApplicationsAdapter(var applicationList : List<ApplicationCardModelCandi
 
 
     class MyApplicationsViewHolder(itemView: View, listener: MyApplicationsListener):RecyclerView.ViewHolder(itemView), View.OnClickListener{
+        val textViewName = itemView.textViewName
         val textViewPost = itemView.textViewPost
         val textViewCollege = itemView.textViewCollege
         val textViewDate = itemView.textViewDate
@@ -34,6 +35,7 @@ class MyApplicationsAdapter(var applicationList : List<ApplicationCardModelCandi
     }
 
     override fun onBindViewHolder(holder: MyApplicationsViewHolder, position: Int) {
+        holder.textViewName.text = applicationList?.get(position)?.recruiter_name
         holder.textViewPost.text = applicationList?.get(position)?.offer_name
         holder.textViewCollege.text= applicationList?.get(position)?.collegeName
         holder.textViewDate.text = applicationList?.get(position)?.float_date.toString()

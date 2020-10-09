@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -19,6 +18,7 @@ import com.princeakash.projectified.candidate.addApplication.model.GetOffersByDo
 import com.princeakash.projectified.candidate.addApplication.viewModel.CandidateAddApplicationViewModel
 import com.princeakash.projectified.candidate.myApplications.model.OfferCardModelCandidate
 import com.princeakash.projectified.recruiter.addOffer.view.AddOfferFragment
+import kotlinx.android.synthetic.main.frag_available_offers.view.*
 import kotlin.properties.Delegates
 
 class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffersListener{
@@ -61,17 +61,20 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
         candidateAddApplicationViewModel.responseGetOffersByDomain.observe(viewLifecycleOwner, {
             offerList = it.offers as ArrayList<OfferCardModelCandidate>
             recyclerView.adapter = GetOffersByDomainAdapter(offerList, this)
+            view.progress_circular_layout.visibility = View.INVISIBLE
         })
 
         candidateAddApplicationViewModel.errorString.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 errorString = it
+                view.progress_circular_layout.visibility = View.INVISIBLE
                 Toast.makeText(this@GetOffersByDomainFragment.context, errorString, Toast.LENGTH_SHORT).show()
             }
         })
 
         //Start fetching offer list
         if(savedInstanceState == null || !listFetched) {
+            view.progress_circular_layout.visibility = View.VISIBLE
             candidateAddApplicationViewModel.getOffersByDomain(domainName!!)
             listFetched = true
         } else if (listFetched){

@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:andorid="http://schemas.android.com/tools"
     android:background="@color/bg"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <!--<com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbarlayout"
-        android:layout_width="match_parent"
+
+    <RelativeLayout
+        android:elevation="5dp"
+        android:id="@+id/progress_circular_layout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:title="Offer Details"
-            app:layout_scrollFlags="scroll|enterAlways|snap" />
-
-    </com.google.android.material.appbar.AppBarLayout>-->
+        android:background="@drawable/progress_bar_background"
+        android:padding="20dp"
+        android:visibility="visible"
+        android:layout_gravity="center_horizontal|center_vertical">
+        <ProgressBar
+            android:indeterminateTint="@android:color/white"
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
+    </RelativeLayout>
+>>>>>>> e5e415638a57aba337f8837683feddeaa8db21dd
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -188,13 +190,10 @@
                 android:id="@+id/cardViewRecruiterDetails"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-<<<<<<< Updated upstream
-                app:cardCornerRadius="10dp"
-                android:background="@drawable/bg_stroke"
-=======
+                android:cardCornerRadius="10dp"
+                andorid:background="@drawable/bg_stroke"
                 app:cardCornerRadius="20dp"
                 android:background="@drawable/view_pagerdesign"
->>>>>>> Stashed changes
                 android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
                 app:layout_constraintEnd_toEndOf="@id/guideline2"
@@ -360,7 +359,5 @@
                 app:layout_constraintBottom_toBottomOf="@id/buttonCancel"
                 app:layout_constraintEnd_toEndOf="@id/guideline2"
                 android:text="Apply"/>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

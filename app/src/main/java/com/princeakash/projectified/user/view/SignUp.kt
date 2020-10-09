@@ -63,8 +63,8 @@ class SignUp : Fragment(){
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.sign_up_user, container, false)
         editTextEmail = v.editTextEmail1
-        editTextName = v.editTextFullName1
-        editTextPhone=v.editTextphonenumber1
+        editTextName = v.editTextName1
+        editTextPhone=v.editTextPhoneNumber1
         editTextPassword=v.editTextPassword1
         editTextReEnterPassword=v.editTextReEnterPassword1
         SignUpButton = v.SignUpButton
@@ -94,7 +94,7 @@ class SignUp : Fragment(){
                     bundle.putString(N_AME,name)
 
                     parentFragmentManager.beginTransaction()
-                            .replace(R.id.fragment_initial, VerifyOtpFragment::class.java,bundle, "verify")
+                            .replace(R.id.fragment_signup, VerifyOtpFragment::class.java,bundle, "verify")
                             //.addToBackStack(null)
                             .commit()
 
