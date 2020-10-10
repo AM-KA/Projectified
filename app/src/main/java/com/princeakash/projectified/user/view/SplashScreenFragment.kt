@@ -2,6 +2,7 @@ package com.princeakash.projectified.user.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -55,10 +56,10 @@ class SplashScreenFragment : Fragment() {
     }
 
     fun takeToLogin(){
-        parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_initial, LoginFragment(), "Login")
-                //.addToBackStack(null)
-                .commit()
+          Log.d("Login","Login Competed")
+          startActivity(Intent(requireActivity(), LoginSignupScreens::class.java))
+        requireActivity().finish()
+
     }
 
     fun takeToHome(){

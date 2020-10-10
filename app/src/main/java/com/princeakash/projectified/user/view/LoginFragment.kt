@@ -27,7 +27,7 @@ class LoginFragment : Fragment() {
         private var editTextEmail: EditText? = null
         private var editTextPassword: EditText? = null
         private var LogInButton: Button? = null
-        private var SignUpButton:Button?=null
+
 
 
         //View Models and Fun Objects
@@ -40,20 +40,10 @@ class LoginFragment : Fragment() {
                 editTextEmail = v.editTextEmail
                 editTextPassword = v.editTextPassword
                 LogInButton = v.LogInButton
-                SignUpButton=v.ButtonSignUp
-
 
                 LogInButton?.setOnClickListener {
                         displayHomeScreen()
                 }
-                SignUpButton?.setOnClickListener{
-                        parentFragmentManager.beginTransaction()
-                                .replace(R.id.fragment_initial, SignUp(), "SignUp")
-                                //.addToBackStack(null)
-                                .commit()
-                }
-
-
 
                 return v
         }

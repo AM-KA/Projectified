@@ -28,6 +28,9 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".AboutUsActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".user.view.LoginSignupScreens"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
     </application>
 
 </manifest>
