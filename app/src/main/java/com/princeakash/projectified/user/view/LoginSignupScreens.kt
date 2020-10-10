@@ -9,6 +9,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
+import butterknife.ButterKnife
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.princeakash.projectified.R
@@ -17,64 +19,25 @@ import kotlinx.android.synthetic.main.login.*
 
 class LoginSignupScreens : AppCompatActivity() {
 
-    private lateinit var TabLayout: TabLayout
-    private lateinit var ViewPager: ViewPager
+    private lateinit var tabLayout: TabLayout
+    private lateinit var viewPager: ViewPager2
     private val titles = arrayOf("Login", "SignUp")
-    private lateinit var pagerAdapter:LoginSignUpAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.login)
+         viewPager=findViewById(R.id.viewPager)
+        tabLayout=findViewById(R.id.tablayout1)
 
-        pagerAdapter = LoginSignUpAdapter(supportFragmentManager);
+        var viewPagerAdapter = ViewPagerAdapter(this)
+        viewPager.adapter = viewPagerAdapter
 
-
-        TabLayout = findViewById(R.id.tablayout1)
-        ViewPager = findViewById(R.id.viewPager)
-        ViewPager.setAdapter(pagerAdapter)
-        TabLayoutMediator(TabLayout, viewPager) { tab: TabLayout.Tab, position: Int -> tab.setText(titles.get(position)) }.attach()
-
-
-
-        fun BackPressed() {
-            if (ViewPager.getCurrentItem() == 0) {
-                super.onBackPressed();
-            } else {
-                ViewPager.setCurrentItem(ViewPager.getCurrentItem() - 1);
-            }
-        }
-
-    }
-
-
-    class LoginSignUpAdapter(val fm: FragmentManager) : FragmentPagerAdapter(fm) {
-
-        private lateinit var context: Context
-
-        private var totaltabs: Int = 0
-
-        private fun LoginSignUpAdapter(fm: FragmentManager, context: Context, totaltabs: Int) {
-            this.context = context
-            this.totaltabs = totaltabs
-        }
-
-        override fun getCount(): Int {
-            return totaltabs
-        }
-
-
-        override fun getItem(position: Int): Fragment {
-
-            return when (position) {
-                0 -> return LoginFragment()
-                1 -> return SignUpFrgment()
-                else
-                -> return LoginFragment()
-            }
-        }
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = "OBJECT ${(position + 1)}"
+        }.attach()
     }
 }
-
 
 
 
