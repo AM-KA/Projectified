@@ -7,10 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.tasks.OnCompleteListener
@@ -35,7 +32,7 @@ import java.util.concurrent.TimeUnit
 class VerifyOtpFragment :Fragment() {
 
 
-    private var EditTextOtp: EditText? = null
+    private var EditTextOtp: AutoCompleteTextView ?=null
     private var VerifyButton: Button? = null
     private var ProgressBar: ProgressBar? = null
     private lateinit var auth: FirebaseAuth
@@ -60,7 +57,7 @@ class VerifyOtpFragment :Fragment() {
 
         val v = inflater.inflate(R.layout.verifyphoneno, container, false)
 
-        EditTextOtp = v.enterOtp
+        EditTextOtp = v.editTextOtp
         VerifyButton = v.VerifyButton
         ProgressBar = v.ProgressBar
         ProgressBar?.visibility = View.INVISIBLE

@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import android.widget.Toast.LENGTH_SHORT
 import androidx.annotation.ColorRes
 import androidx.fragment.app.Fragment
@@ -83,11 +80,27 @@ class CreateProfileFragment :Fragment()
         editChipPython = v.chipPython1
         editChipJavaScript = v.chipJavaScript1
 
+        val adapterCourse = ArrayAdapter.createFromResource(requireContext(), R.array.courses, android.R.layout.simple_spinner_dropdown_item)
+        adapterCourse.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        editTextCourse!!.setAdapter(adapterCourse)
+
+        val adapterSemester = ArrayAdapter.createFromResource(requireContext(), R.array.semesters, android.R.layout.simple_spinner_dropdown_item)
+        adapterSemester.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        editTextSemester!!.setAdapter(adapterSemester)
+
+        val adapterInterest = ArrayAdapter.createFromResource(requireContext(), R.array.interests, android.R.layout.simple_spinner_dropdown_item)
+        adapterInterest.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        editTextInterest1!!.setAdapter(adapterInterest)
+        editTextInterest2!!.setAdapter(adapterInterest)
+        editTextInterest3!!.setAdapter(adapterInterest)
+
+
         ButtonSave = v.Save
         ButtonSave?.setOnClickListener {
             validateParameters();
         }
         return v
+
     }
 
     private fun validateParameters() {
