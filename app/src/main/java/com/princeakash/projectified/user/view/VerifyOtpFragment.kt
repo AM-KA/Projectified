@@ -1,6 +1,7 @@
 package com.princeakash.projectified.user.view
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,10 +21,13 @@ import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.princeakash.projectified.MainActivity
 import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.addApplication.view.HomeFragment
 import com.princeakash.projectified.user.BodySignUp
+import com.princeakash.projectified.user.LoginBody
 import com.princeakash.projectified.user.ProfileViewModel
+import com.princeakash.projectified.user.ResponseLogin
 import kotlinx.android.synthetic.main.verifyphoneno.view.*
 import java.util.concurrent.TimeUnit
 
@@ -35,13 +39,14 @@ class VerifyOtpFragment :Fragment() {
     private var VerifyButton: Button? = null
     private var ProgressBar: ProgressBar? = null
     private lateinit var auth: FirebaseAuth
-
-
+    private lateinit var bodySignUp: BodySignUp
+    private lateinit var responseLogin: ResponseLogin
     private lateinit var profileViewModel: ProfileViewModel
 
     private var storedVerificationId: String? = null
     private var resendToken: PhoneAuthProvider.ForceResendingToken? = null
     private var phoneno: String? = null
+    private var ph: String? = null
     private var code: String?=  null
     private  var name: String?=null
     private var email: String?=null
@@ -61,11 +66,11 @@ class VerifyOtpFragment :Fragment() {
         ProgressBar?.visibility = View.INVISIBLE
 
 
-        phoneno = requireArguments().getString(PHONE_NO)
+        ph = requireArguments().getString(PHONE_NO)
             name= requireArguments().getString(N_AME)
             email = requireArguments().getString(E_MAIL)
             password = requireArguments().getString(PASS_WORD)
-        phoneno = "+91" + phoneno
+        phoneno = "+91" + ph
         sendVerificationCodetoTheUser();
 
         VerifyButton?.setOnClickListener {
@@ -86,8 +91,42 @@ class VerifyOtpFragment :Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
-        profileViewModel.responseSignUp.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show(); }
+        profileViewModel.responseSignUp().observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let {
+                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                if (it.code == 200) {
+                    Log.d(TAG, "onViewCreated: Sign Up Successful, user "+it.userID!!)
+                    val bodyLogin = LoginBody(email = bodySignUp!!.email, password=bodySignUp!!.password)
+                    profileViewModel.logIn(bodyLogin)
+                }
+            }
+        })
+        profileViewModel.responseLogin().observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let {
+                responseLogin = it
+                if(responseLogin.code!=200){
+                    Toast.makeText(context, responseLogin.message, Toast.LENGTH_SHORT).show()
+                }else{
+                    profileViewModel.setToken(responseLogin.token!!)
+                    profileViewModel.setLoginStatus(true)
+                    if(responseLogin.profileCompleted!!){
+                        //Navigate to main activity
+                        val intent = Intent(activity, MainActivity::class.java)
+                        startActivity(intent)
+                    }else{
+                        //Navigate to CreateProfileFragment
+                        responseLogin.profile?.let {
+                            profileViewModel.setLocalProfile(it)
+                        }
+                        val bundle = Bundle()
+                        bundle.putString(LoginFragment.USER_NAME, responseLogin.userName)
+                        requireActivity().supportFragmentManager.beginTransaction()
+                                .replace(R.id.fragment_initial, CreateProfileFragment::class.java, bundle, "LoginFragment")
+                                .addToBackStack(null)
+                                .commit()
+                    }
+                }
+            }
         })
         profileViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
@@ -114,11 +153,11 @@ class VerifyOtpFragment :Fragment() {
 
             Log.d(TAG, "onVerificationCompleted:$credential")
             Toast.makeText(context, "Verification Completed", Toast.LENGTH_SHORT).show()
-            parentFragmentManager.beginTransaction()
+            /*parentFragmentManager.beginTransaction()
                     .replace(R.id.fragment_initial, CreateProfileFragment::class.java, null, "Create Profile")
                     .addToBackStack(null)
-                    .commit()
-
+                    .commit()*/
+            signInWithPhoneAuthCredential(credential)
         }
 
         override fun onVerificationFailed(e: FirebaseException) {
@@ -164,14 +203,14 @@ class VerifyOtpFragment :Fragment() {
                             val user = task.result?.user
 
 
-                            val signUp = BodySignUp(name!!, email!!, phoneno!!, password!!)
-                            profileViewModel.signUp(signUp)
+                            bodySignUp = BodySignUp(name!!, email!!, ph!!, password!!)
+                            profileViewModel.signUp(bodySignUp)
 
 
-                            parentFragmentManager.beginTransaction()
+                            /*parentFragmentManager.beginTransaction()
                                     .replace(R.id.fragment_initial, CreateProfileFragment::class.java, null, "verify")
                                     //.addToBackStack(null)
-                                    .commit()
+                                    .commit()*/
 
                             // ...
                         } else {

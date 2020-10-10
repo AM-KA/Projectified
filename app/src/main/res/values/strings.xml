@@ -4,6 +4,19 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="recruiter_details">Recruiter Details</string>
+    <string name="name">Name</string>
+    <string name="loading">Loading..</string>
+    <string name="college">College</string>
+    <string name="course">Course</string>
+    <string name="semester">Semester</string>
+    <string name="enlist_opportunity">Enlist Opportunity</string>
+    <string name="cancel">Cancel</string>
+    <string name="opportunity_details">Opportunity Details</string>
+    <string name="offer_name">Offer Name</string>
+    <string name="requirement">Requirement</string>
+    <string name="skills">Skills</string>
+    <string name="expectation_from_applicant">Expectation From Applicant</string>
 
     <string-array name="courses">
         <item>Bachelor of Technology</item>

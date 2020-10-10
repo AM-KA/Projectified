@@ -2,6 +2,7 @@ package com.princeakash.projectified.candidate.myApplications.viewModel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.princeakash.projectified.Event
@@ -22,16 +23,25 @@ class CandidateExistingApplicationViewModel(val app: Application) : AndroidViewM
     //MutableLiveData variables of responses for all kinds of requests h
     //picked up from instance of MyApplication handled by RecruiterViewModel
     //which can be put to observation in Activities/Fragments
+    private var responseUpdateApplication: MutableLiveData<Event<ResponseUpdateApplication>> = MutableLiveData()
+    private var responseDeleteApplication: MutableLiveData<Event<ResponseDeleteApplication>> = MutableLiveData()
+    private var responseGetApplicationByCandidate: MutableLiveData<ResponseGetApplicationsByCandidate> = MutableLiveData()
+    private var responseGetApplicationDetailByIdCandidate: MutableLiveData<ResponseGetApplicationDetailByIdCandidate> = MutableLiveData()
+    private var errorString: MutableLiveData<Event<String>> = MutableLiveData()
 
-    var responseUpdateApplication: MutableLiveData<Event<ResponseUpdateApplication>> = MutableLiveData()
-    var responseDeleteApplication: MutableLiveData<Event<ResponseDeleteApplication>> = MutableLiveData()
-    var responseGetApplicationByCandidate: MutableLiveData<ResponseGetApplicationsByCandidate> = MutableLiveData()
-    var responseGetApplicationDetailByIdCandidate: MutableLiveData<ResponseGetApplicationDetailByIdCandidate> = MutableLiveData()
-    var errorString: MutableLiveData<Event<String>> = MutableLiveData()
+    //MutableLiveData variables of responses for all kinds of requests h
+    //picked up from instance of MyApplication handled by RecruiterViewModel
+    //which can be put to observation in Activities/Fragments
+    fun responseUpdateApplication(): LiveData<Event<ResponseUpdateApplication>> = responseUpdateApplication
+    fun responseDeleteApplication(): LiveData<Event<ResponseDeleteApplication>> = responseDeleteApplication
+    fun responseGetApplicationByCandidate(): LiveData<ResponseGetApplicationsByCandidate> = responseGetApplicationByCandidate
+    fun responseGetApplicationDetailByIdCandidate(): LiveData<ResponseGetApplicationDetailByIdCandidate> = responseGetApplicationDetailByIdCandidate
+    fun errorString(): LiveData<Event<String>> = errorString
 
-    fun getApplicationsByCandidate() {profileRepository.getUserId()
+    fun getApplicationsByCandidate() {
+        profileRepository.getUserId()
         val token: String = profileRepository.getToken()
-        val applicantID: String =profileRepository.getUserId()
+        val applicantID: String = profileRepository.getUserId()
         if (token.equals("")) {
             errorString.postValue(Event(RecruiterExistingOffersViewModel.INVALID_TOKEN))
             return
@@ -42,7 +52,7 @@ class CandidateExistingApplicationViewModel(val app: Application) : AndroidViewM
         }
         viewModelScope.launch {
             try {
-                responseGetApplicationByCandidate.postValue(candidateRepository.getApplicationByCandidate("Bearer " +token, applicantID))
+                responseGetApplicationByCandidate.postValue(candidateRepository.getApplicationByCandidate("Bearer $token", applicantID))
             } catch (e: Exception) {
                 handleError(e)
             }
@@ -57,7 +67,7 @@ class CandidateExistingApplicationViewModel(val app: Application) : AndroidViewM
         }
         viewModelScope.launch {
             try {
-                responseGetApplicationDetailByIdCandidate.postValue(candidateRepository.getApplicationDetailByIdCandidate("Bearer " +token, applicationID))
+                responseGetApplicationDetailByIdCandidate.postValue(candidateRepository.getApplicationDetailByIdCandidate("Bearer $token", applicationID))
             } catch (e: Exception) {
                 handleError(e)
             }
@@ -73,7 +83,7 @@ class CandidateExistingApplicationViewModel(val app: Application) : AndroidViewM
         }
         viewModelScope.launch {
             try {
-                responseUpdateApplication.postValue(Event(candidateRepository.updateApplication("Bearer " +token, applicationID, bodyUpdateApplication)))
+                responseUpdateApplication.postValue(Event(candidateRepository.updateApplication("Bearer $token", applicationID, bodyUpdateApplication)))
             } catch (e: Exception) {
                 handleError(e)
             }
@@ -89,14 +99,14 @@ class CandidateExistingApplicationViewModel(val app: Application) : AndroidViewM
         }
         viewModelScope.launch {
             try {
-                responseDeleteApplication.postValue(Event(candidateRepository.deleteApplication("Bearer " +token ,applicationID)))
+                responseDeleteApplication.postValue(Event(candidateRepository.deleteApplication("Bearer $token", applicationID)))
             } catch (e: Exception) {
                 handleError(e)
             }
         }
     }
 
-    fun handleError(e: Exception){
+    fun handleError(e: Exception) {
         e.printStackTrace()
 
         //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity

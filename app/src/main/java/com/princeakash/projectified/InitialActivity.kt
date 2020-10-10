@@ -3,7 +3,6 @@ package com.princeakash.projectified
 import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.google.firebase.FirebaseApp
 import com.princeakash.projectified.user.view.SplashScreenFragment
 
 class InitialActivity : AppCompatActivity() {

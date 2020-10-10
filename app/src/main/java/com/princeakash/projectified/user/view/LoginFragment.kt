@@ -61,7 +61,7 @@ class LoginFragment : Fragment() {
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                 super.onViewCreated(view, savedInstanceState)
                 profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
-                profileViewModel.responseLogin.observe(viewLifecycleOwner, {
+                profileViewModel.responseLogin().observe(viewLifecycleOwner, {
                         it?.getContentIfNotHandled()?.let {
                                 responseLogin = it
                                 if(responseLogin.code!=200){

@@ -58,14 +58,15 @@ class ApplyOpportunityFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
 
         candidateAddApplicationViewModel = ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
-        candidateAddApplicationViewModel.responseAddApplication.observe(viewLifecycleOwner, {
+        candidateAddApplicationViewModel.responseAddApplication().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
+                progressCircularLayout.visibility = View.INVISIBLE
                 responseAddApplication = it
                 Toast.makeText(context, it.message, LENGTH_SHORT).show()
             }
         })
 
-        candidateAddApplicationViewModel.errorString.observe(viewLifecycleOwner, {
+        candidateAddApplicationViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 error = it
                 Toast.makeText(context, error, LENGTH_SHORT).show()
@@ -82,6 +83,7 @@ class ApplyOpportunityFragment : Fragment() {
         editTextResume = view.editTextResume
         buttonApply = view.buttonSubmit
         buttonCancel = view.buttonCancel
+        progressCircularLayout = view.progress_circular_layout
         buttonApply.setOnClickListener {
 
             validateParameters()

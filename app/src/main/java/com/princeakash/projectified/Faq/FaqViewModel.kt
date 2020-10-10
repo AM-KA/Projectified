@@ -2,6 +2,7 @@ package com.princeakash.projectified.Faq
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.princeakash.projectified.Event
@@ -11,20 +12,25 @@ import kotlin.Exception
 
 class FaqViewModel(val app: Application): AndroidViewModel(app) {
 
-    //
+    //FaqRepository
     val faqRepository = (app as MyApplication).faqRepository
 
+    //MutableLiveData
+    private var responseGetFaq: MutableLiveData<ResponseGetFaq> = MutableLiveData()
+    private var responseAddQuestion: MutableLiveData<Event<ResponseAddQuestion>> = MutableLiveData()
+    private var errorString: MutableLiveData<Event<String>> = MutableLiveData()
+
     //LiveData
-    var responseGetFaq: MutableLiveData<Event<ResponseGetFaq>> = MutableLiveData()
-    var responseAddQuestion: MutableLiveData<Event<ResponseAddQuestion>> = MutableLiveData()
-    var errorString: MutableLiveData<String> = MutableLiveData()
+    fun responseGetFaq(): LiveData<ResponseGetFaq> = responseGetFaq
+    fun responseAddQuestion():LiveData<Event<ResponseAddQuestion>> = responseAddQuestion
+    fun errorString(): LiveData<Event<String>> = errorString
 
     fun getAllFaq(){
         viewModelScope.launch {
             try{
-                responseGetFaq.postValue(Event(faqRepository.getAllFaq()));
+                responseGetFaq.postValue(faqRepository.getAllFaq());
             } catch(e: Exception){
-                errorString.postValue(e.localizedMessage)
+                errorString.postValue(Event(e.localizedMessage))
             }
         }
     }
@@ -35,7 +41,7 @@ class FaqViewModel(val app: Application): AndroidViewModel(app) {
                 val bodyAddQuestion = BodyAddQuestion(question)
                 responseAddQuestion.postValue(Event(faqRepository.addQuestion(bodyAddQuestion)))
             }catch (e: Exception){
-                errorString.postValue(e.localizedMessage)
+                errorString.postValue(Event(e.localizedMessage))
             }
         }
     }

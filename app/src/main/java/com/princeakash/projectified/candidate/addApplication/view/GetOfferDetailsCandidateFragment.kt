@@ -47,13 +47,13 @@ class GetOfferDetailsCandidateFragment : Fragment() {
         (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Offer Details"
         candidateAddApplicationsViewModel = ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
 
-        candidateAddApplicationsViewModel.responseGetOfferById.observe(viewLifecycleOwner, {
+        candidateAddApplicationsViewModel.responseGetOfferById().observe(viewLifecycleOwner, {
             responseGetOfferById = it
             populateViews()
         })
 
 
-        candidateAddApplicationsViewModel.errorString.observe(viewLifecycleOwner, {
+        candidateAddApplicationsViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 error = it
                 Toast.makeText(context, error, Toast.LENGTH_SHORT).show()

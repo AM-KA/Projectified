@@ -56,7 +56,7 @@ class CreateProfileFragment :Fragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
-        profileViewModel!!.responseCreateProfile.observe(viewLifecycleOwner, {
+        profileViewModel!!.responseCreateProfile().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 responseCreateProfile = it
                 Toast.makeText(context, it.message, LENGTH_SHORT).show()

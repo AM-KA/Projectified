@@ -42,7 +42,7 @@ class MyApplication: Application(){
 
     //Storing static values
     companion object{
-        val BASE_URL = "http://192.168.1.101:3000/"
+        val BASE_URL = "https://am-ka-projectified-test.herokuapp.com/"
     }
 
     override fun onCreate() {

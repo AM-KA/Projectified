@@ -58,13 +58,13 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
         }
 
         candidateAddApplicationViewModel = ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
-        candidateAddApplicationViewModel.responseGetOffersByDomain.observe(viewLifecycleOwner, {
+        candidateAddApplicationViewModel.responseGetOffersByDomain().observe(viewLifecycleOwner, {
             offerList = it.offers as ArrayList<OfferCardModelCandidate>
             recyclerView.adapter = GetOffersByDomainAdapter(offerList, this)
             view.progress_circular_layout.visibility = View.INVISIBLE
         })
 
-        candidateAddApplicationViewModel.errorString.observe(viewLifecycleOwner, {
+        candidateAddApplicationViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 errorString = it
                 view.progress_circular_layout.visibility = View.INVISIBLE

@@ -41,12 +41,12 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
         val v = inflater.inflate(R.layout.frag_myapplication, container, false)
         progressCircularLayout = v.progress_circular_layout
         candidateExistingApplicationViewModel= ViewModelProvider(requireParentFragment()).get(CandidateExistingApplicationViewModel::class.java)
-        candidateExistingApplicationViewModel!!.responseGetApplicationByCandidate.observe(viewLifecycleOwner, {
+        candidateExistingApplicationViewModel!!.responseGetApplicationByCandidate().observe(viewLifecycleOwner, {
             applicationList = it?.applications as ArrayList<ApplicationCardModelCandidate>
             recyclerViewApplications.adapter = MyApplicationsAdapter(applicationList, this@MyApplicationsHomeFragment)
             progressCircularLayout.visibility = View.INVISIBLE
         })
-        candidateExistingApplicationViewModel!!.errorString.observe(viewLifecycleOwner, {
+        candidateExistingApplicationViewModel!!.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 progressCircularLayout.visibility = View.INVISIBLE
                 errorString = it

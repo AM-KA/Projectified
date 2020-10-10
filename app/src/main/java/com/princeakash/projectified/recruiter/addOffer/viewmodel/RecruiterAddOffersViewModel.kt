@@ -2,6 +2,7 @@ package com.princeakash.projectified.recruiter.addOffer.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.princeakash.projectified.Event
@@ -21,11 +22,16 @@ class RecruiterAddOffersViewModel(val app: Application): AndroidViewModel(app) {
     //picked up from instance of MyApplication.
     val recruiterRepository: RecruiterRepository = (app as MyApplication).recruiterRepository
     val profileRepository: ProfileRepository = (app as MyApplication).profileRepository
-    var errorString: MutableLiveData<Event<String>> = MutableLiveData()
 
-    //MutableLiveData variables of responses for all kinds of requests handled by RecruiterViewModel
+    //MutableLiveData variables of responses for all kinds of requests handled by RecruiterAddOffersViewModel
     //which can be put to observation in Activities/Fragments
-    var responseAddOffer : MutableLiveData<Event<ResponseAddOffer>> = MutableLiveData()
+    private val responseAddOffer : MutableLiveData<Event<ResponseAddOffer>> = MutableLiveData()
+    private val errorString: MutableLiveData<Event<String>> = MutableLiveData()
+
+    //LiveData variables of responses for all kinds of requests handled by RecruiterAddOffersViewModel
+    //which can be put to observation in Activities/Fragments
+    fun responseAddOffer() : LiveData<Event<ResponseAddOffer>> = responseAddOffer
+    fun errorString(): LiveData<Event<String>> = errorString
 
     fun addOffer(offerName:String, domainName:String, requirements: String, skills: String, expectation: String){
         val token = profileRepository.getToken()
@@ -41,7 +47,7 @@ class RecruiterAddOffersViewModel(val app: Application): AndroidViewModel(app) {
         viewModelScope.launch {
             try {
                 val bodyAddOffer = BodyAddOffer(offerName, domainName, requirements, skills, expectation, recruiterID)
-                responseAddOffer.postValue(Event(recruiterRepository.addOffer(bodyAddOffer, "Bearer "+token)))
+                responseAddOffer.postValue(Event(recruiterRepository.addOffer(bodyAddOffer, "Bearer $token")))
             } catch(e: Exception){
                 handleError(e)
             }

@@ -17,9 +17,7 @@ class FaqActivity : AppCompatActivity(), NewFaqDialogFragment.NewFaqDialogListen
     var adapter: FaqAdapter? = null
 
     var faqViewModel: FaqViewModel? = null
-    var faqList: List<FaqModel> = ArrayList()
-    var responseAddQuestion: ResponseAddQuestion? = null
-    var error: String? = null
+    //var faqList: List<FaqModel> = ArrayList()
     lateinit var recyclerViewFaq: RecyclerView
     lateinit var fab: FloatingActionButton
 
@@ -30,31 +28,28 @@ class FaqActivity : AppCompatActivity(), NewFaqDialogFragment.NewFaqDialogListen
         fab = findViewById(R.id.fab)
         window?.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
         faqViewModel = ViewModelProvider(this).get(FaqViewModel::class.java)
-        faqViewModel!!.responseGetFaq.observe(this, {
-            it?.getContentIfNotHandled()?.let {
-                faqList = it.faqList
-                Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
-                adapter = FaqAdapter(faqList)
+        faqViewModel!!.responseGetFaq().observe(this, {
+                //Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                adapter = FaqAdapter(it.faqList)
                 recyclerViewFaq.adapter = adapter
-            }
         })
-        faqViewModel!!.responseAddQuestion.observe(this, {
+        faqViewModel!!.responseAddQuestion().observe(this, {
             it?.getContentIfNotHandled()?.let {
-                responseAddQuestion = it
-                Toast.makeText(this, responseAddQuestion!!.message, Toast.LENGTH_LONG).show()
+                Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
             }
         })
-        faqViewModel!!.errorString.observe(this, {
-            error = it
-            Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+        faqViewModel!!.errorString().observe(this, {
+            it?.getContentIfNotHandled()?.let{
+                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+            }
         })
 
-        faqViewModel!!.getAllFaq()
+        if(savedInstanceState==null)
+            faqViewModel!!.getAllFaq()
 
         recyclerViewFaq.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            adapter = FaqAdapter(faqList)
         }
         fab.setOnClickListener{
             //New Dialog Box

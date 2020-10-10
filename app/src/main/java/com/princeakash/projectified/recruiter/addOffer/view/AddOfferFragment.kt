@@ -1,6 +1,5 @@
 package com.princeakash.projectified.recruiter.addOffer.view
 
-import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,30 +17,26 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.addApplication.view.GetOffersByDomainFragment.Companion.DOMAIN_NAME
-import com.princeakash.projectified.recruiter.addOffer.model.ResponseAddOffer
 import com.princeakash.projectified.recruiter.addOffer.viewmodel.RecruiterAddOffersViewModel
-import kotlinx.android.synthetic.main.frag_floatopportuninty.view.*
-import kotlinx.android.synthetic.main.frag_myapplicationdetail.*
+import kotlinx.android.synthetic.main.frag_float_opportunity.view.*
 
 class AddOfferFragment : Fragment() {
 
     //Views
-    private var editTextOfferName: TextInputEditText? = null
-    private var editTextRequirements: TextInputEditText? = null
-    private var editTextSkills: TextInputEditText? = null
-    private var editTextExpectation: TextInputEditText? = null
+    private lateinit var editTextOfferName: TextInputEditText
+    private lateinit var editTextRequirements: TextInputEditText
+    private lateinit var editTextSkills: TextInputEditText
+    private lateinit var editTextExpectation: TextInputEditText
     private lateinit var textViewName: TextView
     private lateinit var textViewCollege: TextView
     private lateinit var textViewCourse: TextView
     private lateinit var textViewSemester: TextView
     private lateinit var progressCircularLayout: RelativeLayout
-
-    private var buttonEnlist: Button? = null
+    private lateinit var buttonEnlist: Button
 
     //ViewModels
     private lateinit var recruiterAddOffersViewModel: RecruiterAddOffersViewModel
-    private lateinit var responseAddOffer: ResponseAddOffer
-    private lateinit var error: String
+
     private var domainName: String? = null
 
     /*
@@ -58,8 +53,9 @@ class AddOfferFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.frag_floatopportuninty, container, false)
+        val view = inflater.inflate(R.layout.frag_float_opportunity, container, false)
         editTextOfferName = view.editTextOfferName
         editTextRequirements = view.editTextRequirement
         editTextSkills = view.editTextSkills
@@ -71,34 +67,62 @@ class AddOfferFragment : Fragment() {
         buttonEnlist = view.EnlistButton
         progressCircularLayout = view.progress_circular_layout
 
-        buttonEnlist!!.setOnClickListener {
+        buttonEnlist.setOnClickListener {
             validateParameters()
         }
+
         (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Add Offer"
+
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recruiterAddOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterAddOffersViewModel::class.java)
+
+        recruiterAddOffersViewModel.responseAddOffer().observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let{
+                progressCircularLayout.visibility = View.INVISIBLE
+                Toast.makeText(context, it.message, LENGTH_SHORT).show()
+            }
+        })
+
+        recruiterAddOffersViewModel.errorString().observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let{
+                progressCircularLayout.visibility = View.INVISIBLE
+                Toast.makeText(context, it, LENGTH_SHORT).show()
+            }
+        })
+
+        loadRecruiterDetails()
+    }
+
     private fun validateParameters() {
-        if(editTextOfferName!!.text.isNullOrEmpty()){
-            editTextOfferName!!.error = "Enter offer name."
+
+        //Ensuring non-empty input
+        if(editTextOfferName.text.isNullOrEmpty()){
+            editTextOfferName.error = "Enter offer name."
             return
         }
-        if(editTextRequirements!!.text.isNullOrEmpty()){
-            editTextRequirements!!.error = "Enter requirements."
+        if(editTextRequirements.text.isNullOrEmpty()){
+            editTextRequirements.error = "Enter requirements."
             return
         }
-        if(editTextSkills!!.text.isNullOrEmpty()){
-            editTextSkills!!.error = "Enter skills."
+        if(editTextSkills.text.isNullOrEmpty()){
+            editTextSkills.error = "Enter skills."
             return
         }
-        if(editTextExpectation!!.text.isNullOrEmpty()){
-            editTextExpectation!!.error = "Enter expectation."
+        if(editTextExpectation.text.isNullOrEmpty()){
+            editTextExpectation.error = "Enter expectation."
             return
         }
-        val offerName = editTextOfferName!!.text.toString()
-        val requirements = editTextRequirements!!.text.toString()
-        val skills = editTextSkills!!.text.toString()
-        val expectation = editTextExpectation!!.text.toString()
+
+        //Obtaining inputs to pass into addOffer function
+        val offerName = editTextOfferName.text.toString()
+        val requirements = editTextRequirements.text.toString()
+        val skills = editTextSkills.text.toString()
+        val expectation = editTextExpectation.text.toString()
+
         AlertDialog.Builder(requireContext())
                 .setTitle("Confirm")
                 .setMessage("Are you sure you want to float this offer?")
@@ -118,29 +142,9 @@ class AddOfferFragment : Fragment() {
         outState.putString(DOMAIN_NAME, domainName)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        recruiterAddOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterAddOffersViewModel::class.java)
-
-        recruiterAddOffersViewModel.responseAddOffer.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let{
-                progressCircularLayout.visibility = View.INVISIBLE
-                responseAddOffer = it
-                // TODO: Show Toast
-            }
-        })
-
-        recruiterAddOffersViewModel.errorString.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let{
-                progressCircularLayout.visibility = View.INVISIBLE
-                error = it
-                Toast.makeText(context, error, LENGTH_SHORT).show()
-            }
-        })
-
-        loadRecruiterDetails()
-    }
-
+    /*
+        Loading Recruiter Details through locally stored profile
+     */
     private fun loadRecruiterDetails() {
         progressCircularLayout.visibility = View.VISIBLE
         recruiterAddOffersViewModel.getLocalProfile()?.let {

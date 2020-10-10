@@ -78,7 +78,7 @@ class SignUp : Fragment(){
         super.onViewCreated(view, savedInstanceState)
 
         profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
-        profileViewModel.responsecheckSignUp.observe(viewLifecycleOwner, {
+        profileViewModel.responsecheckSignUp().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 responsechecksignUp = it
                 code = it.code

@@ -96,7 +96,7 @@ class UpdateProfileFragment :Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
-        profileViewModel.responseUpdateProfile.observe(viewLifecycleOwner, {
+        profileViewModel.responseUpdateProfile().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 responseUpdateProfile = it
                 Toast.makeText(context, it.message, LENGTH_SHORT).show()

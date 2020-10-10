@@ -43,14 +43,14 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
 
         recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
 
-        recruiterExistingOffersViewModel!!.responseGetOfferApplicants.observe(viewLifecycleOwner, {
+        recruiterExistingOffersViewModel!!.responseGetOfferApplicants().observe(viewLifecycleOwner, {
             responseGetOfferApplicants = it
             applicantList = it.applicants as ArrayList<ApplicantCardModel>
             recyclerViewApplicants.adapter = MyOfferApplicantsAdapter(applicantList, this)
             progressCircularLayout.visibility = View.INVISIBLE
         })
 
-        recruiterExistingOffersViewModel!!.errorString.observe(viewLifecycleOwner, {
+        recruiterExistingOffersViewModel!!.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 error = it
@@ -58,15 +58,10 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
             }
         })
 
-        recruiterExistingOffersViewModel!!.responseMarkAsSeen.observe(viewLifecycleOwner, {
+        recruiterExistingOffersViewModel!!.responseMarkAsSeen().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { iter ->
                 progressCircularLayout.visibility = View.INVISIBLE
                 responseMarkAsSeen = iter
-
-                Log.d(TAG, "onCreateView: Entered seen")
-                //Take action as per response
-
-                Log.d(TAG, "onCreateView: " + iter.application_id)
                 //Search for id
                 applicantList?.let {
                     Log.d(TAG, "onCreateView: List not null")
@@ -76,7 +71,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
                             Log.d(TAG, "onCreateView: Mark as seen is being changed")
                             responseGetOfferApplicants?.applicants = it
                             progressCircularLayout.visibility = View.VISIBLE
-                            recruiterExistingOffersViewModel!!.responseGetOfferApplicants.postValue(responseGetOfferApplicants)
+                            recruiterExistingOffersViewModel!!.refreshApplicants(responseGetOfferApplicants!!)
                             break
                         }
                     }
@@ -84,7 +79,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
             }
         })
 
-        recruiterExistingOffersViewModel!!.responseMarkAsSelected.observe(viewLifecycleOwner, {
+        recruiterExistingOffersViewModel!!.responseMarkAsSelected().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { iter ->
                 progressCircularLayout.visibility = View.INVISIBLE
                 responseMarkAsSelected = iter
@@ -102,7 +97,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
                             Log.d(TAG, "onCreateView: Mark as selected is being changed")
                             responseGetOfferApplicants?.applicants = it
                             progressCircularLayout.visibility = View.VISIBLE
-                            recruiterExistingOffersViewModel!!.responseGetOfferApplicants.postValue(responseGetOfferApplicants)
+                            recruiterExistingOffersViewModel!!.refreshApplicants(responseGetOfferApplicants!!)
                             break
                         }
                     }
@@ -112,9 +107,11 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
         if (savedInstanceState == null) {
             offerId = requireArguments().getString(OFFER_ID)
             offerId?.let {
+                progressCircularLayout.visibility = View.VISIBLE
                 recruiterExistingOffersViewModel!!.getOfferApplicants(it)
             }
         } else {
+            //progressCircularLayout.visibility = View.VISIBLE
             offerId = savedInstanceState.getString(OFFER_ID)
         }
         (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Candidates"

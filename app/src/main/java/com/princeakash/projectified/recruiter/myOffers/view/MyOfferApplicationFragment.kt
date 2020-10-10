@@ -71,12 +71,12 @@ class MyOfferApplicationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
 
-        recruiterExistingOffersViewModel.responseGetApplicationById.observe(viewLifecycleOwner, {
+        recruiterExistingOffersViewModel.responseGetApplicationById().observe(viewLifecycleOwner, {
             responseGetApplicationByIdRecruiter = it
             populateViews()
         })
 
-        recruiterExistingOffersViewModel.errorString.observe(viewLifecycleOwner, {
+        recruiterExistingOffersViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 progressCircularLayout.visibility = View.INVISIBLE
                 error = it
@@ -84,7 +84,7 @@ class MyOfferApplicationFragment : Fragment() {
             }
         })
 
-        recruiterExistingOffersViewModel.responseMarkAsSeen.observe(viewLifecycleOwner, {
+        recruiterExistingOffersViewModel.responseMarkAsSeen().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 progressCircularLayout.visibility = View.INVISIBLE
                 responseMarkAsSeen = it
@@ -92,7 +92,7 @@ class MyOfferApplicationFragment : Fragment() {
             }
         })
 
-        recruiterExistingOffersViewModel.responseMarkAsSelected.observe(viewLifecycleOwner, {
+        recruiterExistingOffersViewModel.responseMarkAsSelected().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 progressCircularLayout.visibility = View.INVISIBLE
                 responseMarkAsSelected = it

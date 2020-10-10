@@ -22,19 +22,20 @@ import kotlinx.android.synthetic.main.frag_my_offers.view.*
 
 class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
 
+    //ViewModel
     var recruiterExistingOffersViewModel: RecruiterExistingOffersViewModel? = null
+
+    //Offer List for RecyclerView
     var offerList: ArrayList<OfferCardModelRecruiter> = ArrayList()
-    var errorString:String? = null
 
     //Determining whether re-fetching data is required or not
     var detailsViewed = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        /*savedInstanceState?.let {
-            offerList = savedInstanceState.getSerializable(OFFERS_LIST) as ArrayList<OfferCardModelRecruiter>
-        }*/
+
         (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "My Offers"
+
         return inflater.inflate(R.layout.frag_my_offers, container, false)
     }
 
@@ -42,16 +43,15 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
         super.onViewCreated(view, savedInstanceState)
 
         recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
-        recruiterExistingOffersViewModel!!.responseGetOffersByRecruiter.observe(viewLifecycleOwner, {
-            offerList = it?.offers as ArrayList<OfferCardModelRecruiter>
+        recruiterExistingOffersViewModel!!.responseGetOffersByRecruiter().observe(viewLifecycleOwner, {
+            offerList = it.offers as ArrayList<OfferCardModelRecruiter>
             view.progress_circular_layout.visibility = View.INVISIBLE
             view.recyclerViewOffers.adapter = MyOffersAdapter(offerList, this@MyOfferHomeFragment)
         })
-        recruiterExistingOffersViewModel!!.errorString.observe(viewLifecycleOwner, {
+        recruiterExistingOffersViewModel!!.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
-                errorString = it
                 view.progress_circular_layout.visibility = View.INVISIBLE
-                Toast.makeText(this@MyOfferHomeFragment.context, errorString, LENGTH_SHORT).show()
+                Toast.makeText(this@MyOfferHomeFragment.context, it, LENGTH_SHORT).show()
             }
         })
 
@@ -64,13 +64,11 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
         view.recyclerViewOffers.apply {
             layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
             setHasFixedSize(true)
-            adapter = MyOffersAdapter(offerList, this@MyOfferHomeFragment)
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        //outState.putSerializable(OFFERS_LIST, offerList)
         outState.putBoolean(DETAILS_VIEWED, detailsViewed)
     }
 
@@ -78,6 +76,7 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
 
         //Set detailsViewed to true so that on coming back, we can re-load all data
         detailsViewed = true
+
         //Populate new fragment with details of offer.
         val bundle = Bundle()
         val offID = offerList.get(itemPosition).offer_id
@@ -89,7 +88,6 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
     }
 
     companion object {
-        val OFFERS_LIST = "OffersList"
         val DETAILS_VIEWED = "DetailsViewed"
     }
 }

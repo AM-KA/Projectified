@@ -60,14 +60,14 @@ class MyApplicationDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         candidateExistingApplicationViewModel = ViewModelProvider(requireParentFragment()).get(CandidateExistingApplicationViewModel::class.java)
-        candidateExistingApplicationViewModel!!.responseGetApplicationDetailByIdCandidate.observe(viewLifecycleOwner, {
+        candidateExistingApplicationViewModel!!.responseGetApplicationDetailByIdCandidate().observe(viewLifecycleOwner, {
             responseGetApplicationDetailsByIdCandidate = it
             populateViews()
             editable = false
             setEditable()
         })
 
-        candidateExistingApplicationViewModel!!.responseUpdateApplication.observe(viewLifecycleOwner, {
+        candidateExistingApplicationViewModel!!.responseUpdateApplication().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 responseUpdateApplication = it
@@ -76,7 +76,7 @@ class MyApplicationDetailsFragment : Fragment() {
             }
         })
 
-        candidateExistingApplicationViewModel!!.responseDeleteApplication.observe(viewLifecycleOwner, {
+        candidateExistingApplicationViewModel!!.responseDeleteApplication().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 responseDeleteApplication = it
@@ -85,7 +85,7 @@ class MyApplicationDetailsFragment : Fragment() {
             }
         })
 
-        candidateExistingApplicationViewModel!!.errorString.observe(viewLifecycleOwner, {
+        candidateExistingApplicationViewModel!!.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 error = it

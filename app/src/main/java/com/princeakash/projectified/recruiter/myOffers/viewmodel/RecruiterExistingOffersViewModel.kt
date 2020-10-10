@@ -2,6 +2,7 @@ package com.princeakash.projectified.recruiter.myOffers.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.princeakash.projectified.Event
@@ -21,16 +22,28 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
     //MutableLiveData variables of responses for all kinds of requests h
     //picked up from instance of MyApplication.andled by RecruiterViewModel
     //which can be put to observation in Activities/Fragments
-    var responseGetOffersByRecruiter: MutableLiveData<ResponseGetOffersByRecruiter> = MutableLiveData()
-    var responseGetOfferByIdRecruiter: MutableLiveData<ResponseGetOfferByIdRecruiter> = MutableLiveData()
-    var responseGetOfferApplicants: MutableLiveData<ResponseGetOfferApplicants> = MutableLiveData()
-    var responseUpdateOffer: MutableLiveData<Event<ResponseUpdateOffer>> = MutableLiveData()
-    var responseToggleVisibility: MutableLiveData<Event<ResponseToggleVisibility>> = MutableLiveData()
-    var responseDeleteOffer: MutableLiveData<Event<ResponseDeleteOffer>> = MutableLiveData()
-    var responseGetApplicationById : MutableLiveData<ResponseGetApplicationByIdRecruiter> = MutableLiveData()
-    var responseMarkAsSeen: MutableLiveData<Event<ResponseMarkAsSeen>> = MutableLiveData()
-    var responseMarkAsSelected: MutableLiveData<Event<ResponseMarkAsSelected>> = MutableLiveData()
-    var errorString: MutableLiveData<Event<String>> = MutableLiveData()
+    private var responseGetOffersByRecruiter: MutableLiveData<ResponseGetOffersByRecruiter> = MutableLiveData()
+    private var responseGetOfferByIdRecruiter: MutableLiveData<ResponseGetOfferByIdRecruiter> = MutableLiveData()
+    private var responseGetOfferApplicants: MutableLiveData<ResponseGetOfferApplicants> = MutableLiveData()
+    private var responseUpdateOffer: MutableLiveData<Event<ResponseUpdateOffer>> = MutableLiveData()
+    private var responseToggleVisibility: MutableLiveData<Event<ResponseToggleVisibility>> = MutableLiveData()
+    private var responseDeleteOffer: MutableLiveData<Event<ResponseDeleteOffer>> = MutableLiveData()
+    private var responseGetApplicationById : MutableLiveData<ResponseGetApplicationByIdRecruiter> = MutableLiveData()
+    private var responseMarkAsSeen: MutableLiveData<Event<ResponseMarkAsSeen>> = MutableLiveData()
+    private var responseMarkAsSelected: MutableLiveData<Event<ResponseMarkAsSelected>> = MutableLiveData()
+    private var errorString: MutableLiveData<Event<String>> = MutableLiveData()
+
+    //Functions to expose all MutableLiveData instances as LiveData instances
+    fun responseGetOffersByRecruiter() : LiveData<ResponseGetOffersByRecruiter> = responseGetOffersByRecruiter
+    fun responseGetOfferByIdRecruiter(): LiveData<ResponseGetOfferByIdRecruiter> = responseGetOfferByIdRecruiter
+    fun responseGetOfferApplicants() : LiveData<ResponseGetOfferApplicants> = responseGetOfferApplicants
+    fun responseUpdateOffer(): LiveData<Event<ResponseUpdateOffer>> = responseUpdateOffer
+    fun responseToggleVisibility(): LiveData<Event<ResponseToggleVisibility>> = responseToggleVisibility
+    fun responseDeleteOffer(): LiveData<Event<ResponseDeleteOffer>> = responseDeleteOffer
+    fun responseGetApplicationById() : LiveData<ResponseGetApplicationByIdRecruiter> = responseGetApplicationById
+    fun responseMarkAsSeen() : LiveData<Event<ResponseMarkAsSeen>> = responseMarkAsSeen
+    fun responseMarkAsSelected(): LiveData<Event<ResponseMarkAsSelected>> = responseMarkAsSelected
+    fun errorString(): LiveData<Event<String>> = errorString
 
     fun getOffersByRecruiter(){
         val token:String = profileRepository.getToken()
@@ -45,7 +58,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseGetOffersByRecruiter.postValue(recruiterRepository.getOffersByRecruiter("Bearer "+token, recruiterID))
+                responseGetOffersByRecruiter.postValue(recruiterRepository.getOffersByRecruiter("Bearer $token", recruiterID))
             } catch(e: Exception){
                 handleError(e)
             }
@@ -60,7 +73,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseGetOfferByIdRecruiter.postValue(recruiterRepository.getOfferByIdRecruiter("Bearer "+token, offerID))
+                responseGetOfferByIdRecruiter.postValue(recruiterRepository.getOfferByIdRecruiter("Bearer $token", offerID))
             } catch(e: Exception){
                 handleError(e)
             }
@@ -75,7 +88,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseGetOfferApplicants.postValue(recruiterRepository.getOfferApplicants("Bearer "+token, offerID))
+                responseGetOfferApplicants.postValue(recruiterRepository.getOfferApplicants("Bearer $token", offerID))
             } catch(e: Exception){
                 handleError(e)
             }
@@ -90,7 +103,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseUpdateOffer.postValue(Event(recruiterRepository.updateOffer("Bearer "+token, offerID, bodyUpdateOffer)))
+                responseUpdateOffer.postValue(Event(recruiterRepository.updateOffer("Bearer $token", offerID, bodyUpdateOffer)))
             } catch(e: Exception){
                 handleError(e)
             }
@@ -105,7 +118,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseToggleVisibility.postValue(Event(recruiterRepository.toggleVisibility("Bearer "+token, offerID, bodyToggleVisibility)))
+                responseToggleVisibility.postValue(Event(recruiterRepository.toggleVisibility("Bearer $token", offerID, bodyToggleVisibility)))
             } catch(e: Exception){
                 handleError(e)
             }
@@ -120,7 +133,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseDeleteOffer.postValue(Event(recruiterRepository.deleteOffer("Bearer "+token, offerID)))
+                responseDeleteOffer.postValue(Event(recruiterRepository.deleteOffer("Bearer $token", offerID)))
             } catch(e: Exception){
                 handleError(e)
             }
@@ -135,7 +148,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseGetApplicationById.postValue(recruiterRepository.getApplicationById("Bearer "+token, applicationID))
+                responseGetApplicationById.postValue(recruiterRepository.getApplicationById("Bearer $token", applicationID))
             } catch(e: Exception){
                 handleError(e)
             }
@@ -150,7 +163,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseMarkAsSeen.postValue(Event(recruiterRepository.markSeen("Bearer "+token, applicationID, bodyMarkAsSeen)))
+                responseMarkAsSeen.postValue(Event(recruiterRepository.markSeen("Bearer $token", applicationID, bodyMarkAsSeen)))
             } catch(e: Exception){
                 handleError(e)
             }
@@ -165,11 +178,15 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         }
         viewModelScope.launch {
             try {
-                responseMarkAsSelected.postValue(Event(recruiterRepository.markSelected("Bearer "+token, applicationID, bodyMarkAsSelected)))
+                responseMarkAsSelected.postValue(Event(recruiterRepository.markSelected("Bearer $token", applicationID, bodyMarkAsSelected)))
             } catch(e: Exception){
                 handleError(e)
             }
         }
+    }
+
+    fun refreshApplicants(response_GetOfferApplicants: ResponseGetOfferApplicants){
+        responseGetOfferApplicants.postValue(response_GetOfferApplicants)
     }
 
     fun handleError(e: Exception){
@@ -178,19 +195,6 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
         //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
         errorString.postValue(Event("Haha! You got an error!!" + e.localizedMessage))
     }
-
-    /*
-    //Functions to expose all MutableLiveData instances as LiveData instances
-    fun responseAddOffer() : LiveData<ResponseAddOffer> = responseAddOffer
-    fun responseGetOffersByRecruiter() : LiveData<ResponseGetOffersByRecruiter> = responseGetOffersByRecruiter
-    fun responseGetOfferByIdRecruiter(): LiveData<ResponseGetOfferByIdRecruiter> = responseGetOfferByIdRecruiter
-    fun responseGetOfferApplicants() : LiveData<ResponseGetOfferApplicants> = responseGetOfferApplicants
-    fun responseUpdateOffer(): LiveData<ResponseUpdateOffer> = responseUpdateOffer
-    fun responseToggleVisibility(): LiveData<ResponseToggleVisibility> = responseToggleVisibility
-    fun responseDeleteOffer(): LiveData<ResponseDeleteOffer> = responseDeleteOffer
-    fun responseGetApplicationById() : LiveData<ResponseGetApplicationByIdRecruiter> = responseGetApplicationById
-    fun responseMarkAsSeen() : LiveData<ResponseMarkAsSeen> = responseMarkAsSeen
-    fun responseMarkAsSelected(): LiveData<ResponseMarkAsSelected> = responseMarkAsSelected*/
 
     companion object {
         const val INVALID_TOKEN = "Invalid Token. Please log in again.";

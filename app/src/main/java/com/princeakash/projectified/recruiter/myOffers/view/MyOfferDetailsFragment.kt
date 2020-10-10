@@ -22,14 +22,14 @@ import kotlinx.android.synthetic.main.frag_my_offer_details.view.*
 class MyOfferDetailsFragment() : Fragment() {
 
     //Views
-    private var editTextOfferName: TextInputEditText? = null
-    private var editTextRequirements: TextInputEditText? = null
-    private var editTextSkills: TextInputEditText? = null
-    private var editTextExpectations: TextInputEditText? = null
-    private var switchVisibility: SwitchMaterial? = null
-    private var buttonEditDetails: Button? = null
-    private var buttonViewApplicants: Button? = null
-    private var buttonDelist: Button? = null
+    private lateinit var editTextOfferName: TextInputEditText
+    private lateinit var editTextRequirements: TextInputEditText
+    private lateinit var editTextSkills: TextInputEditText
+    private lateinit var editTextExpectations: TextInputEditText
+    private lateinit var switchVisibility: SwitchMaterial
+    private lateinit var buttonEditDetails: Button
+    private lateinit var buttonViewApplicants: Button
+    private lateinit var buttonDelist: Button
     private lateinit var progressCircularLayout: RelativeLayout
 
     //Determines whether textviews are editable or not
@@ -90,14 +90,14 @@ class MyOfferDetailsFragment() : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
 
-        recruiterExistingOffersViewModel!!.responseGetOfferByIdRecruiter.observe(viewLifecycleOwner, {
+        recruiterExistingOffersViewModel!!.responseGetOfferByIdRecruiter().observe(viewLifecycleOwner, {
             responseGetOfferByIdRecruiter = it
             populateViews()
             editable = false
             setEditable()
         })
 
-        recruiterExistingOffersViewModel!!.responseToggleVisibility.observe(viewLifecycleOwner, {
+        recruiterExistingOffersViewModel!!.responseToggleVisibility().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 responseToggleVisibility = it
@@ -105,7 +105,7 @@ class MyOfferDetailsFragment() : Fragment() {
             }
         })
 
-        recruiterExistingOffersViewModel!!.responseUpdateOffer.observe(viewLifecycleOwner, {
+        recruiterExistingOffersViewModel!!.responseUpdateOffer().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 responseUpdateOffer = it
@@ -114,7 +114,7 @@ class MyOfferDetailsFragment() : Fragment() {
             }
         })
 
-        recruiterExistingOffersViewModel!!.responseDeleteOffer.observe(viewLifecycleOwner, {
+        recruiterExistingOffersViewModel!!.responseDeleteOffer().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 responseDeleteOffer = it
@@ -123,7 +123,7 @@ class MyOfferDetailsFragment() : Fragment() {
             }
         })
 
-        recruiterExistingOffersViewModel!!.errorString.observe(viewLifecycleOwner, {
+        recruiterExistingOffersViewModel!!.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 error = it
