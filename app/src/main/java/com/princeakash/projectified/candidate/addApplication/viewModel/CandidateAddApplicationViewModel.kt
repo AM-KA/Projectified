@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.princeakash.projectified.Event
 import com.princeakash.projectified.MyApplication
+import com.princeakash.projectified.MyApplication.Companion.handleError
 import com.princeakash.projectified.candidate.CandidateRepository
 import com.princeakash.projectified.candidate.addApplication.model.BodyAddApplication
 import com.princeakash.projectified.candidate.addApplication.model.ResponseAddApplication
@@ -52,7 +53,7 @@ class CandidateAddApplicationViewModel(val app: Application) : AndroidViewModel(
             try {
                 responseGetOffersByDomain.postValue(candidateRepository.getOffersByDomain("Bearer $token", domainName))
             } catch (e: Exception) {
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
@@ -70,7 +71,7 @@ class CandidateAddApplicationViewModel(val app: Application) : AndroidViewModel(
                 val bodyAddApplication = BodyAddApplication(Date(), Resume, PreviousWork, applicantID, offerId)
                 responseAddApplication.postValue(Event(candidateRepository.addApplication("Bearer $token", bodyAddApplication)))
             } catch (e: Exception) {
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
@@ -85,17 +86,10 @@ class CandidateAddApplicationViewModel(val app: Application) : AndroidViewModel(
             try {
                 responseGetOfferById.postValue(candidateRepository.getOfferById("Bearer $token", offerId))
             } catch (e: Exception) {
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
 
     fun getLocalProfile() = profileRepository.getLocalProfile()
-
-    fun handleError(e: Exception) {
-        e.printStackTrace()
-
-        //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
-        errorString.postValue(Event("Haha! You got an error!!" + e.localizedMessage))
-    }
 }

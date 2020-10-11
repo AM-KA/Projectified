@@ -25,6 +25,13 @@
     <string name="take_down_this_offer_permanently">Take down this offer permanently</string>
     <string name="allow_candidates_to_apply">Allow candidates to apply</string>
     <string name="view_details">View Details</string>
+    <string name="view">View</string>
+    <string name="mark_as_seen">Mark As Seen</string>
+    <string name="mark_as_selected">Mark As Selected</string>
+    <string name="personal_details">Personal Details</string>
+    <string name="experience">Experience</string>
+    <string name="previous_work">Previous Work</string>
+    <string name="resume">Resume</string>
 
     <string-array name="courses">
         <item>Bachelor of Technology</item>

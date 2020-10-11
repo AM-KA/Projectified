@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.princeakash.projectified.Event
 import com.princeakash.projectified.MyApplication
+import com.princeakash.projectified.MyApplication.Companion.handleError
 import com.princeakash.projectified.recruiter.RecruiterRepository
 import com.princeakash.projectified.recruiter.addOffer.model.BodyAddOffer
 import com.princeakash.projectified.recruiter.addOffer.model.ResponseAddOffer
@@ -49,17 +50,10 @@ class RecruiterAddOffersViewModel(val app: Application): AndroidViewModel(app) {
                 val bodyAddOffer = BodyAddOffer(offerName, domainName, requirements, skills, expectation, recruiterID)
                 responseAddOffer.postValue(Event(recruiterRepository.addOffer(bodyAddOffer, "Bearer $token")))
             } catch(e: Exception){
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
 
     fun getLocalProfile() = profileRepository.getLocalProfile()
-
-    fun handleError(e: Exception){
-        e.printStackTrace()
-
-        //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
-        errorString.postValue(Event("Haha! You got an error!!" + e.localizedMessage))
-    }
 }

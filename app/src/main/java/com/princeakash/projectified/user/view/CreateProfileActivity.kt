@@ -52,6 +52,9 @@ class CreateProfileActivity : AppCompatActivity() {
             it?.getContentIfNotHandled()?.let {
                 responseCreateProfile = it
                 Toast.makeText(this, it.message, LENGTH_SHORT).show()
+                //TODO:Apply code=200 validation
+                //Save Profile Status locally
+                profileViewModel.setProfileStatus(true)
                 //Navigate to Main Activity
                 startActivity(Intent(this, MainActivity::class.java))
             }

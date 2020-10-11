@@ -120,12 +120,31 @@ class ProfileRepository(retrofit: Retrofit, app: MyApplication) {
         }
     }
 
+    fun getProfileStatus(): Boolean{
+        try{
+            return sharedPref.getBoolean(PROFILE_STATUS, false)
+        }catch (e: Exception){
+            e.printStackTrace()
+            return false
+        }
+    }
+
+    fun setProfileStatus(profileStatus: Boolean){
+        try{
+            editor.putBoolean(PROFILE_STATUS, profileStatus)
+            editor.commit()
+        } catch(e : Exception){
+            e.printStackTrace()
+        }
+    }
+
     companion object{
         val SHARED_PREFS = "SharedPreferences"
         val LOGIN_STATUS = "LoginStatus"
         val USER_ID = "UserId"
         val USER_PROFILE = "UserProfile"
         val USER_TOKEN = "UserToken"
+        val PROFILE_STATUS = "ProfileStatus"
     }
 }
 

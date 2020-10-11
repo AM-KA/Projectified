@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="IIT(ISM) Dhanbad"
+            android:text="@string/loading"
             app:layout_constraintBottom_toBottomOf="@id/imageViewCollege"
             app:layout_constraintStart_toEndOf="@id/imageViewCollege"
             app:layout_constraintTop_toTopOf="@id/imageViewCollege" />
@@ -69,7 +69,7 @@
             android:id="@+id/textViewDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="04 July 2020"
+            android:text="@string/loading"
             app:layout_constraintBottom_toBottomOf="@id/imageViewDate"
             app:layout_constraintStart_toStartOf="@id/textViewCollege"
             app:layout_constraintTop_toTopOf="@id/imageViewDate" />
@@ -87,7 +87,7 @@
             android:id="@+id/textViewSeen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mark As Seen"
+            android:text="@string/mark_as_seen"
             app:layout_constraintBottom_toBottomOf="@id/imageViewSeen"
             app:layout_constraintStart_toStartOf="@id/textViewCollege"
             app:layout_constraintTop_toTopOf="@id/imageViewSeen" />
@@ -106,7 +106,7 @@
             android:id="@+id/textViewSelected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mark As Selected"
+            android:text="@string/mark_as_selected"
             app:layout_constraintBottom_toBottomOf="@id/imageViewSelected"
             app:layout_constraintStart_toStartOf="@id/textViewCollege"
             app:layout_constraintTop_toTopOf="@id/imageViewSelected" />
@@ -117,7 +117,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorPrimary"
             android:background="@drawable/buttons"
-            android:text="View"
+            android:text="@string/view"
             app:layout_constraintBottom_toBottomOf="@id/imageViewSelected"
             app:layout_constraintEnd_toEndOf="@id/guideline2"
             app:layout_constraintHorizontal_bias="1"

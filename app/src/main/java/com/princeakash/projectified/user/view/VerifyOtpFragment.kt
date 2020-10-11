@@ -7,13 +7,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AutoCompleteTextView
+import android.widget.Button
+import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.tasks.TaskExecutors
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
-import com.google.firebase.auth.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.princeakash.projectified.MainActivity
@@ -27,12 +33,12 @@ import kotlinx.android.synthetic.main.verifyphoneno.view.*
 import java.util.concurrent.TimeUnit
 
 
-class VerifyOtpFragment :Fragment() {
+class VerifyOtpFragment : Fragment() {
 
 
-    private var EditTextOtp: AutoCompleteTextView ?=null
+    private var EditTextOtp: AutoCompleteTextView? = null
     private var VerifyButton: Button? = null
-    private var ProgressBar: ProgressBar? = null
+    private var progressCircularLayout: RelativeLayout? = null
     private lateinit var auth: FirebaseAuth
     private lateinit var bodySignUp: BodySignUp
     private lateinit var responseLogin: ResponseLogin
@@ -42,12 +48,10 @@ class VerifyOtpFragment :Fragment() {
     private var resendToken: PhoneAuthProvider.ForceResendingToken? = null
     private var phoneno: String? = null
     private var ph: String? = null
-    private var code: String?=  null
-    private  var name: String?=null
-    private var email: String?=null
-    private  var password: String?=null
-
-
+    private var code: String? = null
+    private var name: String? = null
+    private var email: String? = null
+    private var password: String? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -57,14 +61,14 @@ class VerifyOtpFragment :Fragment() {
 
         EditTextOtp = v.editTextOtp
         VerifyButton = v.VerifyButton
-        ProgressBar = v.ProgressBar
-        ProgressBar?.visibility = View.INVISIBLE
+        progressCircularLayout = v.progress_circular_layout
+        progressCircularLayout?.visibility = View.INVISIBLE
 
 
         ph = requireArguments().getString(PHONE_NO)
-            name= requireArguments().getString(N_AME)
-            email = requireArguments().getString(E_MAIL)
-            password = requireArguments().getString(PASS_WORD)
+        name = requireArguments().getString(N_AME)
+        email = requireArguments().getString(E_MAIL)
+        password = requireArguments().getString(PASS_WORD)
         phoneno = "+91" + ph
         sendVerificationCodetoTheUser();
 
@@ -80,8 +84,6 @@ class VerifyOtpFragment :Fragment() {
     }
 
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -90,7 +92,7 @@ class VerifyOtpFragment :Fragment() {
             it?.getContentIfNotHandled()?.let {
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
                 if (it.code == 200) {
-                    val bodyLogin = LoginBody(email = bodySignUp!!.email, password=bodySignUp!!.password)
+                    val bodyLogin = LoginBody(email = bodySignUp!!.email, password = bodySignUp!!.password)
                     profileViewModel.logIn(bodyLogin)
                 }
             }
@@ -98,16 +100,16 @@ class VerifyOtpFragment :Fragment() {
         profileViewModel.responseLogin().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 responseLogin = it
-                if(responseLogin.code!=200){
+                if (responseLogin.code != 200) {
                     Toast.makeText(context, responseLogin.message, Toast.LENGTH_SHORT).show()
-                }else{
+                } else {
                     profileViewModel.setToken(responseLogin.token!!)
                     profileViewModel.setLoginStatus(true)
-                    if(responseLogin.profileCompleted!!){
+                    if (responseLogin.profileCompleted!!) {
                         //Navigate to main activity
                         val intent = Intent(activity, MainActivity::class.java)
                         startActivity(intent)
-                    }else{
+                    } else {
                         //Navigate to CreateProfileFragment
                         responseLogin.profile?.let {
                             profileViewModel.setLocalProfile(it)
@@ -115,7 +117,7 @@ class VerifyOtpFragment :Fragment() {
                         val bundle = Bundle()
                         bundle.putString(LoginFragment.USER_NAME, responseLogin.userName)
                         val intent = Intent(requireActivity(), CreateProfileActivity::class.java)
-                        intent.putExtra(USER_NAME,bundle)
+                        intent.putExtra(USER_NAME, bundle)
                         startActivity(intent)
                         requireActivity().finish()
                     }
@@ -183,47 +185,47 @@ class VerifyOtpFragment :Fragment() {
         }
     }
 
-        private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
+    private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
 
-            auth = Firebase.auth
-            auth.signInWithCredential(credential)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success")
+        auth = Firebase.auth
+        auth.signInWithCredential(credential)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithCredential:success")
 
-                            Toast.makeText(context, "Sign Up Done Successfully", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Sign Up Done Successfully", Toast.LENGTH_SHORT).show()
 
-                            val user = task.result?.user
-
-
-                            bodySignUp = BodySignUp(name!!, email!!, ph!!, password!!)
-                            profileViewModel.signUp(bodySignUp)
+                        val user = task.result?.user
 
 
-                            /*parentFragmentManager.beginTransaction()
-                                    .replace(R.id.fragment_initial, CreateProfileFragment::class.java, null, "verify")
-                                    //.addToBackStack(null)
-                                    .commit()*/
-
-                            // ...
-                        } else {
-                            // Sign in failed, display a message and update the UI
-                            Log.w(TAG, "signInWithCredential:failure", task.exception)
-                            if (task.exception is FirebaseAuthInvalidCredentialsException) {
-                                // The verification code entered was invalid
+                        bodySignUp = BodySignUp(name!!, email!!, ph!!, password!!)
+                        profileViewModel.signUp(bodySignUp)
 
 
-                            }
+                        /*parentFragmentManager.beginTransaction()
+                                .replace(R.id.fragment_initial, CreateProfileFragment::class.java, null, "verify")
+                                //.addToBackStack(null)
+                                .commit()*/
+
+                        // ...
+                    } else {
+                        // Sign in failed, display a message and update the UI
+                        Log.w(TAG, "signInWithCredential:failure", task.exception)
+                        if (task.exception is FirebaseAuthInvalidCredentialsException) {
+                            // The verification code entered was invalid
+
+
                         }
                     }
-        }
-    companion object{
+                }
+    }
 
-        val PHONE_NO="phoneno"
-        val E_MAIL="email"
-        val N_AME="name"
-        val PASS_WORD="password"
+    companion object {
+        val PHONE_NO = "phoneno"
+        val E_MAIL = "email"
+        val N_AME = "name"
+        val PASS_WORD = "password"
     }
 }
 

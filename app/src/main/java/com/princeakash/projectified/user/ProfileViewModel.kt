@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.princeakash.projectified.Event
 import com.princeakash.projectified.MyApplication
+import com.princeakash.projectified.MyApplication.Companion.handleError
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(app: Application) : AndroidViewModel(app) {
@@ -34,6 +35,8 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
     //Functions based on *Local Data*
     fun getLoginStatus() = profileRepository.getLoginStatus()
     fun setLoginStatus(loginStatus: Boolean) = profileRepository.setLoginStatus(loginStatus)
+    fun getProfileStatus() = profileRepository.getProfileStatus()
+    fun setProfileStatus(profileStatus: Boolean) = profileRepository.setProfileStatus(profileStatus)
     fun getLocalProfile() = profileRepository.getLocalProfile()
     fun setLocalProfile(bodyModel: ProfileModel) = profileRepository.setLocalProfile(bodyModel)
     fun getToken() = profileRepository.getToken()
@@ -51,7 +54,7 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
                 else
                     errorString.postValue(Event(response.message))
             } catch (e: Exception) {
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
@@ -67,7 +70,7 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
                 else
                     errorString.postValue(Event(response.message))
             } catch (e: Exception) {
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
@@ -89,7 +92,7 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
                 }
                 responseLogin.postValue(Event(response))
             } catch (e: Exception) {
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
@@ -104,7 +107,7 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
                 responseCreateProfile.postValue(Event(profileRepository.createProfile("Bearer $token", bodyCreateProfile)))
                 setLocalProfile(ProfileModel(bodyCreateProfile))
             } catch (e: Exception) {
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
@@ -118,14 +121,9 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
                 responseUpdateProfile.postValue(Event(profileRepository.updateProfile("Bearer $token", bodyUpdateProfile)))
                 setLocalProfile(ProfileModel(bodyUpdateProfile))
             } catch (e: Exception) {
-                handleError(e)
+                handleError(e, errorString)
             }
         }
-    }
-
-    fun handleError(e: Exception) {
-        e.printStackTrace()
-        errorString.postValue(Event(e.localizedMessage))
     }
 
     companion object {

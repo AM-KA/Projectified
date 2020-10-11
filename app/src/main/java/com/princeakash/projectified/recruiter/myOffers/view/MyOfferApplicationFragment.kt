@@ -1,7 +1,6 @@
 package com.princeakash.projectified.recruiter.myOffers.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,9 +10,12 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.princeakash.projectified.R
-import com.princeakash.projectified.recruiter.myOffers.model.*
+import com.princeakash.projectified.recruiter.myOffers.model.BodyMarkAsSeen
+import com.princeakash.projectified.recruiter.myOffers.model.BodyMarkAsSelected
+import com.princeakash.projectified.recruiter.myOffers.model.ResponseGetApplicationByIdRecruiter
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterExistingOffersViewModel
 import kotlinx.android.synthetic.main.frag_candidate_details_recruiter.view.*
 
@@ -22,24 +24,21 @@ class MyOfferApplicationFragment : Fragment() {
     //ViewModel and Necessary LiveData Observer objects
     private lateinit var recruiterExistingOffersViewModel: RecruiterExistingOffersViewModel
     private var responseGetApplicationByIdRecruiter: ResponseGetApplicationByIdRecruiter? = null
-    private var error: String? = null
-    private var responseMarkAsSeen: ResponseMarkAsSeen? = null
-    private var responseMarkAsSelected: ResponseMarkAsSelected? = null
     private lateinit var progressCircularLayout: RelativeLayout
 
     //Application related data
     private lateinit var applicationID: String
 
     //Views
-    private var textViewName: TextView? = null
-    private var textViewCollege: TextView? = null
-    private var textViewCourse: TextView? = null
-    private var textViewSemester: TextView? = null
-    private var textViewPhone: TextView? = null
-    private var textViewPreviousWork: TextView? = null
-    private var textViewResume: TextView? = null
-    private var imageViewSeen: ImageView? = null
-    private var imageViewSelected: ImageView? = null
+    private lateinit var textViewName: TextView
+    private lateinit var textViewCollege: TextView
+    private lateinit var textViewCourse: TextView
+    private lateinit var textViewSemester: TextView
+    private lateinit var textViewPhone: TextView
+    private lateinit var textViewPreviousWork: TextView
+    private lateinit var textViewResume: TextView
+    private lateinit var imageViewSeen: ImageView
+    private lateinit var imageViewSelected: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,43 +72,48 @@ class MyOfferApplicationFragment : Fragment() {
 
         recruiterExistingOffersViewModel.responseGetApplicationById().observe(viewLifecycleOwner, {
             responseGetApplicationByIdRecruiter = it
-            populateViews()
+            populateViews(it)
         })
 
         recruiterExistingOffersViewModel.errorString().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let{
+            it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
-                error = it
-                Toast.makeText(context, error, LENGTH_SHORT).show()
+                Toast.makeText(context, it, LENGTH_SHORT).show()
             }
         })
 
         recruiterExistingOffersViewModel.responseMarkAsSeen().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let{
+            it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
-                responseMarkAsSeen = it
                 //Take action as per response
+                if(it.code==200 || it.code == 403)
+                    imageViewSeen.setImageResource(R.drawable.ic_baseline_favorite_24)
+                Toast.makeText(context, it.message, LENGTH_SHORT).show()
             }
         })
 
         recruiterExistingOffersViewModel.responseMarkAsSelected().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let{
+            it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
-                responseMarkAsSelected = it
                 //Take action as per response
+                if(it.code==200 || it.code == 403)
+                    imageViewSelected.setImageResource(R.drawable.ic_baseline_done_24)
+                Toast.makeText(context, it.message, LENGTH_SHORT).show()
             }
         })
 
-
-        imageViewSeen?.setOnClickListener {
+        imageViewSeen.setOnClickListener {
             markSeen()
         }
 
-        imageViewSelected?.setOnClickListener {
+        imageViewSelected.setOnClickListener {
             markSelected()
         }
-        progressCircularLayout.visibility = View.VISIBLE
-        recruiterExistingOffersViewModel.getApplicationById(applicationID)
+
+        if(savedInstanceState==null) {
+            progressCircularLayout.visibility = View.VISIBLE
+            recruiterExistingOffersViewModel.getApplicationById(applicationID)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -117,28 +121,33 @@ class MyOfferApplicationFragment : Fragment() {
         outState.putString(APPLICATION_ID, applicationID)
     }
 
-    private fun populateViews() {
-        responseGetApplicationByIdRecruiter?.let {
-            if(it.code==200) {
-                textViewName?.text = it.application?.applicant_name
-                textViewCollege?.text = it.application?.applicant_collegeName
-                textViewCourse?.text = it.application?.applicant_course
-                textViewSemester?.text = it.application?.applicant_semester
-                textViewPhone?.text = it.application?.applicant_phone
-                textViewPreviousWork?.text = it.application?.previousWork
-                textViewResume?.text = it.application?.resume
+    private fun populateViews(it: ResponseGetApplicationByIdRecruiter) {
+        if (it.code == 200) {
+            textViewName.text = it.application?.applicant_name
+            textViewCollege.text = it.application?.applicant_collegeName
+            textViewCourse.text = it.application?.applicant_course
+            textViewSemester.text = it.application?.applicant_semester
+            textViewPhone.text = it.application?.applicant_phone
+            textViewPreviousWork.text = it.application?.previousWork
+            textViewResume.text = it.application?.resume
+            it.application?.is_Seen?.let {
+                if (it)
+                    imageViewSeen.setImageResource(R.drawable.ic_baseline_favorite_24)
             }
-            else{
-                Toast.makeText(context, it.message, LENGTH_SHORT)
+            it.application?.is_Selected?.let {
+                if (it)
+                    imageViewSelected.setImageResource(R.drawable.ic_baseline_done_24)
             }
-            progressCircularLayout.visibility = View.INVISIBLE
+        } else {
+            Toast.makeText(context, it.message, LENGTH_SHORT).show()
         }
+        progressCircularLayout.visibility = View.INVISIBLE
     }
 
     private fun markSeen() {
         responseGetApplicationByIdRecruiter?.let {
             var status = true
-            if(it.application != null)
+            if (it.application != null)
                 status = it.application?.is_Seen!!
             progressCircularLayout.visibility = View.VISIBLE
             recruiterExistingOffersViewModel.markSeen(applicationID, BodyMarkAsSeen(!status))
@@ -148,7 +157,7 @@ class MyOfferApplicationFragment : Fragment() {
     private fun markSelected() {
         responseGetApplicationByIdRecruiter?.let {
             var status = true
-            if(it.application != null)
+            if (it.application != null)
                 status = it.application?.is_Selected!!
             progressCircularLayout.visibility = View.VISIBLE
             recruiterExistingOffersViewModel.markSelected(applicationID, BodyMarkAsSelected(!status))
@@ -159,4 +168,3 @@ class MyOfferApplicationFragment : Fragment() {
         const val APPLICATION_ID = "ApplicationId"
     }
 }
-

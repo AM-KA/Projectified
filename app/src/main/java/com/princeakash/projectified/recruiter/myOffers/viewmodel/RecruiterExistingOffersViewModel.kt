@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.princeakash.projectified.Event
 import com.princeakash.projectified.MyApplication
+import com.princeakash.projectified.MyApplication.Companion.handleError
 import com.princeakash.projectified.recruiter.*
 import com.princeakash.projectified.recruiter.myOffers.model.*
 import com.princeakash.projectified.user.ProfileRepository
@@ -60,7 +61,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
             try {
                 responseGetOffersByRecruiter.postValue(recruiterRepository.getOffersByRecruiter("Bearer $token", recruiterID))
             } catch(e: Exception){
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
@@ -75,7 +76,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
             try {
                 responseGetOfferByIdRecruiter.postValue(recruiterRepository.getOfferByIdRecruiter("Bearer $token", offerID))
             } catch(e: Exception){
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
@@ -90,7 +91,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
             try {
                 responseGetOfferApplicants.postValue(recruiterRepository.getOfferApplicants("Bearer $token", offerID))
             } catch(e: Exception){
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
@@ -105,7 +106,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
             try {
                 responseUpdateOffer.postValue(Event(recruiterRepository.updateOffer("Bearer $token", offerID, bodyUpdateOffer)))
             } catch(e: Exception){
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
@@ -120,7 +121,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
             try {
                 responseToggleVisibility.postValue(Event(recruiterRepository.toggleVisibility("Bearer $token", offerID, bodyToggleVisibility)))
             } catch(e: Exception){
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
@@ -135,7 +136,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
             try {
                 responseDeleteOffer.postValue(Event(recruiterRepository.deleteOffer("Bearer $token", offerID)))
             } catch(e: Exception){
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
@@ -150,7 +151,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
             try {
                 responseGetApplicationById.postValue(recruiterRepository.getApplicationById("Bearer $token", applicationID))
             } catch(e: Exception){
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
@@ -165,7 +166,7 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
             try {
                 responseMarkAsSeen.postValue(Event(recruiterRepository.markSeen("Bearer $token", applicationID, bodyMarkAsSeen)))
             } catch(e: Exception){
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
@@ -180,20 +181,15 @@ class RecruiterExistingOffersViewModel(val app: Application) : AndroidViewModel(
             try {
                 responseMarkAsSelected.postValue(Event(recruiterRepository.markSelected("Bearer $token", applicationID, bodyMarkAsSelected)))
             } catch(e: Exception){
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
 
-    fun refreshApplicants(response_GetOfferApplicants: ResponseGetOfferApplicants){
-        responseGetOfferApplicants.postValue(response_GetOfferApplicants)
-    }
-
-    fun handleError(e: Exception){
-        e.printStackTrace()
-
-        //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
-        errorString.postValue(Event("Haha! You got an error!!" + e.localizedMessage))
+    fun refreshApplicants(applicantList: ArrayList<ApplicantCardModel>){
+        val res = responseGetOfferApplicants.value!!
+        res.applicants = applicantList
+        responseGetOfferApplicants.postValue(res)
     }
 
     companion object {

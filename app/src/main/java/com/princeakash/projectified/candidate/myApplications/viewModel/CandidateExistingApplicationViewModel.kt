@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.princeakash.projectified.Event
 import com.princeakash.projectified.MyApplication
+import com.princeakash.projectified.MyApplication.Companion.handleError
 import com.princeakash.projectified.candidate.CandidateRepository
 import com.princeakash.projectified.candidate.myApplications.model.*
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterExistingOffersViewModel
@@ -54,7 +55,7 @@ class CandidateExistingApplicationViewModel(val app: Application) : AndroidViewM
             try {
                 responseGetApplicationByCandidate.postValue(candidateRepository.getApplicationByCandidate("Bearer $token", applicantID))
             } catch (e: Exception) {
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
@@ -69,7 +70,7 @@ class CandidateExistingApplicationViewModel(val app: Application) : AndroidViewM
             try {
                 responseGetApplicationDetailByIdCandidate.postValue(candidateRepository.getApplicationDetailByIdCandidate("Bearer $token", applicationID))
             } catch (e: Exception) {
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
@@ -85,7 +86,7 @@ class CandidateExistingApplicationViewModel(val app: Application) : AndroidViewM
             try {
                 responseUpdateApplication.postValue(Event(candidateRepository.updateApplication("Bearer $token", applicationID, bodyUpdateApplication)))
             } catch (e: Exception) {
-                handleError(e)
+                handleError(e, errorString)
             }
         }
     }
@@ -101,15 +102,8 @@ class CandidateExistingApplicationViewModel(val app: Application) : AndroidViewM
             try {
                 responseDeleteApplication.postValue(Event(candidateRepository.deleteApplication("Bearer $token", applicationID)))
             } catch (e: Exception) {
-                handleError(e)
+                handleError(e, errorString)
             }
         }
-    }
-
-    fun handleError(e: Exception) {
-        e.printStackTrace()
-
-        //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
-        errorString.postValue(Event("Haha! You got an error!!" + e.localizedMessage))
     }
 }

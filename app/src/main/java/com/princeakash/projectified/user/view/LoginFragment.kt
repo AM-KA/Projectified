@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.RelativeLayout
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.Fragment
@@ -25,7 +26,7 @@ class LoginFragment : Fragment() {
     private var editTextEmail: EditText? = null
     private var editTextPassword: EditText? = null
     private var LogInButton: Button? = null
-
+    private lateinit var progressCircularLayout: RelativeLayout
 
     //View Models and Fun Objects
 
@@ -37,6 +38,7 @@ class LoginFragment : Fragment() {
         editTextEmail = v.editTextEmail
         editTextPassword = v.editTextPassword
         LogInButton = v.LogInButton
+        progressCircularLayout = v.progress_circular_layout
 
         LogInButton?.setOnClickListener {
             displayHomeScreen()
@@ -49,31 +51,39 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
         profileViewModel.responseLogin().observe(viewLifecycleOwner, {
-                it?.getContentIfNotHandled()?.let {
-                        responseLogin = it
-                        if (responseLogin.code != 200) {
-                                Toast.makeText(context, responseLogin.message, LENGTH_SHORT).show()
-                        } else {
-                                profileViewModel.setToken(responseLogin.token!!)
-                                profileViewModel.setLoginStatus(true)
-                                if (responseLogin.profileCompleted!!) {
-                                        //Navigate to main activity
-                                        val intent = Intent(activity, MainActivity::class.java)
-                                        startActivity(intent)
-                                } else {
-                                        //Navigate to CreateProfileFragment
-                                        responseLogin.profile?.let {
-                                                profileViewModel.setLocalProfile(it)
-                                        }
-                                        val bundle = Bundle()
-                                        bundle.putString(LoginFragment.USER_NAME, responseLogin.userName)
-                                        val intent = Intent(requireActivity(), CreateProfileActivity::class.java)
-                                        intent.putExtra(USER_NAME, bundle)
-                                        startActivity(intent)
-                                        requireActivity().finish()
-                                }
+            it?.getContentIfNotHandled()?.let {
+                progressCircularLayout.visibility = View.INVISIBLE
+                responseLogin = it
+                if (responseLogin.code != 200) {
+                    Toast.makeText(context, responseLogin.message, LENGTH_SHORT).show()
+                } else {
+                    profileViewModel.setToken(responseLogin.token!!)
+                    profileViewModel.setLoginStatus(true)
+                    profileViewModel.setProfileStatus(responseLogin.profileCompleted!!)
+                    if (responseLogin.profileCompleted!!) {
+                        //Navigate to main activity
+                        val intent = Intent(activity, MainActivity::class.java)
+                        startActivity(intent)
+                    } else {
+                        //Navigate to CreateProfileFragment
+                        responseLogin.profile?.let {
+                            profileViewModel.setLocalProfile(it)
                         }
+                        val bundle = Bundle()
+                        bundle.putString(LoginFragment.USER_NAME, responseLogin.userName)
+                        val intent = Intent(requireActivity(), CreateProfileActivity::class.java)
+                        intent.putExtra(USER_NAME, bundle)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
                 }
+            }
+        })
+        profileViewModel.errorString().observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let {
+                progressCircularLayout.visibility = View.INVISIBLE
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            }
         })
     }
 
@@ -89,6 +99,7 @@ class LoginFragment : Fragment() {
         val email = editTextEmail!!.text!!.toString()
         val password = editTextPassword!!.text!!.toString()
 
+        progressCircularLayout.visibility = View.VISIBLE
         val logIn = LoginBody(email, password)
         profileViewModel.logIn(logIn)
     }
