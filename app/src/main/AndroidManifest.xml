@@ -30,6 +30,8 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".user.view.LoginSignupScreens"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".user.view.CreateProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
     </application>
 

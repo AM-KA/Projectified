@@ -67,7 +67,6 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
                     android:hint="Name"
-                    android:text="Akash Mahapatra"
                     android:inputType="text"
                     android:defaultFocusHighlightEnabled="false"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -86,7 +85,6 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
                     android:hint="College"
-                    android:text="IIT (ISM) Dhanbad"
                     android:inputType="text"
                     android:defaultFocusHighlightEnabled="false"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -265,7 +263,6 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
                     android:hint="Description"
-                    android:text="I am fun loving"
                     android:inputType="text"
                     android:defaultFocusHighlightEnabled="false"/>
 

@@ -17,6 +17,14 @@
     <string name="requirement">Requirement</string>
     <string name="skills">Skills</string>
     <string name="expectation_from_applicant">Expectation From Applicant</string>
+    <string name="save_amp_update"><![CDATA[Save & Update]]></string>
+    <string name="update_offer_details">Update offer details</string>
+    <string name="view_applicants">View Applicants</string>
+    <string name="view_list_of_applicants">View list of applicants</string>
+    <string name="delist_opportunity">Delist Opportunity</string>
+    <string name="take_down_this_offer_permanently">Take down this offer permanently</string>
+    <string name="allow_candidates_to_apply">Allow candidates to apply</string>
+    <string name="view_details">View Details</string>
 
     <string-array name="courses">
         <item>Bachelor of Technology</item>

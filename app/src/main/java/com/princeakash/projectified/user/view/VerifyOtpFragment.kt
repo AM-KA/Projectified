@@ -10,9 +10,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.TaskExecutors
-import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
@@ -20,11 +18,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.princeakash.projectified.MainActivity
 import com.princeakash.projectified.R
-import com.princeakash.projectified.candidate.addApplication.view.HomeFragment
 import com.princeakash.projectified.user.BodySignUp
 import com.princeakash.projectified.user.LoginBody
 import com.princeakash.projectified.user.ProfileViewModel
 import com.princeakash.projectified.user.ResponseLogin
+import com.princeakash.projectified.user.view.LoginFragment.Companion.USER_NAME
 import kotlinx.android.synthetic.main.verifyphoneno.view.*
 import java.util.concurrent.TimeUnit
 
@@ -92,7 +90,6 @@ class VerifyOtpFragment :Fragment() {
             it?.getContentIfNotHandled()?.let {
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
                 if (it.code == 200) {
-                    Log.d(TAG, "onViewCreated: Sign Up Successful, user "+it.userID!!)
                     val bodyLogin = LoginBody(email = bodySignUp!!.email, password=bodySignUp!!.password)
                     profileViewModel.logIn(bodyLogin)
                 }
@@ -117,10 +114,10 @@ class VerifyOtpFragment :Fragment() {
                         }
                         val bundle = Bundle()
                         bundle.putString(LoginFragment.USER_NAME, responseLogin.userName)
-                        requireActivity().supportFragmentManager.beginTransaction()
-                                .replace(R.id.fragment_initial, CreateProfileFragment::class.java, bundle, "LoginFragment")
-                                .addToBackStack(null)
-                                .commit()
+                        val intent = Intent(requireActivity(), CreateProfileActivity::class.java)
+                        intent.putExtra(USER_NAME,bundle)
+                        startActivity(intent)
+                        requireActivity().finish()
                     }
                 }
             }
