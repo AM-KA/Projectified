@@ -22,31 +22,26 @@ import kotlinx.android.synthetic.main.frag_myapplicationdetail.view.editTextSkil
 class MyApplicationDetailsFragment : Fragment() {
 
     //Views
-    private var editTextRequirements: TextInputEditText? = null
-    private var editTextSkills: TextInputEditText? = null
-    private var editTextExpectations: TextInputEditText? = null
-    private var editTextName: TextInputEditText? = null
-    private var editTextCollege: TextInputEditText? = null
-    private var editTextSemester: TextInputEditText? = null
-    private var editTextCourse: TextInputEditText? = null
-    private var editTextPreviousWork: TextInputEditText? = null
-    private var editTextResume: TextInputEditText? = null
-    private var imageViewSeen: ImageView? = null
-    private var imageViewSelected: ImageView? = null
-    private var buttonDeleteApplication: Button? = null
-    private var buttonUpdateDetails: Button? = null
+    private lateinit  var editTextRequirements: TextInputEditText
+    private lateinit  var editTextSkills: TextInputEditText
+    private lateinit  var editTextExpectations: TextInputEditText
+    private lateinit var editTextName: TextInputEditText
+    private lateinit var editTextCollege: TextInputEditText
+    private lateinit var editTextSemester: TextInputEditText
+    private lateinit var editTextCourse: TextInputEditText
+    private lateinit var editTextPreviousWork: TextInputEditText
+    private lateinit var editTextResume: TextInputEditText
+    private lateinit var imageViewSeen: ImageView
+    private lateinit var imageViewSelected: ImageView
+    private lateinit var buttonDeleteApplication: Button
+    private lateinit var buttonUpdateDetails: Button
     private lateinit var progressCircularLayout: RelativeLayout
 
-    //Determines whether TextViews are editable or not
-    private var editable = false
+
 
     //ViewModels and Observable Objects
-    private var candidateExistingApplicationViewModel: CandidateExistingApplicationViewModel? = null
-    private var responseGetApplicationDetailsByIdCandidate: ResponseGetApplicationDetailByIdCandidate? = null
-    private var responseUpdateApplication: ResponseUpdateApplication? = null
-    private var responseDeleteApplication: ResponseDeleteApplication? = null
+    private lateinit var candidateExistingApplicationViewModel: CandidateExistingApplicationViewModel
 
-    private var error: String? = null
 
     //Application Data
     private var applicationId: String? = null
@@ -54,60 +49,16 @@ class MyApplicationDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        candidateExistingApplicationViewModel = ViewModelProvider(requireParentFragment()).get(CandidateExistingApplicationViewModel::class.java)
-        candidateExistingApplicationViewModel!!.responseGetApplicationDetailByIdCandidate().observe(viewLifecycleOwner, {
-            responseGetApplicationDetailsByIdCandidate = it
-            populateViews()
-            editable = false
-            setEditable()
-        })
-
-        candidateExistingApplicationViewModel!!.responseUpdateApplication().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let {
-                progressCircularLayout.visibility = View.INVISIBLE
-                responseUpdateApplication = it
-                //TODO: Show Toast
-                fetchApplicationDetails()
-            }
-        })
-
-        candidateExistingApplicationViewModel!!.responseDeleteApplication().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let {
-                progressCircularLayout.visibility = View.INVISIBLE
-                responseDeleteApplication = it
-                //TODO: Show Toast
-                parentFragmentManager.popBackStackImmediate()
-            }
-        })
-
-        candidateExistingApplicationViewModel!!.errorString().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let {
-                progressCircularLayout.visibility = View.INVISIBLE
-                error = it
-                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-            }
-        })
 
         if (savedInstanceState == null) {
             //First LoadUp of Fragment
             applicationId = requireArguments().getString(APPLICATION_IDC)
-            fetchApplicationDetails()
         } else {
             //Restore state
             //responseGetApplicationDetailsByIdCandidate = savedInstanceState.getSerializable(RESPONSE_GET_APPLICATIONS_DETAILS) as ResponseGetApplicationDetailsByIdCandidate
             applicationId = savedInstanceState.getString(APPLICATION_IDC)
-            editable = savedInstanceState.getBoolean(EDITABLE_STATUS)
-            responseGetApplicationDetailsByIdCandidate?.let {
-                populateViews()
+
             }
-            setEditable()
-        }
-        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Application Details"
     }
 
 
@@ -128,17 +79,62 @@ class MyApplicationDetailsFragment : Fragment() {
         buttonUpdateDetails = v.buttonUpdateDetails
         progressCircularLayout = v.progress_circular_layout
 
+
+        return v
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        candidateExistingApplicationViewModel = ViewModelProvider(requireParentFragment()).get(CandidateExistingApplicationViewModel::class.java)
+        candidateExistingApplicationViewModel!!.responseGetApplicationDetailByIdCandidate().observe(viewLifecycleOwner, {
+            progressCircularLayout.visibility = View.INVISIBLE
+            populateViews(it)
+
+        })
+
+
+        candidateExistingApplicationViewModel!!.responseUpdateApplication().observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let {
+                progressCircularLayout.visibility = View.INVISIBLE
+                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                fetchApplicationDetails()
+            }
+        })
+
+
+        candidateExistingApplicationViewModel!!.responseDeleteApplication().observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let {
+                progressCircularLayout.visibility = View.INVISIBLE
+                //TODO: Show Toast
+                parentFragmentManager.popBackStackImmediate()
+            }
+        })
+
+
+        candidateExistingApplicationViewModel!!.errorString().observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let {
+                progressCircularLayout.visibility = View.INVISIBLE
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            }
+        })
+
         buttonUpdateDetails?.setOnClickListener {
-            editable = !editable
-            setEditable()
-            if (editable)
-                updateOffer()
+            updateOffer()
+
+
         }
         buttonDeleteApplication?.setOnClickListener {
             deleteApplication()
         }
-        return v
+
+
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Application Details"
     }
+
+
+
 
     private fun updateOffer() {
         if (editTextPreviousWork!!.text == null || editTextPreviousWork!!.text!!.equals("")) {
@@ -154,9 +150,10 @@ class MyApplicationDetailsFragment : Fragment() {
         val resume = editTextResume!!.text!!.toString()
 
         progressCircularLayout.visibility = View.VISIBLE
-        val bodyUpdateApplication = BodyUpdateApplication(previousWork, resume)
+        val bodyUpdateApplication = BodyUpdateApplication(resume, previousWork)
         candidateExistingApplicationViewModel!!.updateApplication(applicationId!!, bodyUpdateApplication)
     }
+
 
     private fun fetchApplicationDetails() {
         //TODO:Start ProgressBar
@@ -164,43 +161,43 @@ class MyApplicationDetailsFragment : Fragment() {
         applicationId?.let { candidateExistingApplicationViewModel!!.getApplicationDetailByIdCandidate(it) }
     }
 
+
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(APPLICATION_IDC, applicationId)
-        outState.putBoolean(EDITABLE_STATUS, editable)
     }
 
-    private fun populateViews() {
-        editTextRequirements?.setText(responseGetApplicationDetailsByIdCandidate?.application?.requirements)
-        editTextSkills?.setText(responseGetApplicationDetailsByIdCandidate?.application?.skills)
-        editTextExpectations?.setText(responseGetApplicationDetailsByIdCandidate?.application?.expectation)
-        editTextName?.setText(responseGetApplicationDetailsByIdCandidate?.application?.recruiter_name)
-        editTextCollege?.setText(responseGetApplicationDetailsByIdCandidate?.application?.recruiter_collegeName)
-        editTextSemester?.setText(responseGetApplicationDetailsByIdCandidate?.application?.recruiter_semester)
-        editTextCourse?.setText(responseGetApplicationDetailsByIdCandidate?.application?.recruiter_course)
-        editTextPreviousWork?.setText(responseGetApplicationDetailsByIdCandidate?.application?.previousWork)
-        editTextResume?.setText(responseGetApplicationDetailsByIdCandidate?.application?.resume)
-        if (responseGetApplicationDetailsByIdCandidate?.application?.is_Seen!!)
-            imageViewSeen?.setImageResource(R.drawable.ic_baseline_favorite_24)
-        else
-            imageViewSeen?.setImageResource((R.drawable.ic_outline_favorite_border_24))
 
-        if (responseGetApplicationDetailsByIdCandidate?.application?.is_Selected!!)
-            imageViewSelected?.setImageResource(R.drawable.ic_baseline_done_24)
-        else
-            imageViewSelected?.setImageResource((R.drawable.ic_baseline_done_outline_24))
+
+    private fun populateViews(it:ResponseGetApplicationDetailByIdCandidate) {
+        if (it.code == 200) {
+            editTextRequirements?.setText(it.application?.requirements)
+            editTextSkills?.setText(it?.application?.skills)
+            editTextExpectations?.setText(it?.application?.expectation)
+            editTextName?.setText(it?.application?.recruiter_name)
+            editTextCollege?.setText(it?.application?.recruiter_collegeName)
+            editTextSemester?.setText(it?.application?.recruiter_semester)
+            editTextCourse?.setText(it?.application?.recruiter_course)
+            editTextPreviousWork?.setText(it?.application?.previousWork)
+            editTextResume?.setText(it?.application?.resume)
+
+            if (it?.application?.is_Seen!!)
+                imageViewSeen?.setImageResource(R.drawable.ic_baseline_favorite_24)
+            else
+                imageViewSeen?.setImageResource((R.drawable.ic_outline_favorite_border_24))
+
+            if (it?.application?.is_Selected!!)
+                imageViewSelected?.setImageResource(R.drawable.ic_baseline_done_24)
+            else
+                imageViewSelected?.setImageResource((R.drawable.ic_baseline_done_outline_24))
+            progressCircularLayout.visibility = View.INVISIBLE
+        } else {
+            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+        }
         progressCircularLayout.visibility = View.INVISIBLE
     }
 
-    private fun setEditable() {
-        editTextPreviousWork?.isEnabled = editable
-        editTextResume?.isEnabled = editable
-        if (editable) {
-            buttonUpdateDetails?.text = "Save Details"
-        } else {
-            buttonUpdateDetails?.text = "Edit Details"
-        }
-    }
 
     private fun deleteApplication() {
         AlertDialog.Builder(requireContext())
@@ -214,8 +211,9 @@ class MyApplicationDetailsFragment : Fragment() {
                 .create().show()
     }
 
+
+
     companion object {
         const val APPLICATION_IDC = "applicationId"
-        const val EDITABLE_STATUS = "EditableStatus"
     }
 }

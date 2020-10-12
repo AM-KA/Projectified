@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.addApplication.model.ResponseGetOfferById
+import com.princeakash.projectified.candidate.addApplication.view.ApplyOpportunityFragment.Companion.OFFER_IDC
 import com.princeakash.projectified.candidate.addApplication.viewModel.CandidateAddApplicationViewModel
 import kotlinx.android.synthetic.main.frag_apply_opportunity_view.view.*
 import kotlinx.android.synthetic.main.frag_apply_opportunity_view.view.progress_circular_layout
@@ -33,32 +34,29 @@ class GetOfferDetailsCandidateFragment : Fragment() {
 
     //View Models and Observable Objects
     private lateinit var candidateAddApplicationsViewModel: CandidateAddApplicationViewModel
-    private lateinit var responseGetOfferById: ResponseGetOfferById
 
-    private var error: String? = null
+
 
     private var offerId: String? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) {
+            offerId = requireArguments().getString(OFFER_IDC)
+
+        } else {
+            offerId = savedInstanceState.getString(OFFER_IDC)
+
+        }
+
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
 
         val v = inflater.inflate(R.layout.frag_apply_opportunity_view, container, false)
         progressCircularLayout = v.progress_circular_layout
         (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Offer Details"
-        candidateAddApplicationsViewModel = ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
-
-        candidateAddApplicationsViewModel.responseGetOfferById().observe(viewLifecycleOwner, {
-            responseGetOfferById = it
-            populateViews()
-        })
-
-
-        candidateAddApplicationsViewModel.errorString().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let {
-                error = it
-                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-            }
-        })
 
         textViewExpectations = v.textViewExpectationData
         textViewSkills = v.textViewSkillsData
@@ -70,13 +68,6 @@ class GetOfferDetailsCandidateFragment : Fragment() {
         buttonApplyOpportunity = v.buttonApply
         buttonCancelOpportunity = v.buttonCancel
 
-        if (savedInstanceState == null) {
-            offerId = requireArguments().getString(OFFER_IDC)
-            fetchOfferDetails()
-        } else {
-            offerId = savedInstanceState.getString(OFFER_IDC)
-            populateViews()
-        }
 
         buttonApplyOpportunity.setOnClickListener()
         {
@@ -96,26 +87,42 @@ class GetOfferDetailsCandidateFragment : Fragment() {
                     .commit()
         }
 
-
         return v
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    private fun fetchOfferDetails() {
-        //TODO:Start ProgressBar
-        progressCircularLayout.visibility = View.VISIBLE
-        candidateAddApplicationsViewModel.getoffersById(offerId!!)
+        candidateAddApplicationsViewModel = ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
+
+        candidateAddApplicationsViewModel.responseGetOfferById().observe(viewLifecycleOwner, {
+            populateViews(it)
+        })
+
+        candidateAddApplicationsViewModel.errorString().observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        if (savedInstanceState == null) {
+            progressCircularLayout.visibility = View.VISIBLE
+            candidateAddApplicationsViewModel.getoffersById(offerId!!)
+        }
     }
 
-    private fun populateViews() {
-        textViewExpectations.setText(responseGetOfferById.offer.expectation)
-        textViewSkills.setText(responseGetOfferById.offer.skills)
-        textViewRequirements.setText(responseGetOfferById.offer.requirements)
-        textViewName.setText(responseGetOfferById.offer.recruiter_name)
-        textViewCollege.setText(responseGetOfferById.offer.recruiter_collegeName)
-        textViewSemester.setText(responseGetOfferById.offer.recruiter_semester)
-        textViewCourse.setText(responseGetOfferById.offer.recruiter_course)
-        progressCircularLayout.visibility = View.INVISIBLE
+
+    private fun populateViews(it:ResponseGetOfferById) {
+        if (it.code == 200) {
+            textViewExpectations.setText(it.offer.expectation)
+            textViewSkills.setText(it.offer.skills)
+            textViewRequirements.setText(it.offer.requirements)
+            textViewName.setText(it.offer.recruiter_name)
+            textViewCollege.setText(it.offer.recruiter_collegeName)
+            textViewSemester.setText(it.offer.recruiter_semester)
+            textViewCourse.setText(it.offer.recruiter_course)
+            progressCircularLayout.visibility = View.INVISIBLE
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -23,11 +23,10 @@ import kotlin.properties.Delegates
 
 class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffersListener{
 
-    lateinit var candidateAddApplicationViewModel: CandidateAddApplicationViewModel
-    var offerList: ArrayList<OfferCardModelCandidate> = ArrayList()
-    var errorString:String? = null
-    var domainName:String?=null
-    var listFetched by Delegates.notNull<Boolean>()
+    private lateinit var candidateAddApplicationViewModel: CandidateAddApplicationViewModel
+    private var offerList: ArrayList<OfferCardModelCandidate> = ArrayList()
+    private  var domainName:String?=null
+    private  var listFetched by Delegates.notNull<Boolean>()
     lateinit var recyclerView:RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,9 +65,8 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
 
         candidateAddApplicationViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
-                errorString = it
                 view.progress_circular_layout.visibility = View.INVISIBLE
-                Toast.makeText(this@GetOffersByDomainFragment.context, errorString, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@GetOffersByDomainFragment.context, it, Toast.LENGTH_SHORT).show()
             }
         })
 

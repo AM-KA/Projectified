@@ -73,7 +73,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:drawablePadding="10dp"
-                android:hint="Name"
+                android:hint="@string/name"
                 android:paddingLeft="15dp" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -93,7 +93,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:hint="Email"
+                android:hint="@string/email"
                 android:inputType="text"
                 android:paddingLeft="15dp" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -114,7 +114,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:hint="Phone Number"
+                android:hint="@string/phone_no"
                 android:inputType="number"
                 android:paddingLeft="15dp" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -135,7 +135,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:hint="Password"
+                android:hint="@string/password"
                 android:paddingLeft="15dp" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -156,7 +156,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:hint="Confirm Password"
+                android:hint="@string/ReEnterPassword"
                 android:paddingLeft="15dp" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -168,7 +168,7 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/buttons"
             android:fontFamily="@font/roboto"
-            android:text="SIGN UP"
+            android:text="@string/signUp"
             android:textColor="#FFFFFF"
             android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="@id/guideline2"

@@ -136,7 +136,7 @@
                             android:defaultFocusHighlightEnabled="false"
                             android:drawablePadding="10dp"
                             android:hint="Requirement"
-                            android:inputType="text"
+                            android:inputType="none"
                             android:text="Oyo" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -157,7 +157,7 @@
                             android:defaultFocusHighlightEnabled="false"
                             android:drawablePadding="10dp"
                             android:hint="Skills"
-                            android:inputType="text"
+                            android:inputType="none"
                             android:text="Retrofit" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -179,7 +179,7 @@
                             android:defaultFocusHighlightEnabled="false"
                             android:drawablePadding="10dp"
                             android:hint="Expectation From Applicant"
-                            android:inputType="text"
+                            android:inputType="none"
                             android:text="Must have completed 1 project" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -272,7 +272,7 @@
                             android:defaultFocusHighlightEnabled="false"
                             android:drawablePadding="10dp"
                             android:hint="Name"
-                            android:inputType="text"
+                            android:inputType="none"
                             android:text="Kunal agarwal" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -293,7 +293,7 @@
                             android:defaultFocusHighlightEnabled="false"
                             android:drawablePadding="10dp"
                             android:hint="College"
-                            android:inputType="text"
+                            android:inputType="none"
                             android:text="IIT(ISM) Dhanbad" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -314,7 +314,7 @@
                             android:defaultFocusHighlightEnabled="false"
                             android:drawablePadding="10dp"
                             android:hint="Semester"
-                            android:inputType="text"
+                            android:inputType="none"
                             android:text="V" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -336,7 +336,7 @@
                             android:defaultFocusHighlightEnabled="false"
                             android:drawablePadding="10dp"
                             android:hint="Course"
-                            android:inputType="text"
+                            android:inputType="none"
                             android:text="Bachelor of technology" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -430,7 +430,7 @@
                             android:drawablePadding="10dp"
                             android:hint="Previous Work"
                             android:inputType="text"
-                            android:text="Budget Manager(Drive Link)" />
+                            android:text="Drive or portfolio link" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout

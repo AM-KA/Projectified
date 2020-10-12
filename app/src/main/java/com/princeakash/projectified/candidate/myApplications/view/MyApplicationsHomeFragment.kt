@@ -27,7 +27,7 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
     lateinit var progressCircularLayout: RelativeLayout
     var candidateExistingApplicationViewModel: CandidateExistingApplicationViewModel? = null
     var applicationList: ArrayList<ApplicationCardModelCandidate> = ArrayList()
-    var errorString:String? = null
+
 
     //Determining whether re-fetching data is required or not
     var detailsViewed = false
@@ -40,17 +40,18 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
                               savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.frag_myapplication, container, false)
         progressCircularLayout = v.progress_circular_layout
+
         candidateExistingApplicationViewModel= ViewModelProvider(requireParentFragment()).get(CandidateExistingApplicationViewModel::class.java)
         candidateExistingApplicationViewModel!!.responseGetApplicationByCandidate().observe(viewLifecycleOwner, {
             applicationList = it?.applications as ArrayList<ApplicationCardModelCandidate>
             recyclerViewApplications.adapter = MyApplicationsAdapter(applicationList, this@MyApplicationsHomeFragment)
             progressCircularLayout.visibility = View.INVISIBLE
         })
+
         candidateExistingApplicationViewModel!!.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 progressCircularLayout.visibility = View.INVISIBLE
-                errorString = it
-                Toast.makeText(this@MyApplicationsHomeFragment.context, errorString, LENGTH_SHORT).show()
+                Toast.makeText(this@MyApplicationsHomeFragment.context,it, LENGTH_SHORT).show()
             }
         })
 

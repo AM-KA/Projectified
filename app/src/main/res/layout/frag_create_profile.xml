@@ -66,7 +66,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
-                    android:hint="Name"
+                    android:hint="@string/name"
                     android:inputType="text"
                     android:defaultFocusHighlightEnabled="false"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -84,7 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
-                    android:hint="College"
+                    android:hint="@string/college"
                     android:inputType="text"
                     android:defaultFocusHighlightEnabled="false"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -101,7 +101,7 @@
                 <AutoCompleteTextView
                     android:id="@+id/editTextCourse"
                     android:completionThreshold="2"
-                    android:hint="Course"
+                    android:hint="@string/course"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -117,7 +117,7 @@
                 app:layout_constraintTop_toBottomOf="@id/editTextLayoutCourse">
                 <AutoCompleteTextView
                     android:id="@+id/editTextSemester"
-                    android:hint="Semester"
+                    android:hint="@string/semester"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -129,7 +129,7 @@
                 android:layout_marginTop="20dp"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
                 app:layout_constraintTop_toBottomOf="@id/editTextLayoutSemester"
-                android:text="Languages"/>
+                android:text="@string/languages"/>
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroupLanguages"
                 android:layout_width="0dp"
@@ -145,42 +145,42 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.Chip.Filter"
-                    android:text="C"/>
+                    android:text="@string/c"/>
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipCpp1"
                     android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.Chip.Filter"
-                    android:text="C++"/>
+                    android:text="@string/cpp"/>
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipJava1"
                     android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.Chip.Filter"
-                    android:text="Java"/>
+                    android:text="@string/java"/>
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipPython1"
                     android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.Chip.Filter"
-                    android:text="Python"/>
+                    android:text="@string/python"/>
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipKotlin1"
                     android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.Chip.Filter"
-                    android:text="Kotlin"/>
+                    android:text="@string/kotlin"/>
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipJavaScript1"
                     android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.Chip.Filter"
-                    android:text="JavScript"/>
+                    android:text="@string/javascript"/>
             </com.google.android.material.chip.ChipGroup>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -194,7 +194,7 @@
                 app:layout_constraintTop_toBottomOf="@id/chipGroupLanguages">
                 <AutoCompleteTextView
                     android:id="@+id/editTextInterest1"
-                    android:hint="Interest 1"
+                    android:hint="@string/interest1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -210,7 +210,7 @@
                 app:layout_constraintTop_toBottomOf="@id/editTextLayoutInterest1">
                 <AutoCompleteTextView
                     android:id="@+id/editTextInterest2"
-                    android:hint="Interest 2"
+                    android:hint="@string/interest2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -226,7 +226,7 @@
                 app:layout_constraintTop_toBottomOf="@id/editTextLayoutInterest2">
                 <AutoCompleteTextView
                     android:id="@+id/editTextInterest3"
-                    android:hint="Interest 3"
+                    android:hint="@string/interest3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -242,7 +242,7 @@
                 app:layout_constraintTop_toBottomOf="@id/editTextLayoutInterest3">
                 <AutoCompleteTextView
                     android:id="@+id/editTextHobbies"
-                    android:hint="Hobbies"
+                    android:hint="@string/hobbies"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -262,7 +262,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
-                    android:hint="Description"
+                    android:hint="@string/description"
                     android:inputType="text"
                     android:defaultFocusHighlightEnabled="false"/>
 
@@ -273,7 +273,7 @@
                 android:layout_height="60dp"
                 android:background="@drawable/buttons"
                 android:fontFamily="@font/roboto"
-                android:text="SAVE"
+                android:text="@string/save"
                 android:textColor="#FFFFFF"
                 android:textSize="20dp"
                 app:layout_constraintTop_toBottomOf="@id/editTextLayoutDescription"

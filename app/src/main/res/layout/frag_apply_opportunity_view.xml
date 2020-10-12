@@ -117,7 +117,7 @@
                         android:id="@+id/textViewOpportunityDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Opportunity Details"
+                        android:text="@string/opportunity_details"
                         style="@style/CardInfoHead"
                         app:layout_constraintStart_toStartOf="@id/guideline5"
                         app:layout_constraintTop_toTopOf="@id/guideline7"/>
@@ -127,7 +127,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Requirement"
+                        android:text="@string/requirement"
                         app:layout_constraintStart_toStartOf="@id/guideline9"
                         app:layout_constraintTop_toBottomOf="@id/textViewOpportunityDetails"/>
 
@@ -135,7 +135,7 @@
                         android:id="@+id/textViewRequirementData"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Oyo"
+                        android:text="@string/loading"
                         android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="@id/guideline10"
                         app:layout_constraintEnd_toEndOf="@id/guideline6"
@@ -146,7 +146,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Skills"
+                        android:text="@string/skills"
                         app:layout_constraintStart_toStartOf="@id/guideline9"
                         app:layout_constraintTop_toBottomOf="@id/textViewRequirementData"/>
 
@@ -154,7 +154,7 @@
                         android:id="@+id/textViewSkillsData"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Retrofit"
+                        android:text="@string/loading"
                         android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="@id/guideline10"
                         app:layout_constraintEnd_toEndOf="@id/guideline6"
@@ -173,7 +173,7 @@
                         android:id="@+id/textViewExpectationData"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Must have completed at least 1 project."
+                        android:text="@string/loading"
                         android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="@id/guideline10"
                         app:layout_constraintEnd_toEndOf="@id/guideline6"
@@ -247,7 +247,7 @@
                         android:id="@+id/textViewRecruiterDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Recruiter Details"
+                        android:text="@string/recruiter_details"
                         style="@style/CardInfoHead"
                         app:layout_constraintStart_toStartOf="@id/guideline11"
                         app:layout_constraintTop_toBottomOf="@id/guideline13" />
@@ -257,7 +257,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Name"
+                        android:text="@string/name"
                         app:layout_constraintStart_toStartOf="@id/guideline15"
                         app:layout_constraintTop_toBottomOf="@id/textViewRecruiterDetails"/>
 
@@ -265,7 +265,7 @@
                         android:id="@+id/textViewNameData"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Kunal Agarwal"
+                        android:text="@string/loading"
                         android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="@id/guideline16"
                         app:layout_constraintEnd_toEndOf="@id/guideline12"
@@ -276,7 +276,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="College"
+                        android:text="@string/college"
                         app:layout_constraintStart_toStartOf="@id/guideline15"
                         app:layout_constraintTop_toBottomOf="@id/textViewNameData"/>
 
@@ -284,7 +284,7 @@
                         android:id="@+id/textViewCollegeData"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="IIT (ISM) Dhanbad"
+                        android:text="@string/loading"
                         android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="@id/guideline16"
                         app:layout_constraintEnd_toEndOf="@id/guideline12"
@@ -295,7 +295,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Course"
+                        android:text="@string/course"
                         app:layout_constraintStart_toStartOf="@id/guideline15"
                         app:layout_constraintTop_toBottomOf="@id/textViewCollegeData"/>
 
@@ -303,7 +303,7 @@
                         android:id="@+id/textViewCourseData"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Bachelor of Technology"
+                        android:text="@string/loading"
                         android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="@id/guideline16"
                         app:layout_constraintEnd_toEndOf="@id/guideline12"
@@ -314,7 +314,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Semester"
+                        android:text="@string/semester"
                         app:layout_constraintStart_toStartOf="@id/guideline15"
                         app:layout_constraintTop_toBottomOf="@id/textViewCourseData"/>
 
@@ -322,7 +322,7 @@
                         android:id="@+id/textViewSemesterData"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="V"
+                        android:text="@string/loading"
                         android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="@id/guideline16"
                         app:layout_constraintEnd_toEndOf="@id/guideline12"
@@ -343,7 +343,7 @@
                 app:layout_constraintEnd_toStartOf="@id/buttonApply"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 android:layout_marginTop="40dp"
-                android:text="Cancel"/>
+                android:text="@string/cancel"/>
 
             <Button
                 android:id="@+id/buttonApply"
@@ -354,7 +354,7 @@
                 app:layout_constraintTop_toTopOf="@id/buttonCancel"
                 app:layout_constraintBottom_toBottomOf="@id/buttonCancel"
                 app:layout_constraintEnd_toEndOf="@id/guideline2"
-                android:text="Apply"/>
+                android:text="@string/apply"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

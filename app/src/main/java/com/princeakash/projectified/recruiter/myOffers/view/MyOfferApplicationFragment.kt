@@ -43,8 +43,8 @@ class MyOfferApplicationFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        applicationID = if (savedInstanceState == null) {
-            requireArguments().getString(APPLICATION_ID)!!
+       if (savedInstanceState == null) {
+           applicationID = requireArguments().getString(APPLICATION_ID)!!
         } else
             savedInstanceState.getString(APPLICATION_ID)!!
     }

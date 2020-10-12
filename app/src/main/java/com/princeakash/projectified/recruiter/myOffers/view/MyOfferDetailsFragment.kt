@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
-import com.princeakash.projectified.CustomProgressBar
+//import com.princeakash.projectified.CustomProgressBar
 import com.princeakash.projectified.R
 import com.princeakash.projectified.recruiter.myOffers.model.*
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterExistingOffersViewModel
@@ -39,6 +39,8 @@ class MyOfferDetailsFragment() : Fragment() {
 
     //Offer Data
     private var offerId: String = ""
+
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

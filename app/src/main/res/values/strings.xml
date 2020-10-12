@@ -32,6 +32,36 @@
     <string name="experience">Experience</string>
     <string name="previous_work">Previous Work</string>
     <string name="resume">Resume</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="phone_no">Phone No.</string>
+    <string name="ReEnterPassword">Confirm Password</string>
+    <string name="signUp">SIGN UP</string>
+    <string name="login">LOGIN</string>
+    <string name="enterotp">Enter Otp</string>
+    <string name="verify">Verify</string>
+    <string name="languages">Languages</string>
+    <string name="c">C</string>
+    <string name="cpp">C++</string>
+    <string name="java">Java</string>
+    <string name="kotlin">Koltin</string>
+    <string name="javascript">Javascript</string>
+    <string name="hobbies">Hobbies</string>
+    <string name="description">Description</string>
+    <string name="python">Python</string>
+    <string name="interest1">Interest 1</string>
+    <string name="interest2">Interest 2</string>
+    <string name="interest3">Interest 3</string>
+    <string name="save">Save</string>
+    <string name="submit">Submit</string>
+    <string name="apply">Apply</string>
+    <string name="seen">Seen</string>
+    <string name="selected">Selected</string>
+
+
+
+
+
 
     <string-array name="courses">
         <item>Bachelor of Technology</item>

@@ -247,7 +247,7 @@
                             android:id="@+id/editTextPreviousWork"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:hint="Previous Work"/>
+                            android:hint="@string/previous_work"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -264,7 +264,7 @@
                             android:id="@+id/editTextResume"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:hint="Resume (Drive Link)"/>
+                            android:hint="@string/resume"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -281,7 +281,7 @@
                 app:layout_constraintBottom_toTopOf="@id/guideline4"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 android:layout_marginTop="30dp"
-                android:text="Cancel"/>
+                android:text="@string/cancel"/>
 
             <Button
                 android:id="@+id/buttonSubmit"
@@ -292,7 +292,7 @@
                 app:layout_constraintTop_toTopOf="@id/buttonCancel"
                 app:layout_constraintBottom_toBottomOf="@id/buttonCancel"
                 app:layout_constraintEnd_toEndOf="@id/guideline2"
-                android:text="Submit"/>
+                android:text="@string/submit"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

@@ -40,38 +40,22 @@ class ApplyOpportunityFragment : Fragment() {
 
     //ViewModels
     private lateinit var candidateAddApplicationViewModel: CandidateAddApplicationViewModel
-    private var responseAddApplication: ResponseAddApplication? = null
 
-    // Error String
-    private var error: String? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        offerId = if (savedInstanceState == null)
-            requireArguments().getString(OFFER_IDC)!!
+         if (savedInstanceState == null)
+           offerId =  requireArguments().getString(OFFER_IDC)!!
         else
-            savedInstanceState.getString(OFFER_IDC)!!
+           offerId =  savedInstanceState.getString(OFFER_IDC)!!
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        candidateAddApplicationViewModel = ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
-        candidateAddApplicationViewModel.responseAddApplication().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let {
-                progressCircularLayout.visibility = View.INVISIBLE
-                responseAddApplication = it
-                Toast.makeText(context, it.message, LENGTH_SHORT).show()
-            }
-        })
 
-        candidateAddApplicationViewModel.errorString().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let {
-                error = it
-                Toast.makeText(context, error, LENGTH_SHORT).show()
-            }
-        })
 
         val view = inflater.inflate(R.layout.frag_apply_opportunity_self, container, false)
 
@@ -95,9 +79,29 @@ class ApplyOpportunityFragment : Fragment() {
                     .commit()
         }
 
-        loadLocalProfile()
         (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Apply"
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        candidateAddApplicationViewModel = ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
+        candidateAddApplicationViewModel.responseAddApplication().observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let {
+                progressCircularLayout.visibility = View.INVISIBLE
+                Toast.makeText(context, it.message, LENGTH_SHORT).show()
+            }
+        })
+
+        candidateAddApplicationViewModel.errorString().observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let {
+                Toast.makeText(context, it, LENGTH_SHORT).show()
+            }
+        })
+        loadLocalProfile()
+
+
     }
 
     private fun validateParameters() {

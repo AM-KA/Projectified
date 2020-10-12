@@ -10,7 +10,7 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@drawable/login"
+        android:background="@drawable/logo_background"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,13 +42,14 @@
        android:background="@drawable/view_pagerdesign"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-       app:layout_constraintTop_toBottomOf="@id/tablayout1"
-   app:layout_constraintHeight_percent=".9"/>
+       app:layout_constraintTop_toBottomOf="@id/tablayout1" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tablayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:tabIndicatorColor="#00FFFF"
+        app:tabIndicatorHeight="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/view_pagerdesign"
@@ -58,13 +59,14 @@
        />
 
 
-<!--       <ImageView-->TODO(LOGO)
-<!--           android:layout_width="60dp"-->
-<!--           android:layout_height="60dp"-->
-<!--           android:background="@drawable/logo"-->
-<!--           app:layout_constraintEnd_toEndOf="parent"-->
-<!--           app:layout_constraintStart_toStartOf="parent"-->
-<!--           app:layout_constraintBottom_toTopOf="@id/constraintlayout"-->
+      <ImageView
+           android:layout_width="60dp"
+           android:layout_height="60dp"
+          android:layout_marginBottom="20dp"
+           android:background="@drawable/logo"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintBottom_toTopOf="@id/constraintlayout"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
