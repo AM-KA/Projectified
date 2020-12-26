@@ -61,7 +61,8 @@ class MyApplication : Application() {
 
     //Storing static values
     companion object {
-        val BASE_URL = "https://am-ka-projectified-test.herokuapp.com/"
+        //val BASE_URL = "https://am-ka-projectified-test.herokuapp.com/"
+        val BASE_URL = "http://192.168.1.4:3000/"
         fun handleError(e: Exception, errorString: MutableLiveData<Event<String>>){
             e.printStackTrace()
 

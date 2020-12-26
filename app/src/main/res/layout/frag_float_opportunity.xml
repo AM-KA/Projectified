@@ -359,6 +359,7 @@
                 android:text="@string/enlist_opportunity"/>
 
             <Button
+                android:id="@+id/buttonCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button2"

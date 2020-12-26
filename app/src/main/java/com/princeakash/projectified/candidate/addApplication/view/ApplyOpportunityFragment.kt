@@ -41,21 +41,16 @@ class ApplyOpportunityFragment : Fragment() {
     //ViewModels
     private lateinit var candidateAddApplicationViewModel: CandidateAddApplicationViewModel
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-         if (savedInstanceState == null)
-           offerId =  requireArguments().getString(OFFER_IDC)!!
+        offerId = if (savedInstanceState == null)
+            requireArguments().getString(OFFER_IDC)!!
         else
-           offerId =  savedInstanceState.getString(OFFER_IDC)!!
+            savedInstanceState.getString(OFFER_IDC)!!
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
-
 
         val view = inflater.inflate(R.layout.frag_apply_opportunity_self, container, false)
 
@@ -91,17 +86,27 @@ class ApplyOpportunityFragment : Fragment() {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it.message, LENGTH_SHORT).show()
+                if(it.code.equals("200")){
+                    parentFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_apply, HomeFragment::class.java, null, "HomeFragment")
+                            .addToBackStack(null)
+                            .commit()
+                }
             }
         })
 
         candidateAddApplicationViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
+                progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it, LENGTH_SHORT).show()
             }
         })
         loadLocalProfile()
+    }
 
-
+    override fun onResume() {
+        super.onResume()
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Apply"
     }
 
     private fun validateParameters() {

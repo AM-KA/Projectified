@@ -116,6 +116,11 @@ class MyOfferApplicationFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Candidate Details"
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(APPLICATION_ID, applicationID)

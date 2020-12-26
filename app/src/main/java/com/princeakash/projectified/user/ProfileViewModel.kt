@@ -82,11 +82,17 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
                 setLoginStatus(true)
                 if (response.code == 200) {
                     setToken(response.token!!)
-                    setUserId(response.userID!!)
+                    setUserId(response._id!!)
                     Log.d(TAG, "logIn: " + response.token)
                     //TODO: Fetch Profile and save to SharedPreference using setLocalProfile()
                     if (response.profileCompleted!!) {
-                        val bodyProfile = response.profile
+                        //val bodyProfile = response.profile
+                        val bodyProfile = ProfileModel(response.name!!,
+                                response.collegeName!!, response.course!!,
+                                response.semester!!, response.languages!!,
+                                response.interest1!!, response.interest2!!,
+                                response.interest3!!, response.description!!,
+                                response.hobbies!!)
                         setLocalProfile(bodyProfile!!)
                     }
                 }
@@ -97,7 +103,7 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun createProfile(bodyCreateProfile: BodyCreateProfile) {
+    /*fun createProfile(bodyCreateProfile: BodyCreateProfile) {
         viewModelScope.launch {
             try {
                 val token = profileRepository.getToken()
@@ -110,7 +116,7 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
                 handleError(e, errorString)
             }
         }
-    }
+    }*/
 
     fun updateProfile(bodyUpdateProfile: BodyUpdateProfile) {
         viewModelScope.launch {

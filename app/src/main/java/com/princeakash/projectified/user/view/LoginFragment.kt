@@ -57,20 +57,14 @@ class LoginFragment : Fragment() {
                 if (responseLogin.code != 200) {
                     Toast.makeText(context, responseLogin.message, LENGTH_SHORT).show()
                 } else {
-                    profileViewModel.setToken(responseLogin.token!!)
-                    profileViewModel.setLoginStatus(true)
-                    profileViewModel.setProfileStatus(responseLogin.profileCompleted!!)
                     if (responseLogin.profileCompleted!!) {
                         //Navigate to main activity
                         val intent = Intent(activity, MainActivity::class.java)
                         startActivity(intent)
                     } else {
                         //Navigate to CreateProfileFragment
-                        responseLogin.profile?.let {
-                            profileViewModel.setLocalProfile(it)
-                        }
                         val bundle = Bundle()
-                        bundle.putString(LoginFragment.USER_NAME, responseLogin.userName)
+                        bundle.putString(USER_NAME, responseLogin.name)
                         val intent = Intent(requireActivity(), CreateProfileActivity::class.java)
                         intent.putExtra(USER_NAME, bundle)
                         startActivity(intent)
@@ -82,7 +76,7 @@ class LoginFragment : Fragment() {
         profileViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, it, LENGTH_SHORT).show()
             }
         })
     }
@@ -106,5 +100,6 @@ class LoginFragment : Fragment() {
 
     companion object {
         val USER_NAME = "UserName"
+        val USER_ID = "UserId"
     }
 }

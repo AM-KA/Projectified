@@ -67,6 +67,11 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "My Offers"
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(DETAILS_VIEWED, detailsViewed)

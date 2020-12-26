@@ -74,6 +74,11 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "My Applications"
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(DETAILS_VIEWED, detailsViewed)

@@ -13,9 +13,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.MainActivity
 import com.princeakash.projectified.R
-import com.princeakash.projectified.user.BodyCreateProfile
-import com.princeakash.projectified.user.ProfileViewModel
-import com.princeakash.projectified.user.ResponseCreateProfile
+import com.princeakash.projectified.user.*
 
 class CreateProfileActivity : AppCompatActivity() {
 
@@ -40,23 +38,26 @@ class CreateProfileActivity : AppCompatActivity() {
 
     //  View Models and fun Instances
     lateinit var profileViewModel: ProfileViewModel
-    lateinit var responseCreateProfile: ResponseCreateProfile
+    lateinit var responseUpdateProfile: ResponseUpdateProfile
 
     private var userName: String = ""
+    private var userId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.frag_create_profile)
+
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
-        profileViewModel.responseCreateProfile().observe(this, {
+        profileViewModel.responseUpdateProfile().observe(this, {
             it?.getContentIfNotHandled()?.let {
-                responseCreateProfile = it
+                responseUpdateProfile = it
                 Toast.makeText(this, it.message, LENGTH_SHORT).show()
                 //TODO:Apply code=200 validation
                 //Save Profile Status locally
                 profileViewModel.setProfileStatus(true)
                 //Navigate to Main Activity
                 startActivity(Intent(this, MainActivity::class.java))
+                finish()
             }
         })
 
@@ -90,11 +91,19 @@ class CreateProfileActivity : AppCompatActivity() {
         editTextInterest2.setAdapter(adapterInterest)
         editTextInterest3.setAdapter(adapterInterest)
 
+        prepareName();
 
         ButtonSave = findViewById(R.id.Save)
         ButtonSave.setOnClickListener {
             validateParameters()
         }
+    }
+
+    private fun prepareName() {
+        val bundle = intent.getBundleExtra(LoginFragment.USER_NAME)
+        userName = bundle.getString(LoginFragment.USER_NAME)!!
+        editTextName.setText(userName)
+        //userId = bundle.getString(LoginFragment.USER_ID)!!
     }
 
     private fun validateParameters() {
@@ -157,7 +166,9 @@ class CreateProfileActivity : AppCompatActivity() {
         val description = editTextDescription1.text!!.toString()
         val hobbies = editTextHobbies.text!!.toString()
 
-        val bodycreateProfile = BodyCreateProfile(userName, college, course, semester, num, interest1, interest2, interest3, description, hobbies, "0")
-        profileViewModel.createProfile(bodycreateProfile)
+        //val bodycreateProfile = BodyCreateProfile(userName, college, course, semester, num, interest1, interest2, interest3, description, hobbies, "0")
+        //profileViewModel.createProfile(bodycreateProfile)
+        val bodyUpdateProfile = BodyUpdateProfile(userName, college, course, semester, num, interest1, interest2, interest3, description, hobbies, userId)
+        profileViewModel.updateProfile(bodyUpdateProfile);
     }
 }

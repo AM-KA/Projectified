@@ -132,6 +132,11 @@ class MyOfferDetailsFragment() : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Offer Details"
+    }
+
     private fun viewApplicants() {
         val bundle = Bundle()
         bundle.putString(OFFER_ID, offerId)

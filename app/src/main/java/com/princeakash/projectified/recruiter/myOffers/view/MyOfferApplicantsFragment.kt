@@ -98,7 +98,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
             //progressCircularLayout.visibility = View.VISIBLE
             offerId = savedInstanceState.getString(OFFER_ID)
         }
-        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Candidates"
+        //(requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Candidates"
         return v
     }
 
@@ -109,6 +109,11 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
             it.adapter = MyOfferApplicantsAdapter(applicantList, this)
             it.setHasFixedSize(true)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Candidates"
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

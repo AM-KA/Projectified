@@ -70,7 +70,7 @@ class VerifyOtpFragment : Fragment() {
         email = requireArguments().getString(E_MAIL)
         password = requireArguments().getString(PASS_WORD)
         phoneno = "+91" + ph
-        sendVerificationCodetoTheUser();
+        sendVerificationCodetoTheUser()
 
         VerifyButton?.setOnClickListener {
             if (EditTextOtp?.text!!.isNotEmpty()) {
@@ -92,7 +92,7 @@ class VerifyOtpFragment : Fragment() {
             it?.getContentIfNotHandled()?.let {
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
                 if (it.code == 200) {
-                    val bodyLogin = LoginBody(email = bodySignUp!!.email, password = bodySignUp!!.password)
+                    val bodyLogin = LoginBody(email = bodySignUp.email, password = bodySignUp.password)
                     profileViewModel.logIn(bodyLogin)
                 }
             }
@@ -103,19 +103,19 @@ class VerifyOtpFragment : Fragment() {
                 if (responseLogin.code != 200) {
                     Toast.makeText(context, responseLogin.message, Toast.LENGTH_SHORT).show()
                 } else {
-                    profileViewModel.setToken(responseLogin.token!!)
-                    profileViewModel.setLoginStatus(true)
+                    /*profileViewModel.setToken(responseLogin.token!!)
+                    profileViewModel.setLoginStatus(true)*/
                     if (responseLogin.profileCompleted!!) {
                         //Navigate to main activity
                         val intent = Intent(activity, MainActivity::class.java)
                         startActivity(intent)
                     } else {
                         //Navigate to CreateProfileFragment
-                        responseLogin.profile?.let {
+                        /*responseLogin.profile?.let {
                             profileViewModel.setLocalProfile(it)
-                        }
+                        }*/
                         val bundle = Bundle()
-                        bundle.putString(LoginFragment.USER_NAME, responseLogin.userName)
+                        bundle.putString(USER_NAME, responseLogin.name)
                         val intent = Intent(requireActivity(), CreateProfileActivity::class.java)
                         intent.putExtra(USER_NAME, bundle)
                         startActivity(intent)

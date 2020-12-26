@@ -33,6 +33,7 @@ class AddOfferFragment : Fragment() {
     private lateinit var textViewSemester: TextView
     private lateinit var progressCircularLayout: RelativeLayout
     private lateinit var buttonEnlist: Button
+    private lateinit var buttonCancel: Button
 
     //ViewModels
     private lateinit var recruiterAddOffersViewModel: RecruiterAddOffersViewModel
@@ -65,12 +66,16 @@ class AddOfferFragment : Fragment() {
         textViewCourse = view.textViewCourseData
         textViewSemester = view.textViewSemesterData
         buttonEnlist = view.EnlistButton
+        buttonCancel = view.buttonCancel
         progressCircularLayout = view.progress_circular_layout
 
         buttonEnlist.setOnClickListener {
             validateParameters()
         }
 
+        buttonCancel.setOnClickListener {
+            parentFragmentManager.popBackStackImmediate()
+        }
         (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Add Offer"
 
         return view
@@ -84,6 +89,7 @@ class AddOfferFragment : Fragment() {
             it?.getContentIfNotHandled()?.let{
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it.message, LENGTH_SHORT).show()
+                parentFragmentManager.popBackStackImmediate()
             }
         })
 
@@ -95,6 +101,11 @@ class AddOfferFragment : Fragment() {
         })
 
         loadRecruiterDetails()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Add Offer"
     }
 
     private fun validateParameters() {

@@ -10,10 +10,10 @@ interface ProfileService {
     @POST("user/login")
     suspend fun logIn(@Body bodyLogin: LoginBody): ResponseLogin
 
-    @POST("profile")
-    suspend fun createProfile(@Header("Authorization") token: String, @Body bodyCreateProfile: BodyCreateProfile) :ResponseCreateProfile
+    /*@POST("profile")
+    suspend fun createProfile(@Header("Authorization") token: String, @Body bodyCreateProfile: BodyCreateProfile) :ResponseCreateProfile*/
 
-    @PATCH("profile/{profileID}")
+    @PATCH("user/{profileID}")
     suspend fun updateProfile(@Header("Authorization") token: String, @Body bodyUpdateProfile: BodyUpdateProfile, @Path("profileID") profileID:String) :  ResponseUpdateProfile
 
     @POST("user/checksignup")

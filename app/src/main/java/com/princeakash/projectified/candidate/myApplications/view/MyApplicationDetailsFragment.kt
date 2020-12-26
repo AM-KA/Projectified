@@ -15,20 +15,17 @@ import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.myApplications.model.*
 import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateExistingApplicationViewModel
 import kotlinx.android.synthetic.main.frag_myapplicationdetail.view.*
-import kotlinx.android.synthetic.main.frag_myapplicationdetail.view.editTextExpectation
-import kotlinx.android.synthetic.main.frag_myapplicationdetail.view.editTextRequirement
-import kotlinx.android.synthetic.main.frag_myapplicationdetail.view.editTextSkills
 
 class MyApplicationDetailsFragment : Fragment() {
 
     //Views
-    private lateinit  var editTextRequirements: TextInputEditText
-    private lateinit  var editTextSkills: TextInputEditText
-    private lateinit  var editTextExpectations: TextInputEditText
-    private lateinit var editTextName: TextInputEditText
-    private lateinit var editTextCollege: TextInputEditText
-    private lateinit var editTextSemester: TextInputEditText
-    private lateinit var editTextCourse: TextInputEditText
+    private lateinit  var textViewRequirements: TextView
+    private lateinit  var textViewSkills: TextView
+    private lateinit  var textViewExpectations: TextView
+    private lateinit var textViewName: TextView
+    private lateinit var textViewCollege: TextView
+    private lateinit var textViewSemester: TextView
+    private lateinit var textViewCourse: TextView
     private lateinit var editTextPreviousWork: TextInputEditText
     private lateinit var editTextResume: TextInputEditText
     private lateinit var imageViewSeen: ImageView
@@ -37,40 +34,21 @@ class MyApplicationDetailsFragment : Fragment() {
     private lateinit var buttonUpdateDetails: Button
     private lateinit var progressCircularLayout: RelativeLayout
 
-
-
     //ViewModels and Observable Objects
     private lateinit var candidateExistingApplicationViewModel: CandidateExistingApplicationViewModel
-
 
     //Application Data
     private var applicationId: String? = null
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        if (savedInstanceState == null) {
-            //First LoadUp of Fragment
-            applicationId = requireArguments().getString(APPLICATION_IDC)
-        } else {
-            //Restore state
-            //responseGetApplicationDetailsByIdCandidate = savedInstanceState.getSerializable(RESPONSE_GET_APPLICATIONS_DETAILS) as ResponseGetApplicationDetailsByIdCandidate
-            applicationId = savedInstanceState.getString(APPLICATION_IDC)
-
-            }
-    }
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.frag_myapplicationdetail, container, false)
-        editTextRequirements = v.editTextRequirement
-        editTextSkills = v.editTextSkills
-        editTextExpectations = v.editTextExpectation
-        editTextName = v.editTextName
-        editTextCollege = v.editTextCollege
-        editTextSemester = v.editTextSemester
-        editTextCourse = v.editTextCourse
+        textViewRequirements = v.textViewRequirementData
+        textViewSkills = v.textViewSkillsData
+        textViewExpectations = v.textViewExpectationData
+        textViewName = v.textViewNameData
+        textViewCollege = v.textViewCollegeData
+        textViewSemester = v.textViewSemesterData
+        textViewCourse = v.textViewCourseData
         editTextPreviousWork = v.editTextPreviousWork
         editTextResume = v.editTextResume
         imageViewSeen = v.imageViewSeen
@@ -79,10 +57,8 @@ class MyApplicationDetailsFragment : Fragment() {
         buttonUpdateDetails = v.buttonUpdateDetails
         progressCircularLayout = v.progress_circular_layout
 
-
         return v
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -122,19 +98,28 @@ class MyApplicationDetailsFragment : Fragment() {
 
         buttonUpdateDetails?.setOnClickListener {
             updateOffer()
-
-
         }
         buttonDeleteApplication?.setOnClickListener {
             deleteApplication()
         }
 
+        //(requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Application Details"
 
-        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Application Details"
+        if (savedInstanceState == null) {
+            //First LoadUp of Fragment
+            applicationId = requireArguments().getString(APPLICATION_IDC)
+            fetchApplicationDetails()
+        } else {
+            //Restore state
+            //responseGetApplicationDetailsByIdCandidate = savedInstanceState.getSerializable(RESPONSE_GET_APPLICATIONS_DETAILS) as ResponseGetApplicationDetailsByIdCandidate
+            applicationId = savedInstanceState.getString(APPLICATION_IDC)
+        }
     }
 
-
-
+    override fun onResume() {
+        super.onResume()
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Application Details"
+    }
 
     private fun updateOffer() {
         if (editTextPreviousWork!!.text == null || editTextPreviousWork!!.text!!.equals("")) {
@@ -154,31 +139,26 @@ class MyApplicationDetailsFragment : Fragment() {
         candidateExistingApplicationViewModel!!.updateApplication(applicationId!!, bodyUpdateApplication)
     }
 
-
     private fun fetchApplicationDetails() {
         //TODO:Start ProgressBar
         progressCircularLayout.visibility = View.VISIBLE
         applicationId?.let { candidateExistingApplicationViewModel!!.getApplicationDetailByIdCandidate(it) }
     }
 
-
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(APPLICATION_IDC, applicationId)
     }
 
-
-
     private fun populateViews(it:ResponseGetApplicationDetailByIdCandidate) {
         if (it.code == 200) {
-            editTextRequirements?.setText(it.application?.requirements)
-            editTextSkills?.setText(it?.application?.skills)
-            editTextExpectations?.setText(it?.application?.expectation)
-            editTextName?.setText(it?.application?.recruiter_name)
-            editTextCollege?.setText(it?.application?.recruiter_collegeName)
-            editTextSemester?.setText(it?.application?.recruiter_semester)
-            editTextCourse?.setText(it?.application?.recruiter_course)
+            textViewRequirements?.setText(it.application?.requirements)
+            textViewSkills?.setText(it?.application?.skills)
+            textViewExpectations?.setText(it?.application?.expectation)
+            textViewName?.setText(it?.application?.recruiter_name)
+            textViewCollege?.setText(it?.application?.recruiter_collegeName)
+            textViewSemester?.setText(it?.application?.recruiter_semester)
+            textViewCourse?.setText(it?.application?.recruiter_course)
             editTextPreviousWork?.setText(it?.application?.previousWork)
             editTextResume?.setText(it?.application?.resume)
 
@@ -198,7 +178,6 @@ class MyApplicationDetailsFragment : Fragment() {
         progressCircularLayout.visibility = View.INVISIBLE
     }
 
-
     private fun deleteApplication() {
         AlertDialog.Builder(requireContext())
                 .setTitle("Confirm Delete")
@@ -210,8 +189,6 @@ class MyApplicationDetailsFragment : Fragment() {
                 .setNegativeButton("No") { dialog, which -> }
                 .create().show()
     }
-
-
 
     companion object {
         const val APPLICATION_IDC = "applicationId"

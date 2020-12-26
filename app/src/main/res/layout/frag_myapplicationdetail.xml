@@ -58,10 +58,10 @@
                 android:id="@+id/cardViewOpportunityDetails"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_stroke"
                 app:cardCornerRadius="10dp"
-                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                android:background="@drawable/bg_stroke"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
                 app:layout_constraintTop_toBottomOf="@id/guideline3">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -111,97 +111,90 @@
                         app:layout_constraintGuide_begin="55dp" />
 
                     <TextView
-                        android:id="@+id/textViewOppurtinityDetails"
+                        android:id="@+id/textViewOpportunityDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Opportunity Details"
+                        android:text="@string/opportunity_details"
                         style="@style/CardInfoHead"
                         app:layout_constraintStart_toStartOf="@id/guideline5"
-                        app:layout_constraintTop_toTopOf="@id/guideline7" />
+                        app:layout_constraintTop_toTopOf="@id/guideline7"/>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/editTextLayoutRequirements"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/textViewRequirement"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        app:layout_constraintEnd_toEndOf="@id/guideline6"
+                        android:text="@string/requirement"
                         app:layout_constraintStart_toStartOf="@id/guideline9"
-                        app:layout_constraintTop_toBottomOf="@id/textViewOppurtinityDetails">
+                        app:layout_constraintTop_toBottomOf="@id/textViewOpportunityDetails"/>
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editTextRequirement"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:defaultFocusHighlightEnabled="false"
-                            android:drawablePadding="10dp"
-                            android:hint="Requirement"
-                            android:inputType="none"
-                            android:text="Oyo" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/editTextLayoutSkills"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <TextView
+                        android:id="@+id/textViewRequirementData"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:text="@string/loading"
                         android:layout_marginTop="10dp"
+                        app:layout_constraintStart_toStartOf="@id/guideline10"
                         app:layout_constraintEnd_toEndOf="@id/guideline6"
-                        app:layout_constraintStart_toStartOf="@id/guideline9"
-                        app:layout_constraintTop_toBottomOf="@id/editTextLayoutRequirements">
+                        app:layout_constraintTop_toBottomOf="@id/textViewRequirement"/>
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editTextSkills"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:defaultFocusHighlightEnabled="false"
-                            android:drawablePadding="10dp"
-                            android:hint="Skills"
-                            android:inputType="none"
-                            android:text="Retrofit" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/editTextLayoutExpectation"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/textViewSkills"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        app:layout_constraintBottom_toTopOf="@id/guideline8"
-                        app:layout_constraintEnd_toEndOf="@id/guideline6"
+                        android:text="@string/skills"
                         app:layout_constraintStart_toStartOf="@id/guideline9"
-                        app:layout_constraintTop_toBottomOf="@id/editTextLayoutSkills">
+                        app:layout_constraintTop_toBottomOf="@id/textViewRequirementData"/>
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editTextExpectation"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:defaultFocusHighlightEnabled="false"
-                            android:drawablePadding="10dp"
-                            android:hint="Expectation From Applicant"
-                            android:inputType="none"
-                            android:text="Must have completed 1 project" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                    <TextView
+                        android:id="@+id/textViewSkillsData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/loading"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintStart_toStartOf="@id/guideline10"
+                        app:layout_constraintEnd_toEndOf="@id/guideline6"
+                        app:layout_constraintTop_toBottomOf="@id/textViewSkills"/>
+
+                    <TextView
+                        android:id="@+id/textViewExpectation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Expectation From Applicant"
+                        app:layout_constraintStart_toStartOf="@id/guideline9"
+                        app:layout_constraintTop_toBottomOf="@id/textViewSkillsData"/>
+
+                    <TextView
+                        android:id="@+id/textViewExpectationData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/loading"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintStart_toStartOf="@id/guideline10"
+                        app:layout_constraintEnd_toEndOf="@id/guideline6"
+                        app:layout_constraintTop_toBottomOf="@id/textViewExpectation"
+                        app:layout_constraintBottom_toTopOf="@id/guideline8"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
-
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardViewRecruiterDetails"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/bg_stroke"
                 app:cardCornerRadius="10dp"
-                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                android:background="@drawable/view_pagerdesign"
+                android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
-                app:layout_constraintTop_toBottomOf="@id/cardViewOpportunityDetails">
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/cardViewOpportunityDetails"
+                >
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-
 
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline11"
@@ -250,95 +243,87 @@
                         android:id="@+id/textViewRecruiterDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Recruiter Details"
+                        android:text="@string/recruiter_details"
                         style="@style/CardInfoHead"
                         app:layout_constraintStart_toStartOf="@id/guideline11"
                         app:layout_constraintTop_toBottomOf="@id/guideline13" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/editTextLayoutName"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/textViewName"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        app:layout_constraintEnd_toEndOf="@id/guideline12"
+                        android:text="@string/name"
                         app:layout_constraintStart_toStartOf="@id/guideline15"
-                        app:layout_constraintTop_toBottomOf="@id/textViewRecruiterDetails">
+                        app:layout_constraintTop_toBottomOf="@id/textViewRecruiterDetails"/>
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editTextName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:defaultFocusHighlightEnabled="false"
-                            android:drawablePadding="10dp"
-                            android:hint="Name"
-                            android:inputType="none"
-                            android:text="Kunal agarwal" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/editTextLayoutCollege"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <TextView
+                        android:id="@+id/textViewNameData"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:text="@string/loading"
                         android:layout_marginTop="10dp"
+                        app:layout_constraintStart_toStartOf="@id/guideline16"
                         app:layout_constraintEnd_toEndOf="@id/guideline12"
-                        app:layout_constraintStart_toStartOf="@id/guideline15"
-                        app:layout_constraintTop_toBottomOf="@id/editTextLayoutName">
+                        app:layout_constraintTop_toBottomOf="@id/textViewName"/>
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editTextCollege"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:defaultFocusHighlightEnabled="false"
-                            android:drawablePadding="10dp"
-                            android:hint="College"
-                            android:inputType="none"
-                            android:text="IIT(ISM) Dhanbad" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/editTextLayoutSemester"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/textViewCollege"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        app:layout_constraintEnd_toEndOf="@id/guideline12"
+                        android:text="@string/college"
                         app:layout_constraintStart_toStartOf="@id/guideline15"
-                        app:layout_constraintTop_toBottomOf="@id/editTextLayoutCollege">
+                        app:layout_constraintTop_toBottomOf="@id/textViewNameData"/>
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editTextSemester"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:defaultFocusHighlightEnabled="false"
-                            android:drawablePadding="10dp"
-                            android:hint="Semester"
-                            android:inputType="none"
-                            android:text="V" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/editTextLayoutCourse"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <TextView
+                        android:id="@+id/textViewCollegeData"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:text="@string/loading"
                         android:layout_marginTop="10dp"
-                        app:layout_constraintBottom_toTopOf="@id/guideline14"
+                        app:layout_constraintStart_toStartOf="@id/guideline16"
                         app:layout_constraintEnd_toEndOf="@id/guideline12"
-                        app:layout_constraintStart_toStartOf="@id/guideline15"
-                        app:layout_constraintTop_toBottomOf="@id/editTextLayoutSemester">
+                        app:layout_constraintTop_toBottomOf="@id/textViewCollege"/>
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editTextCourse"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:defaultFocusHighlightEnabled="false"
-                            android:drawablePadding="10dp"
-                            android:hint="Course"
-                            android:inputType="none"
-                            android:text="Bachelor of technology" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                    <TextView
+                        android:id="@+id/textViewCourse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/course"
+                        app:layout_constraintStart_toStartOf="@id/guideline15"
+                        app:layout_constraintTop_toBottomOf="@id/textViewCollegeData"/>
+
+                    <TextView
+                        android:id="@+id/textViewCourseData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/loading"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintStart_toStartOf="@id/guideline16"
+                        app:layout_constraintEnd_toEndOf="@id/guideline12"
+                        app:layout_constraintTop_toBottomOf="@id/textViewCourse"/>
+
+                    <TextView
+                        android:id="@+id/textViewSemester"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/semester"
+                        app:layout_constraintStart_toStartOf="@id/guideline15"
+                        app:layout_constraintTop_toBottomOf="@id/textViewCourseData"/>
+
+                    <TextView
+                        android:id="@+id/textViewSemesterData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/loading"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintStart_toStartOf="@id/guideline16"
+                        app:layout_constraintEnd_toEndOf="@id/guideline12"
+                        app:layout_constraintTop_toBottomOf="@id/textViewSemester"
+                        app:layout_constraintBottom_toBottomOf="@id/guideline14"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
@@ -515,7 +500,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:background="@drawable/button2"
-                android:text="EDIT"
+                android:text="SAVE"
                 app:layout_constraintEnd_toStartOf="@id/guideline2"
                 app:layout_constraintTop_toBottomOf="@id/imageViewSelected" />
 

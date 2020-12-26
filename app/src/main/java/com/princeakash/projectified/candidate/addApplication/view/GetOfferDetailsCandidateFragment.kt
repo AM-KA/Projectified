@@ -35,20 +35,15 @@ class GetOfferDetailsCandidateFragment : Fragment() {
     //View Models and Observable Objects
     private lateinit var candidateAddApplicationsViewModel: CandidateAddApplicationViewModel
 
-
-
     private var offerId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
             offerId = requireArguments().getString(OFFER_IDC)
-
         } else {
             offerId = savedInstanceState.getString(OFFER_IDC)
-
         }
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -101,6 +96,7 @@ class GetOfferDetailsCandidateFragment : Fragment() {
 
         candidateAddApplicationsViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
+                progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
             }
         })
@@ -111,6 +107,10 @@ class GetOfferDetailsCandidateFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Offer Details"
+    }
 
     private fun populateViews(it:ResponseGetOfferById) {
         if (it.code == 200) {
