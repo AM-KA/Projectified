@@ -13,9 +13,9 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
-import com.princeakash.projectified.user.BodyUpdateProfile
-import com.princeakash.projectified.user.ProfileViewModel
-import com.princeakash.projectified.user.ResponseUpdateProfile
+import com.princeakash.projectified.user.model.BodyUpdateProfile
+import com.princeakash.projectified.user.viewmodel.ProfileViewModel
+import com.princeakash.projectified.user.model.ResponseUpdateProfile
 import kotlinx.android.synthetic.main.frag_update_profile.view.*
 
 class UpdateProfileFragment : Fragment() {

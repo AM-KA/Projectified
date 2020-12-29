@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.princeakash.projectified.R
 import kotlinx.android.synthetic.main.card_my_offers.view.*
+import java.text.SimpleDateFormat
 
 class MyOffersAdapter(var offerList: List<OfferCardModelRecruiter>?, val listener:MyOffersListener): RecyclerView.Adapter<MyOffersAdapter.MyOffersViewHolder>() {
 
@@ -13,11 +14,11 @@ class MyOffersAdapter(var offerList: List<OfferCardModelRecruiter>?, val listene
         val textViewPost = itemView.textViewPost
         val textViewDate = itemView.textViewDate
         val textViewApplicants = itemView.textViewCollege
-        val buttonViewDetails = itemView.button
+        //val buttonViewDetails = itemView.button
         val myListener = listener
 
         init{
-            buttonViewDetails.setOnClickListener(this)
+            itemView.setOnClickListener(this)
         }
         override fun onClick(v: View?) {
             myListener.onViewDetailsClick(adapterPosition)
@@ -31,7 +32,7 @@ class MyOffersAdapter(var offerList: List<OfferCardModelRecruiter>?, val listene
 
     override fun onBindViewHolder(holder: MyOffersViewHolder, position: Int) {
         holder.textViewPost.text = offerList?.get(position)?.offer_name
-        holder.textViewDate.text = offerList?.get(position)?.float_date
+        holder.textViewDate.text = (SimpleDateFormat("dd MMMM yyyy HH:mm:ss z")).format(offerList?.get(position)?.float_date)
         holder.textViewApplicants.text =  "${offerList?.get(position)?.no_of_applicants} Applicants"
     }
 

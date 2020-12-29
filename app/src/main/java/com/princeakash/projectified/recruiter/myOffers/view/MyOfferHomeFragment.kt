@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -34,8 +35,6 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "My Offers"
-
         return inflater.inflate(R.layout.frag_my_offers, container, false)
     }
 
@@ -51,12 +50,14 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
         recruiterExistingOffersViewModel!!.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 view.progress_circular_layout.visibility = View.INVISIBLE
-                Toast.makeText(this@MyOfferHomeFragment.context, it, LENGTH_SHORT).show()
+                Toast.makeText(this@MyOfferHomeFragment.context, it, LENGTH_LONG).show()
             }
         })
 
         //Start fetching offer list
         if(savedInstanceState == null || savedInstanceState.getBoolean(DETAILS_VIEWED)) {
+            view.progress_circular_layout.visibility = View.VISIBLE
+            //view.recyclerViewOffers.visibility = View.INVISIBLE
             recruiterExistingOffersViewModel!!.getOffersByRecruiter()
             detailsViewed = false
         }

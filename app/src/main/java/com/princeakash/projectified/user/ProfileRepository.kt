@@ -1,9 +1,9 @@
 package com.princeakash.projectified.user
 
-import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.princeakash.projectified.MyApplication
+import com.princeakash.projectified.user.model.*
 import com.squareup.moshi.JsonAdapter
 import retrofit2.Retrofit
 import kotlin.Exception
@@ -29,10 +29,16 @@ class ProfileRepository(retrofit: Retrofit, app: MyApplication) {
 
     //suspend fun createProfile(token: String,bodyCreateProfile: BodyCreateProfile)  = profileService.createProfile(token, bodyCreateProfile)
 
-    suspend fun updateProfile(token: String,bodyUpdateProfile: BodyUpdateProfile): ResponseUpdateProfile{
+    suspend fun updateProfile(token: String,bodyUpdateProfile: BodyUpdateProfile): ResponseUpdateProfile {
         val profileID = getUserId()
         return profileService.updateProfile(token,bodyUpdateProfile, profileID)
     }
+
+    suspend fun generateOtp(bodyGenerateOtp: BodyGenerateOtp) = profileService.generateOtp(bodyGenerateOtp)
+
+    suspend fun verifyOtp(bodyVerifyOtp: BodyVerifyOtp) = profileService.verifyOtp(bodyVerifyOtp)
+
+    suspend fun updatePassword(bodyUpdatePassword: BodyUpdatePassword) = profileService.updatePassword(bodyUpdatePassword)
 
     fun getLoginStatus(): Boolean{
         try{
@@ -138,6 +144,27 @@ class ProfileRepository(retrofit: Retrofit, app: MyApplication) {
         }
     }
 
+    fun getResetEmail() : String {
+        try{
+            return sharedPref.getString(RESET_EMAIL, "")!!
+        } catch (e: Exception){
+            e.printStackTrace()
+            return ""
+        }
+    }
+
+    fun setResetEmail(email : String){
+        try{
+            if(email.equals(""))
+                throw NullPointerException()
+            editor.putString(RESET_EMAIL, email)
+            editor.commit()
+        } catch(e: Exception){
+            e.printStackTrace()
+            //TODO:Show "Error in token" Toast
+        }
+    }
+
     companion object{
         val SHARED_PREFS = "SharedPreferences"
         val LOGIN_STATUS = "LoginStatus"
@@ -145,6 +172,7 @@ class ProfileRepository(retrofit: Retrofit, app: MyApplication) {
         val USER_PROFILE = "UserProfile"
         val USER_TOKEN = "UserToken"
         val PROFILE_STATUS = "ProfileStatus"
+        val RESET_EMAIL = "ResetUserEmail"
     }
 }
 

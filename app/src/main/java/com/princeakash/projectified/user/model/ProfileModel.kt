@@ -1,4 +1,4 @@
-package com.princeakash.projectified.user
+package com.princeakash.projectified.user.model
 
 data class ProfileModel(
         var name:String,
@@ -12,7 +12,7 @@ data class ProfileModel(
         var description:String,
         var hobbies: String
 ){
-    constructor(bodyCreateProfile: BodyCreateProfile):
+    /*constructor(bodyCreateProfile: BodyCreateProfile):
         this(
                 bodyCreateProfile.name,
                 bodyCreateProfile.collegeName,
@@ -24,7 +24,7 @@ data class ProfileModel(
                 bodyCreateProfile.interest3,
                 bodyCreateProfile.description,
                 bodyCreateProfile.hobbies
-        )
+        )*/
     constructor(bodyUpdateProfile: BodyUpdateProfile):this(
             bodyUpdateProfile.name,
             bodyUpdateProfile.collegeName,

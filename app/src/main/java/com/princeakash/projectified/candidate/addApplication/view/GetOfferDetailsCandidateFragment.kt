@@ -76,10 +76,11 @@ class GetOfferDetailsCandidateFragment : Fragment() {
 
         buttonCancelOpportunity.setOnClickListener()
         {
-            parentFragmentManager.beginTransaction()
+            /*parentFragmentManager.beginTransaction()
                     .replace(R.id.fragment_apply, HomeFragment::class.java, null, "Home Fragment")
                     .addToBackStack("HomeFragment")
-                    .commit()
+                    .commit()*/
+            parentFragmentManager.popBackStackImmediate()
         }
 
         return v
@@ -97,7 +98,7 @@ class GetOfferDetailsCandidateFragment : Fragment() {
         candidateAddApplicationsViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, it, Toast.LENGTH_LONG).show()
             }
         })
 

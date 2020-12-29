@@ -83,7 +83,7 @@ class MyApplicationDetailsFragment : Fragment() {
         candidateExistingApplicationViewModel!!.responseDeleteApplication().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
-                //TODO: Show Toast
+                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
                 parentFragmentManager.popBackStackImmediate()
             }
         })

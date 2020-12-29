@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.auth0.android.jwt.JWT
 import com.princeakash.projectified.MainActivity
 import com.princeakash.projectified.R
-import com.princeakash.projectified.user.ProfileViewModel
+import com.princeakash.projectified.user.viewmodel.ProfileViewModel
 
 class SplashScreenFragment : Fragment() {
 

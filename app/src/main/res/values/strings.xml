@@ -38,7 +38,7 @@
     <string name="ReEnterPassword">Confirm Password</string>
     <string name="signUp">SIGN UP</string>
     <string name="login">LOGIN</string>
-    <string name="enterotp">Enter Otp</string>
+    <string name="enterotp">Enter OTP</string>
     <string name="verify">Verify</string>
     <string name="languages">Languages</string>
     <string name="c">C</string>
@@ -57,11 +57,8 @@
     <string name="apply">Apply</string>
     <string name="seen">Seen</string>
     <string name="selected">Selected</string>
-
-
-
-
-
+    <string name="generateOtp">Generate OTP</string>
+    <string name="setPassword">Set Password</string>
 
     <string-array name="courses">
         <item>Bachelor of Technology</item>

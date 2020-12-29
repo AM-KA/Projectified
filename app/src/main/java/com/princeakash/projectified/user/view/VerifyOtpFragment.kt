@@ -24,11 +24,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.princeakash.projectified.MainActivity
 import com.princeakash.projectified.R
-import com.princeakash.projectified.user.BodySignUp
-import com.princeakash.projectified.user.LoginBody
-import com.princeakash.projectified.user.ProfileViewModel
-import com.princeakash.projectified.user.ResponseLogin
-import com.princeakash.projectified.user.view.LoginFragment.Companion.USER_NAME
+import com.princeakash.projectified.user.model.BodySignUp
+import com.princeakash.projectified.user.model.LoginBody
+import com.princeakash.projectified.user.viewmodel.ProfileViewModel
+import com.princeakash.projectified.user.model.ResponseLogin
+import com.princeakash.projectified.user.view.LoginHomeFragment.Companion.USER_NAME
 import kotlinx.android.synthetic.main.verifyphoneno.view.*
 import java.util.concurrent.TimeUnit
 

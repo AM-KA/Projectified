@@ -26,12 +26,12 @@ class AddApplicationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (savedInstanceState == null) {
+            childFragmentManager.executePendingTransactions()
             childFragmentManager
                     .beginTransaction()
                     .replace(
                             R.id.fragment_apply,
-                            HomeFragment::class.java,
-                            null,
+                            HomeFragment(),
                             "HomeFragment"
                     )
                     .commit()

@@ -54,12 +54,14 @@
 
         <TextView
             android:id="@+id/textViewPost"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Android Developer"
+            android:text="Loading"
             style="@style/CardHead"
             app:layout_constraintStart_toStartOf="@id/guideline1"
-            app:layout_constraintTop_toTopOf="@id/guideline3" />
+            app:layout_constraintTop_toTopOf="@id/guideline3"
+            app:layout_constraintEnd_toEndOf="@id/guideline2"
+            app:layout_constraintHorizontal_bias="0"/>
 
         <ImageView
             android:id="@+id/imageViewDate"
@@ -72,12 +74,14 @@
 
         <TextView
             android:id="@+id/textViewDate"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="04 July 2020"
+            android:text="Loading"
             app:layout_constraintBottom_toBottomOf="@id/imageViewDate"
             app:layout_constraintStart_toStartOf="@id/textViewCollege"
-            app:layout_constraintTop_toTopOf="@id/imageViewDate" />
+            app:layout_constraintTop_toTopOf="@id/imageViewDate"
+            app:layout_constraintEnd_toStartOf="@id/guideline2"
+            app:layout_constraintHorizontal_bias="0"/>
 
         <ImageView
             android:id="@+id/imageViewCollege"
@@ -86,17 +90,19 @@
             android:layout_marginTop="10dp"
             android:src="@drawable/ic_baseline_business_center_24"
             app:layout_constraintStart_toStartOf="@id/guideline5"
-            app:layout_constraintTop_toBottomOf="@id/imageViewDate" />
+            app:layout_constraintTop_toBottomOf="@id/imageViewDate"/>
 
         <TextView
             android:id="@+id/textViewCollege"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="IIT(ISM) Dhanbad"
+            android:text="Loading"
             app:layout_constraintBottom_toBottomOf="@id/imageViewCollege"
             app:layout_constraintStart_toEndOf="@id/imageViewCollege"
-            app:layout_constraintTop_toTopOf="@id/imageViewCollege" />
+            app:layout_constraintTop_toTopOf="@id/imageViewCollege"
+            app:layout_constraintEnd_toStartOf="@id/guideline2"
+            app:layout_constraintHorizontal_bias="0"/>
 
         <ImageView
             android:id="@+id/imageViewSkills"
@@ -110,15 +116,17 @@
 
         <TextView
             android:id="@+id/textViewSkills"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="Retrofit"
+            android:text="Loading"
             app:layout_constraintBottom_toBottomOf="@id/imageViewSkills"
             app:layout_constraintStart_toEndOf="@id/imageViewSkills"
-            app:layout_constraintTop_toTopOf="@id/imageViewSkills" />
+            app:layout_constraintTop_toTopOf="@id/imageViewSkills"
+            app:layout_constraintEnd_toStartOf="@id/guideline2"
+            app:layout_constraintHorizontal_bias="0"/>
 
-        <Button
+        <!--<Button
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -134,8 +142,8 @@
             android:id="@+id/barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:barrierDirection="right"
-            app:constraint_referenced_ids="textViewCollege, textViewSkills, textViewDate"/>
+            app:barrierDirection="left"
+            app:constraint_referenced_ids="button"/>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

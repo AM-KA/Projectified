@@ -6,6 +6,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -13,7 +14,9 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.MainActivity
 import com.princeakash.projectified.R
-import com.princeakash.projectified.user.*
+import com.princeakash.projectified.user.model.BodyUpdateProfile
+import com.princeakash.projectified.user.model.ResponseUpdateProfile
+import com.princeakash.projectified.user.viewmodel.ProfileViewModel
 
 class CreateProfileActivity : AppCompatActivity() {
 
@@ -51,7 +54,7 @@ class CreateProfileActivity : AppCompatActivity() {
         profileViewModel.responseUpdateProfile().observe(this, {
             it?.getContentIfNotHandled()?.let {
                 responseUpdateProfile = it
-                Toast.makeText(this, it.message, LENGTH_SHORT).show()
+                Toast.makeText(this, it.message, LENGTH_LONG).show()
                 //TODO:Apply code=200 validation
                 //Save Profile Status locally
                 profileViewModel.setProfileStatus(true)
@@ -100,8 +103,8 @@ class CreateProfileActivity : AppCompatActivity() {
     }
 
     private fun prepareName() {
-        val bundle = intent.getBundleExtra(LoginFragment.USER_NAME)
-        userName = bundle.getString(LoginFragment.USER_NAME)!!
+        val bundle = intent.getBundleExtra(LoginHomeFragment.USER_NAME)
+        userName = bundle.getString(LoginHomeFragment.USER_NAME)!!
         editTextName.setText(userName)
         //userId = bundle.getString(LoginFragment.USER_ID)!!
     }

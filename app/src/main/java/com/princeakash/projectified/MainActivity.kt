@@ -19,13 +19,13 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.princeakash.projectified.Faq.FaqActivity
-import com.princeakash.projectified.user.ProfileViewModel
+import com.princeakash.projectified.user.viewmodel.ProfileViewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     lateinit var bottomNavigationView: BottomNavigationView
-    private lateinit var profileViewModel:ProfileViewModel
+    private lateinit var profileViewModel: ProfileViewModel
     private lateinit var navigationView: NavigationView
 
     var toolbar: Toolbar? = null

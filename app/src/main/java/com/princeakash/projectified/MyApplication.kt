@@ -61,13 +61,13 @@ class MyApplication : Application() {
 
     //Storing static values
     companion object {
-        //val BASE_URL = "https://am-ka-projectified-test.herokuapp.com/"
-        val BASE_URL = "http://192.168.1.4:3000/"
+        val BASE_URL = "https://am-ka-projectified-test.herokuapp.com/"
+        //val BASE_URL = "http://192.168.1.4:3000/"
         fun handleError(e: Exception, errorString: MutableLiveData<Event<String>>){
             e.printStackTrace()
 
             //Change the Mutable LiveData so that change can be detected in Fragment/Activity. One extra Observer per ViewModel per Activity
-            errorString.postValue(Event("Haha! You got an error!!" + e.localizedMessage))
+            errorString.postValue(Event(e.localizedMessage))
         }
     }
 }

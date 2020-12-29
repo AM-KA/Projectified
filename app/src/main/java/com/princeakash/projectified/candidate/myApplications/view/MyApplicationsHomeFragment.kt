@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -51,7 +52,7 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
         candidateExistingApplicationViewModel!!.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(this@MyApplicationsHomeFragment.context,it, LENGTH_SHORT).show()
+                Toast.makeText(this@MyApplicationsHomeFragment.context,it, LENGTH_LONG).show()
             }
         })
 

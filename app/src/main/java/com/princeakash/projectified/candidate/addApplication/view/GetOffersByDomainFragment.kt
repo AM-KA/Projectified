@@ -26,15 +26,13 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
     private lateinit var candidateAddApplicationViewModel: CandidateAddApplicationViewModel
     private var offerList: ArrayList<OfferCardModelCandidate> = ArrayList()
     private  var domainName:String?=null
-    private  var listFetched by Delegates.notNull<Boolean>()
+    //private  var listFetched by Delegates.notNull<Boolean>()
     lateinit var recyclerView:RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        listFetched = false
         if(savedInstanceState!=null) {
             domainName = savedInstanceState.getString(DOMAIN_NAME)
-            listFetched = savedInstanceState.getBoolean(LIST_FETCHED)
         }else{
             domainName = requireArguments().getString(DOMAIN_NAME)
         }
@@ -46,12 +44,14 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
         recyclerView = view.findViewById(R.id.recyclerViewOffers)
         recyclerView.layoutManager = LinearLayoutManager(requireActivity(), VERTICAL, false)
         (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Offers"
+        view.progress_circular_layout.visibility = View.VISIBLE
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        if(parentFragmentManager.findFragmentByTag("GetOff")!=null)
+            Log.d(TAG, "onViewCreated: Found")
         view.findViewById<FloatingActionButton>(R.id.buttonAddOffer).setOnClickListener {
             proceedToAddOffer()
         }
@@ -66,17 +66,14 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
         candidateAddApplicationViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 view.progress_circular_layout.visibility = View.INVISIBLE
-                Toast.makeText(this@GetOffersByDomainFragment.context, it, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@GetOffersByDomainFragment.context, it, Toast.LENGTH_LONG).show()
             }
         })
 
         //Start fetching offer list
-        if(savedInstanceState == null || !listFetched) {
+        if(savedInstanceState == null) {
             view.progress_circular_layout.visibility = View.VISIBLE
             candidateAddApplicationViewModel.getOffersByDomain(domainName!!)
-            listFetched = true
-        } else if (listFetched){
-            offerList = savedInstanceState.getParcelableArrayList<OfferCardModelCandidate>(OFFERS_LIST) as ArrayList<OfferCardModelCandidate>
         }
     }
 
@@ -88,7 +85,6 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(OFFERS_LIST, offerList)
-        outState.putBoolean(LIST_FETCHED, listFetched)
         outState.putString(DOMAIN_NAME, domainName)
     }
 
@@ -113,8 +109,17 @@ class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffer
     }
     companion object {
         val OFFERS_LIST = "OffersList"
-        val LIST_FETCHED = "ListFetched"
         val DOMAIN_NAME = "DomainName"
         private const val TAG = "GetOffersByDomainFragme"
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d(TAG, "onDestroyView")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy")
     }
 }

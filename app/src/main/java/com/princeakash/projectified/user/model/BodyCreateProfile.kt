@@ -1,4 +1,4 @@
-package com.princeakash.projectified.user
+package com.princeakash.projectified.user.model
 
 import java.lang.reflect.Array
 import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType

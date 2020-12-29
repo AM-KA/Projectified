@@ -1,4 +1,4 @@
-package com.princeakash.projectified.user
+package com.princeakash.projectified.user.model
 
 data class ResponseCreateProfile(
         var code: Int,

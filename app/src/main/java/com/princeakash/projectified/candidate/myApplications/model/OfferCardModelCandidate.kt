@@ -2,13 +2,14 @@ package com.princeakash.projectified.candidate.myApplications.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import java.util.*
 
 data class OfferCardModelCandidate(val offer_id: String,
                                    val offer_name: String,
                                    val skills: String,
-                                   val float_date: String,
+                                   val float_date: Date,
                                    val collegeName: String
-                                   ) : Parcelable {
+                                   ) /*: Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readString()!!,
             parcel.readString()!!,
@@ -38,4 +39,4 @@ data class OfferCardModelCandidate(val offer_id: String,
             return arrayOfNulls(size)
         }
     }
-}
+}*/

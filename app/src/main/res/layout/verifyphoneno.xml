@@ -64,8 +64,6 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:drawablePadding="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:paddingLeft="15dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -78,9 +76,7 @@
         app:layout_constraintEnd_toEndOf="@id/guideline2"
         android:background="@drawable/buttons"
         android:text="@string/verify"
-        android:textAllCaps="false"
-        android:fontFamily="@font/roboto"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColor="#FFFFFF"
         app:layout_constraintStart_toEndOf="@id/guideline1"
         />

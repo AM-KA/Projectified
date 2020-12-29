@@ -1,4 +1,4 @@
-package com.princeakash.projectified.user
+package com.princeakash.projectified.user.viewmodel
 
 import android.app.Application
 import android.util.Log
@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.princeakash.projectified.Event
 import com.princeakash.projectified.MyApplication
 import com.princeakash.projectified.MyApplication.Companion.handleError
+import com.princeakash.projectified.user.model.*
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(app: Application) : AndroidViewModel(app) {
@@ -20,17 +21,23 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
     private var errorString: MutableLiveData<Event<String>> = MutableLiveData()
     private var responseSignUp: MutableLiveData<Event<ResponseSignUp>> = MutableLiveData()
     private var responseLogin: MutableLiveData<Event<ResponseLogin>> = MutableLiveData()
-    private var responseCreateProfile: MutableLiveData<Event<ResponseCreateProfile>> = MutableLiveData()
+    //private var responseCreateProfile: MutableLiveData<Event<ResponseCreateProfile>> = MutableLiveData()
     private var responseUpdateProfile: MutableLiveData<Event<ResponseUpdateProfile>> = MutableLiveData()
     private var responsecheckSignUp: MutableLiveData<Event<ResponseSignUp>> = MutableLiveData()
+    private var responseGenerateOtp: MutableLiveData<Event<ResponseGenerateOtp>> = MutableLiveData()
+    private var responseVerifyOtp: MutableLiveData<Event<ResponseVerifyOtp>> = MutableLiveData()
+    private var responseUpdatePassword: MutableLiveData<Event<ResponseUpdatePassword>> = MutableLiveData()
 
     //LiveData for all exposed data
     fun errorString(): LiveData<Event<String>> = errorString
     fun responseSignUp(): LiveData<Event<ResponseSignUp>> = responseSignUp
     fun responseLogin(): LiveData<Event<ResponseLogin>> = responseLogin
-    fun responseCreateProfile(): LiveData<Event<ResponseCreateProfile>> = responseCreateProfile
+    //fun responseCreateProfile(): LiveData<Event<ResponseCreateProfile>> = responseCreateProfile
     fun responseUpdateProfile(): LiveData<Event<ResponseUpdateProfile>> = responseUpdateProfile
     fun responsecheckSignUp(): LiveData<Event<ResponseSignUp>> = responsecheckSignUp
+    fun responseGenerateOtp(): LiveData<Event<ResponseGenerateOtp>> = responseGenerateOtp
+    fun responseVerifyOtp(): LiveData<Event<ResponseVerifyOtp>> = responseVerifyOtp
+    fun responseUpdatePassword(): LiveData<Event<ResponseUpdatePassword>> = responseUpdatePassword
 
     //Functions based on *Local Data*
     fun getLoginStatus() = profileRepository.getLoginStatus()
@@ -42,7 +49,8 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
     fun getToken() = profileRepository.getToken()
     fun setToken(token: String) = profileRepository.setToken(token)
     private fun setUserId(id: String) = profileRepository.setUserId(id)
-
+    fun getResetEmail() = profileRepository.getResetEmail()
+    fun setResetEmail(email: String) = profileRepository.setResetEmail(email)
 
     //Functions based on *Server Data*
     fun signUp(bodySignUp: BodySignUp) {
@@ -126,6 +134,42 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
                 bodyUpdateProfile.userID = userID
                 responseUpdateProfile.postValue(Event(profileRepository.updateProfile("Bearer $token", bodyUpdateProfile)))
                 setLocalProfile(ProfileModel(bodyUpdateProfile))
+            } catch (e: Exception) {
+                handleError(e, errorString)
+            }
+        }
+    }
+
+    fun generateOtp(email: String){
+        viewModelScope.launch {
+            try {
+                setResetEmail(email)
+                val bodyGenerateOtp = BodyGenerateOtp(email)
+                responseGenerateOtp.postValue(Event(profileRepository.generateOtp(bodyGenerateOtp)))
+            } catch (e: Exception) {
+                handleError(e, errorString)
+            }
+        }
+    }
+
+    fun verifyOtp(otp: String){
+        viewModelScope.launch {
+            try {
+                val resetEmail = getResetEmail()
+                val bodyVerifyOtp = BodyVerifyOtp(resetEmail, otp)
+                responseVerifyOtp.postValue(Event(profileRepository.verifyOtp(bodyVerifyOtp)))
+            } catch (e: Exception) {
+                handleError(e, errorString)
+            }
+        }
+    }
+
+    fun updatePassword(newPassword: String){
+        viewModelScope.launch {
+            try {
+                val email = getResetEmail()
+                val bodyUpdatePassword = BodyUpdatePassword(email, newPassword)
+                responseUpdatePassword.postValue(Event(profileRepository.updatePassword(bodyUpdatePassword)))
             } catch (e: Exception) {
                 handleError(e, errorString)
             }

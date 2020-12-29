@@ -10,6 +10,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 
 import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -88,7 +89,7 @@ class AddOfferFragment : Fragment() {
         recruiterAddOffersViewModel.responseAddOffer().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(context, it.message, LENGTH_SHORT).show()
+                Toast.makeText(context, it.message, LENGTH_LONG).show()
                 parentFragmentManager.popBackStackImmediate()
             }
         })
@@ -96,7 +97,7 @@ class AddOfferFragment : Fragment() {
         recruiterAddOffersViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(context, it, LENGTH_SHORT).show()
+                Toast.makeText(context, it, LENGTH_LONG).show()
             }
         })
 

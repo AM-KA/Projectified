@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -48,7 +49,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
         recruiterExistingOffersViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(context, it, LENGTH_SHORT).show()
+                Toast.makeText(context, it, LENGTH_LONG).show()
             }
         })
 
@@ -65,7 +66,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
                             break
                         }
                     }
-                    Toast.makeText(context, iter.message, LENGTH_SHORT).show()
+                    Toast.makeText(context, iter.message, LENGTH_LONG).show()
                 }
             }
         })
@@ -84,7 +85,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
                             break
                         }
                     }
-                    Toast.makeText(context, iter.message, LENGTH_SHORT).show()
+                    Toast.makeText(context, iter.message, LENGTH_LONG).show()
                 }
             }
         })

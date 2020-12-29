@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import android.widget.Toast.LENGTH_LONG
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -95,14 +96,14 @@ class MyOfferDetailsFragment() : Fragment() {
         recruiterExistingOffersViewModel.responseToggleVisibility().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(context, it.message, LENGTH_SHORT).show()
+                Toast.makeText(context, it.message, LENGTH_LONG).show()
             }
         })
 
         recruiterExistingOffersViewModel.responseUpdateOffer().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(context, it.message, LENGTH_SHORT).show()
+                Toast.makeText(context, it.message, LENGTH_LONG).show()
                 fetchOfferDetails()
             }
         })
@@ -110,7 +111,7 @@ class MyOfferDetailsFragment() : Fragment() {
         recruiterExistingOffersViewModel.responseDeleteOffer().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(context, it.message, LENGTH_SHORT).show()
+                Toast.makeText(context, it.message, LENGTH_LONG).show()
                 parentFragmentManager.popBackStackImmediate()
             }
         })
@@ -118,7 +119,7 @@ class MyOfferDetailsFragment() : Fragment() {
         recruiterExistingOffersViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(context, it, LENGTH_SHORT).show()
+                Toast.makeText(context, it, LENGTH_LONG).show()
             }
         })
 

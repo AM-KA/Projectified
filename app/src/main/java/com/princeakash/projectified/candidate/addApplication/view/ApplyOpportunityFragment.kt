@@ -1,6 +1,5 @@
 package com.princeakash.projectified.candidate.addApplication.view
 
-import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,16 +9,14 @@ import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
-import com.princeakash.projectified.candidate.addApplication.model.ResponseAddApplication
 import com.princeakash.projectified.candidate.addApplication.viewModel.CandidateAddApplicationViewModel
-import com.princeakash.projectified.user.BodySignUp
-import com.princeakash.projectified.user.view.SignUp
 import kotlinx.android.synthetic.main.frag_apply_opportunity_self.view.*
 
 
@@ -68,10 +65,11 @@ class ApplyOpportunityFragment : Fragment() {
             validateParameters()
         }
         buttonCancel.setOnClickListener {
-            parentFragmentManager.beginTransaction()
+            /*parentFragmentManager.beginTransaction()
                     .replace(R.id.fragment_apply, HomeFragment::class.java, null, "HomeFragment")
                     .addToBackStack(null)
-                    .commit()
+                    .commit()*/
+            parentFragmentManager.popBackStackImmediate()
         }
 
         (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Apply"
@@ -85,12 +83,13 @@ class ApplyOpportunityFragment : Fragment() {
         candidateAddApplicationViewModel.responseAddApplication().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(context, it.message, LENGTH_SHORT).show()
+                Toast.makeText(context, it.message, LENGTH_LONG).show()
                 if(it.code.equals("200")){
-                    parentFragmentManager.beginTransaction()
+                    /*parentFragmentManager.beginTransaction()
                             .replace(R.id.fragment_apply, HomeFragment::class.java, null, "HomeFragment")
                             .addToBackStack(null)
-                            .commit()
+                            .commit()*/
+                    parentFragmentManager.popBackStackImmediate()
                 }
             }
         })
@@ -98,7 +97,7 @@ class ApplyOpportunityFragment : Fragment() {
         candidateAddApplicationViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(context, it, LENGTH_SHORT).show()
+                Toast.makeText(context, it, LENGTH_LONG).show()
             }
         })
         loadLocalProfile()

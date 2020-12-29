@@ -1,6 +1,7 @@
 package com.princeakash.projectified.candidate.addApplication.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,6 +44,12 @@ class HomeFragment : Fragment(), HomeListener {
         list.add(HomeItem("Others", R.mipmap.misc, OTHERS))
         recyclerView.adapter = context?.let { HomeAdapter(list, it, this) }
         recyclerView.layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
+
+        val frag = parentFragmentManager.findFragmentByTag("GetOff")
+        if (frag != null) {
+            Log.d("Home", "onCreateView: got something")
+            parentFragmentManager.beginTransaction().remove(frag)
+        }
         return view
     }
 
@@ -55,10 +62,11 @@ class HomeFragment : Fragment(), HomeListener {
         val domainArg = list[position].domainArg
         val bundle = Bundle()
         bundle.putString(DOMAIN_NAME, domainArg)
+        parentFragmentManager.executePendingTransactions()
         parentFragmentManager
                 .beginTransaction()
-                .replace(R.id.fragment_apply, GetOffersByDomainFragment::class.java, bundle, "GetOffersByDomain:$domainArg")
-                .addToBackStack("GetOffersByDomain:$domainArg")
+                .replace(R.id.fragment_apply, GetOffersByDomainFragment::class.java, bundle, "GetOff")
+                .addToBackStack("GetOff")
                 .commit()
     }
 }

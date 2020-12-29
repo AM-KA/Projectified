@@ -13,9 +13,9 @@ import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.princeakash.projectified.R
-import com.princeakash.projectified.user.BodySignUp
-import com.princeakash.projectified.user.ProfileViewModel
-import com.princeakash.projectified.user.ResponseSignUp
+import com.princeakash.projectified.user.model.BodySignUp
+import com.princeakash.projectified.user.viewmodel.ProfileViewModel
+import com.princeakash.projectified.user.model.ResponseSignUp
 import com.princeakash.projectified.user.view.VerifyOtpFragment.Companion.E_MAIL
 import com.princeakash.projectified.user.view.VerifyOtpFragment.Companion.N_AME
 import com.princeakash.projectified.user.view.VerifyOtpFragment.Companion.PASS_WORD

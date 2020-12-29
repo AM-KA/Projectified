@@ -31,7 +31,7 @@ class MyOfferApplicantsAdapter(var applicantList: List<ApplicantCardModel>?, val
         val textViewDate = itemView.textViewDate
         val imageViewSeen = itemView.imageViewSeen
         val imageViewSelected = itemView.imageViewSelected
-        val button = itemView.button
+        //val button = itemView.button
         val myListener = listener
         init {
             imageViewSeen.setOnClickListener {
@@ -42,7 +42,7 @@ class MyOfferApplicantsAdapter(var applicantList: List<ApplicantCardModel>?, val
                 myListener.onSelectedClick(adapterPosition)
             }
 
-            button.setOnClickListener{
+            itemView.setOnClickListener{
                 myListener.onViewDetailsClick(adapterPosition)
             }
         }

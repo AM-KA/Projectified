@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.myApplications.model.OfferCardModelCandidate
 import kotlinx.android.synthetic.main.card_offer_candidate_version.view.*
+import java.text.SimpleDateFormat
 
 class GetOffersByDomainAdapter(val offerList: List<OfferCardModelCandidate>, val listener:GetOffersListener): RecyclerView.Adapter<GetOffersByDomainAdapter.GetOfferViewHolder>() {
 
@@ -15,11 +16,11 @@ class GetOffersByDomainAdapter(val offerList: List<OfferCardModelCandidate>, val
         val textViewDate = itemView.textViewDate
         val textViewCollege = itemView.textViewCollege
         val textViewSkills = itemView.textViewSkills
-        val buttonViewDetails = itemView.button
+        //val buttonViewDetails = itemView.button
         val myListener = listener
 
         init{
-            buttonViewDetails.setOnClickListener(this)
+            itemView.setOnClickListener(this)
         }
         override fun onClick(v: View?) {
             myListener.onViewDetailsClick(adapterPosition)
@@ -33,7 +34,7 @@ class GetOffersByDomainAdapter(val offerList: List<OfferCardModelCandidate>, val
 
     override fun onBindViewHolder(holder: GetOfferViewHolder, position: Int) {
         holder.textViewPost.text = offerList?.get(position)?.offer_name
-        holder.textViewDate.text = offerList?.get(position)?.float_date
+        holder.textViewDate.text = (SimpleDateFormat("dd MMMM yyyy HH:mm:ss z")).format(offerList?.get(position)?.float_date)
         holder.textViewCollege.text = offerList?.get(position)?.collegeName
         holder.textViewSkills.text = offerList?.get(position)?.skills
     }

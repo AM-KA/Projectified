@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -78,7 +79,7 @@ class MyOfferApplicationFragment : Fragment() {
         recruiterExistingOffersViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(context, it, LENGTH_SHORT).show()
+                Toast.makeText(context, it, LENGTH_LONG).show()
             }
         })
 
@@ -88,7 +89,7 @@ class MyOfferApplicationFragment : Fragment() {
                 //Take action as per response
                 if(it.code==200 || it.code == 403)
                     imageViewSeen.setImageResource(R.drawable.ic_baseline_favorite_24)
-                Toast.makeText(context, it.message, LENGTH_SHORT).show()
+                Toast.makeText(context, it.message, LENGTH_LONG).show()
             }
         })
 
@@ -98,7 +99,7 @@ class MyOfferApplicationFragment : Fragment() {
                 //Take action as per response
                 if(it.code==200 || it.code == 403)
                     imageViewSelected.setImageResource(R.drawable.ic_baseline_done_24)
-                Toast.makeText(context, it.message, LENGTH_SHORT).show()
+                Toast.makeText(context, it.message, LENGTH_LONG).show()
             }
         })
 
@@ -144,7 +145,7 @@ class MyOfferApplicationFragment : Fragment() {
                     imageViewSelected.setImageResource(R.drawable.ic_baseline_done_24)
             }
         } else {
-            Toast.makeText(context, it.message, LENGTH_SHORT).show()
+            Toast.makeText(context, it.message, LENGTH_LONG).show()
         }
         progressCircularLayout.visibility = View.INVISIBLE
     }
