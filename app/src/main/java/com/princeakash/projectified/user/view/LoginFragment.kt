@@ -61,6 +61,7 @@ class LoginFragment : Fragment() {
                         //Navigate to main activity
                         val intent = Intent(activity, MainActivity::class.java)
                         startActivity(intent)
+                        requireActivity().finish()
                     } else {
                         //Navigate to CreateProfileFragment
                         val bundle = Bundle()

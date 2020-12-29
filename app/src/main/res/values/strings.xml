@@ -44,8 +44,13 @@
     <string name="c">C</string>
     <string name="cpp">C++</string>
     <string name="java">Java</string>
-    <string name="kotlin">Koltin</string>
-    <string name="javascript">Javascript</string>
+    <string name="kotlin">Kotlin</string>
+    <string name="javascript">JavaScript</string>
+    <string name="nodejs">NodeJs</string>
+    <string name="php">PHP</string>
+    <string name="css">CSS</string>
+
+
     <string name="hobbies">Hobbies</string>
     <string name="description">Description</string>
     <string name="python">Python</string>
