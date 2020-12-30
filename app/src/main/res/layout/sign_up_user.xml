@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintGuide_percent="0.85" />
+            app:layout_constraintGuide_percent="1" />
 
 
         <androidx.constraintlayout.widget.Guideline
@@ -48,12 +48,6 @@
             app:layout_constraintGuide_percent="0.05" />
 
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="1" />
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -175,14 +169,6 @@
             app:layout_constraintStart_toEndOf="@id/guideline1"
             app:layout_constraintTop_toBottomOf="@id/editTextLayoutReEnterPassword"
             app:layout_constraintVertical_bias="0.93" />
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/sign_in_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/SignUpButton"/>
 
         <RelativeLayout
             android:id="@+id/progress_circular_layout"
