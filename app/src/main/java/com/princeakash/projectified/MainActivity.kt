@@ -1,11 +1,14 @@
 package com.princeakash.projectified
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -18,6 +21,7 @@ import androidx.navigation.ui.setupWithNavController
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.princeakash.projectified.Faq.FaqActivity
 import com.princeakash.projectified.user.ProfileViewModel
 
@@ -25,11 +29,17 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     lateinit var bottomNavigationView: BottomNavigationView
-    private lateinit var profileViewModel:ProfileViewModel
+    private lateinit var profileViewModel: ProfileViewModel
     private lateinit var navigationView: NavigationView
+    private lateinit var switch: SwitchMaterial
+    private val appSettingsPrefs : SharedPreferences = getSharedPreferences("AppSettingPrefs" ,0)
+    private  val isNightModeOn : Boolean = appSettingsPrefs.getBoolean("NightMode", false)
+    private  val sharedPrefsEdit: SharedPreferences.Editor  = appSettingsPrefs.edit()
 
     var toolbar: Toolbar? = null
     var drawerLayout: DrawerLayout? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.kk)
@@ -40,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         drawerLayout = findViewById(R.id.drawerLayout)
+
         navigationView = findViewById(R.id.navigation_view)
         navigationView.setNavigationItemSelectedListener { onNavigationItemSelected(it) }
 
@@ -55,12 +66,31 @@ class MainActivity : AppCompatActivity() {
                 toolbar,
                 R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close
-        ){}
+        ) {}
 
         drawerToggle.isDrawerIndicatorEnabled = true
         drawerLayout?.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
+
+        if(isNightModeOn) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }else
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+
+        switch.setOnClickListener(View.OnClickListener {
+            if (isNightModeOn) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                sharedPrefsEdit.putBoolean("NightMode",false)
+                sharedPrefsEdit.apply()
+            }else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                sharedPrefsEdit.putBoolean("NightMode",true)
+                sharedPrefsEdit.apply()
+            }
+        })
     }
+
 
 
    fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
