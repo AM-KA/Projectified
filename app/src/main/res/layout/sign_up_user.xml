@@ -143,7 +143,8 @@
             app:passwordToggleEnabled="true"
             app:layout_constraintEnd_toEndOf="@id/guideline2"
             app:layout_constraintStart_toStartOf="@id/guideline1"
-            app:layout_constraintTop_toBottomOf="@id/editTextLayoutPassword">
+            app:layout_constraintTop_toBottomOf="@id/editTextLayoutPassword"
+            app:layout_constraintBottom_toTopOf="@id/SignUpButton">
 
             <AutoCompleteTextView
                 android:id="@+id/editTextReEnterPassword1"
@@ -168,6 +169,7 @@
             app:layout_constraintEnd_toEndOf="@id/guideline2"
             app:layout_constraintStart_toEndOf="@id/guideline1"
             app:layout_constraintTop_toBottomOf="@id/editTextLayoutReEnterPassword"
+            app:layout_constraintBottom_toBottomOf="@id/guideline4"
             app:layout_constraintVertical_bias="0.93" />
 
         <RelativeLayout

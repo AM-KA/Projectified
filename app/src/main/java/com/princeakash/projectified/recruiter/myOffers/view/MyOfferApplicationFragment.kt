@@ -9,26 +9,20 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
-import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.princeakash.projectified.R
-import com.princeakash.projectified.recruiter.myOffers.model.BodyMarkAsSeen
-import com.princeakash.projectified.recruiter.myOffers.model.BodyMarkAsSelected
 import com.princeakash.projectified.recruiter.myOffers.model.ResponseGetApplicationByIdRecruiter
-import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterExistingOffersViewModel
+import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterViewModel
 import kotlinx.android.synthetic.main.frag_candidate_details_recruiter.view.*
 
 class MyOfferApplicationFragment : Fragment() {
 
     //ViewModel and Necessary LiveData Observer objects
-    private lateinit var recruiterExistingOffersViewModel: RecruiterExistingOffersViewModel
+    private lateinit var recruiterViewModel: RecruiterViewModel
     private var responseGetApplicationByIdRecruiter: ResponseGetApplicationByIdRecruiter? = null
     private lateinit var progressCircularLayout: RelativeLayout
-
-    //Application related data
-    private lateinit var applicationID: String
 
     //Views
     private lateinit var textViewName: TextView
@@ -41,18 +35,8 @@ class MyOfferApplicationFragment : Fragment() {
     private lateinit var imageViewSeen: ImageView
     private lateinit var imageViewSelected: ImageView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-       if (savedInstanceState == null) {
-           applicationID = requireArguments().getString(APPLICATION_ID)!!
-        } else
-            savedInstanceState.getString(APPLICATION_ID)!!
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Candidate Details"
         val v = inflater.inflate(R.layout.frag_candidate_details_recruiter, container, false)
         textViewName = v.textViewName
         textViewCollege = v.textViewCollege
@@ -69,21 +53,22 @@ class MyOfferApplicationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
 
-        recruiterExistingOffersViewModel.responseGetApplicationById().observe(viewLifecycleOwner, {
+        recruiterViewModel = ViewModelProvider(requireActivity()).get(RecruiterViewModel::class.java)
+
+        recruiterViewModel.responseGetApplicationById().observe(viewLifecycleOwner, {
             responseGetApplicationByIdRecruiter = it
             populateViews(it)
         })
 
-        recruiterExistingOffersViewModel.errorString().observe(viewLifecycleOwner, {
+        recruiterViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it, LENGTH_LONG).show()
             }
         })
 
-        recruiterExistingOffersViewModel.responseMarkAsSeen().observe(viewLifecycleOwner, {
+        recruiterViewModel.responseMarkAsSeen().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 //Take action as per response
@@ -93,7 +78,7 @@ class MyOfferApplicationFragment : Fragment() {
             }
         })
 
-        recruiterExistingOffersViewModel.responseMarkAsSelected().observe(viewLifecycleOwner, {
+        recruiterViewModel.responseMarkAsSelected().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 //Take action as per response
@@ -110,21 +95,11 @@ class MyOfferApplicationFragment : Fragment() {
         imageViewSelected.setOnClickListener {
             markSelected()
         }
-
-        if(savedInstanceState==null) {
-            progressCircularLayout.visibility = View.VISIBLE
-            recruiterExistingOffersViewModel.getApplicationById(applicationID)
-        }
     }
 
     override fun onResume() {
         super.onResume()
-        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Candidate Details"
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(APPLICATION_ID, applicationID)
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Candidate Details"
     }
 
     private fun populateViews(it: ResponseGetApplicationByIdRecruiter) {
@@ -156,7 +131,7 @@ class MyOfferApplicationFragment : Fragment() {
             if (it.application != null)
                 status = it.application?.is_Seen!!
             progressCircularLayout.visibility = View.VISIBLE
-            recruiterExistingOffersViewModel.markSeen(applicationID, BodyMarkAsSeen(!status))
+            recruiterViewModel.markSeen(!status)
         }
     }
 
@@ -166,7 +141,7 @@ class MyOfferApplicationFragment : Fragment() {
             if (it.application != null)
                 status = it.application?.is_Selected!!
             progressCircularLayout.visibility = View.VISIBLE
-            recruiterExistingOffersViewModel.markSelected(applicationID, BodyMarkAsSelected(!status))
+            recruiterViewModel.markSelected(!status)
         }
     }
 

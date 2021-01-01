@@ -30,11 +30,20 @@ class MyOffersFragment : Fragment() {
                     .beginTransaction()
                     .replace(
                             R.id.fragment_offers,
-                            MyOfferHomeFragment::class.java,
-                            null,
-                            "MyOffersFragment"
+                            MyOfferHomeFragment(),
+                            MyOfferHomeFragment::class.java.simpleName
                     )
+                    //.addToBackStack("MyOfferBaap")
                     .commit()
         }
+    }
+
+    public fun getVisibleFragment():Fragment?{
+        val fragments = childFragmentManager.fragments
+        for(fragment in fragments){
+            if(fragment.isVisible)
+                return fragment;
+        }
+        return null;
     }
 }

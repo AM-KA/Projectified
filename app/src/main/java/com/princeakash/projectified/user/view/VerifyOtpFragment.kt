@@ -16,10 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.tasks.TaskExecutors
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.princeakash.projectified.MainActivity
@@ -135,12 +132,13 @@ class VerifyOtpFragment : Fragment() {
     private fun sendVerificationCodetoTheUser() {
 
         phoneno?.let {
-            PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                    it, // Phone number to verify
-                    60, // Timeout duration
-                    TimeUnit.SECONDS, // Unit of timeout
-                    TaskExecutors.MAIN_THREAD, // Activity (for callback binding)
-                    callbacks)
+            val options = PhoneAuthOptions.newBuilder(auth)
+                    .setPhoneNumber(it)
+                    .setTimeout(60, TimeUnit.SECONDS)
+                    .setCallbacks(callbacks)
+                    .setActivity(requireActivity())
+                    .build()
+            PhoneAuthProvider.verifyPhoneNumber(options)
         }
     }// OnVerificationStateChangedCallbacks
 

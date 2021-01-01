@@ -11,13 +11,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.addApplication.model.ResponseGetOfferById
-import com.princeakash.projectified.candidate.addApplication.view.ApplyOpportunityFragment.Companion.OFFER_IDC
-import com.princeakash.projectified.candidate.addApplication.viewModel.CandidateAddApplicationViewModel
+import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateViewModel
 import kotlinx.android.synthetic.main.frag_apply_opportunity_view.view.*
-import kotlinx.android.synthetic.main.frag_apply_opportunity_view.view.progress_circular_layout
-import kotlinx.android.synthetic.main.frag_available_offers.view.*
 
 class GetOfferDetailsCandidateFragment : Fragment() {
 
@@ -33,26 +31,11 @@ class GetOfferDetailsCandidateFragment : Fragment() {
     private lateinit var progressCircularLayout: RelativeLayout
 
     //View Models and Observable Objects
-    private lateinit var candidateAddApplicationsViewModel: CandidateAddApplicationViewModel
-
-    private var offerId: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) {
-            offerId = requireArguments().getString(OFFER_IDC)
-        } else {
-            offerId = savedInstanceState.getString(OFFER_IDC)
-        }
-    }
+    private lateinit var candidateViewModel: CandidateViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-
         val v = inflater.inflate(R.layout.frag_apply_opportunity_view, container, false)
         progressCircularLayout = v.progress_circular_layout
-        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Offer Details"
-
         textViewExpectations = v.textViewExpectationData
         textViewSkills = v.textViewSkillsData
         textViewRequirements = v.textViewRequirementData
@@ -63,54 +46,41 @@ class GetOfferDetailsCandidateFragment : Fragment() {
         buttonApplyOpportunity = v.buttonApply
         buttonCancelOpportunity = v.buttonCancel
 
-
-        buttonApplyOpportunity.setOnClickListener()
-        {
-            val bundle = Bundle()
-            bundle.putString(OFFER_IDC, offerId)
-            parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_apply, ApplyOpportunityFragment::class.java, bundle, "ApplyOpportunityFragment")
-                    .addToBackStack("ApplyOpportunity")
-                    .commit()
-        }
-
-        buttonCancelOpportunity.setOnClickListener()
-        {
-            /*parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_apply, HomeFragment::class.java, null, "Home Fragment")
-                    .addToBackStack("HomeFragment")
-                    .commit()*/
-            parentFragmentManager.popBackStackImmediate()
-        }
-
         return v
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        candidateAddApplicationsViewModel = ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
+        candidateViewModel = ViewModelProvider(requireActivity()).get(CandidateViewModel::class.java)
 
-        candidateAddApplicationsViewModel.responseGetOfferById().observe(viewLifecycleOwner, {
+        candidateViewModel.responseGetOfferById().observe(viewLifecycleOwner, {
             populateViews(it)
         })
 
-        candidateAddApplicationsViewModel.errorString().observe(viewLifecycleOwner, {
+        candidateViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+
             }
         })
 
-        if (savedInstanceState == null) {
-            progressCircularLayout.visibility = View.VISIBLE
-            candidateAddApplicationsViewModel.getoffersById(offerId!!)
+
+        buttonApplyOpportunity.setOnClickListener()
+        {
+            view.findNavController().navigate(R.id.view_details_to_apply_opportunity)
+        }
+
+        buttonCancelOpportunity.setOnClickListener()
+        {
+            view.findNavController().navigate(R.id.back_to_offers_by_domain)
         }
     }
 
     override fun onResume() {
         super.onResume()
-        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Offer Details"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Offer Details"
     }
 
     private fun populateViews(it:ResponseGetOfferById) {
@@ -124,11 +94,6 @@ class GetOfferDetailsCandidateFragment : Fragment() {
             textViewCourse.setText(it.offer.recruiter_course)
             progressCircularLayout.visibility = View.INVISIBLE
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(OFFER_IDC, offerId)
     }
 
     companion object {

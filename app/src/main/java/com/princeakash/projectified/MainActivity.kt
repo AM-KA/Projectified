@@ -4,6 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.FrameLayout
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -12,14 +14,15 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.princeakash.projectified.Faq.FaqActivity
+import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateViewModel
+
+import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterViewModel
 import com.princeakash.projectified.user.viewmodel.ProfileViewModel
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,12 +30,17 @@ class MainActivity : AppCompatActivity() {
     lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var navigationView: NavigationView
+    private lateinit var fragments: FrameLayout
+
+    private lateinit var recruiterViewModel: RecruiterViewModel
+    private lateinit var candidateViewModel: CandidateViewModel
 
     var toolbar: Toolbar? = null
     var drawerLayout: DrawerLayout? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.kk)
+        fragments = findViewById(R.id.fragment)
         window?.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
 
@@ -44,9 +52,10 @@ class MainActivity : AppCompatActivity() {
         navigationView.setNavigationItemSelectedListener { onNavigationItemSelected(it) }
 
         bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigation)
+
         navController = findNavController(R.id.fragment)
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.myOffersFragment, R.id.myApplicationsFragment, R.id.profileFragment))
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        //val appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.myOffersFragment, R.id.myApplicationsFragment, R.id.profileFragment))
+        //setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNavigationView.setupWithNavController(navController)
 
         val drawerToggle: ActionBarDrawerToggle = object : ActionBarDrawerToggle(
@@ -60,8 +69,12 @@ class MainActivity : AppCompatActivity() {
         drawerToggle.isDrawerIndicatorEnabled = true
         drawerLayout?.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
-    }
 
+        recruiterViewModel = ViewModelProvider(this).get(RecruiterViewModel::class.java)
+        candidateViewModel = ViewModelProvider(this).get(CandidateViewModel::class.java)
+        recruiterViewModel.issueInitialInstructions()
+        candidateViewModel.issueInitialInstructions()
+    }
 
    fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {

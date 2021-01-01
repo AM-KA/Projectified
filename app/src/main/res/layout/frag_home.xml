@@ -42,5 +42,21 @@
         app:layout_constraintTop_toTopOf="@id/guideline3"
         app:layout_constraintBottom_toBottomOf="@id/guideline4">
     </androidx.recyclerview.widget.RecyclerView>
-
+    <RelativeLayout
+        android:elevation="5dp"
+        android:id="@+id/progress_circular_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/progress_bar_background"
+        android:padding="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <ProgressBar
+            android:indeterminateTint="@android:color/white"
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

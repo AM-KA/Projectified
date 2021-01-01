@@ -11,14 +11,14 @@ import android.widget.TextView
 
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
-import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
-import com.princeakash.projectified.candidate.addApplication.view.GetOffersByDomainFragment.Companion.DOMAIN_NAME
-import com.princeakash.projectified.recruiter.addOffer.viewmodel.RecruiterAddOffersViewModel
+import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateViewModel
+import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterViewModel
 import kotlinx.android.synthetic.main.frag_float_opportunity.view.*
 
 class AddOfferFragment : Fragment() {
@@ -37,21 +37,8 @@ class AddOfferFragment : Fragment() {
     private lateinit var buttonCancel: Button
 
     //ViewModels
-    private lateinit var recruiterAddOffersViewModel: RecruiterAddOffersViewModel
-
-    private var domainName: String? = null
-
-    /*
-        For obtaining DOMAIN_NAME passed through getOffersByDomain fragment
-        and setting up ViewModel and LiveData
-     */
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if(savedInstanceState==null)
-            domainName = requireArguments().getString(DOMAIN_NAME)
-        else
-            domainName = savedInstanceState.getString(DOMAIN_NAME)
-    }
+    private lateinit var recruiterViewModel: RecruiterViewModel
+    private lateinit var candidateViewModel: CandidateViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -75,26 +62,33 @@ class AddOfferFragment : Fragment() {
         }
 
         buttonCancel.setOnClickListener {
-            parentFragmentManager.popBackStackImmediate()
+
         }
-        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Add Offer"
 
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recruiterAddOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterAddOffersViewModel::class.java)
+        recruiterViewModel = ViewModelProvider(requireActivity()).get(RecruiterViewModel::class.java)
+        candidateViewModel = ViewModelProvider(requireActivity()).get(CandidateViewModel::class.java)
 
-        recruiterAddOffersViewModel.responseAddOffer().observe(viewLifecycleOwner, {
+        recruiterViewModel.responseAddOffer().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it.message, LENGTH_LONG).show()
-                parentFragmentManager.popBackStackImmediate()
             }
         })
 
-        recruiterAddOffersViewModel.errorString().observe(viewLifecycleOwner, {
+        candidateViewModel.safeToVisitDomainOffers().observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let{safeToVisit->
+                if(safeToVisit){
+                    view.findNavController().navigate(R.id.back_to_offers_by_domain)
+                }
+            }
+        })
+
+        recruiterViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it, LENGTH_LONG).show()
@@ -106,7 +100,7 @@ class AddOfferFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Add Offer"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Add Offer"
     }
 
     private fun validateParameters() {
@@ -140,18 +134,10 @@ class AddOfferFragment : Fragment() {
                 .setMessage("Are you sure you want to float this offer?")
                 .setPositiveButton("Yes") { dialog, which ->
                     progressCircularLayout.visibility = View.VISIBLE
-                    recruiterAddOffersViewModel.addOffer(offerName, domainName!!, requirements, skills, expectation)
+                    recruiterViewModel.addOffer(offerName, requirements, skills, expectation)
                 }
                 .setNegativeButton("No") { dialog, which -> }
                 .create().show()
-    }
-
-    /*
-        Saving Domain Name already obtained during first call of onCreate()
-     */
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(DOMAIN_NAME, domainName)
     }
 
     /*
@@ -159,7 +145,7 @@ class AddOfferFragment : Fragment() {
      */
     private fun loadRecruiterDetails() {
         progressCircularLayout.visibility = View.VISIBLE
-        recruiterAddOffersViewModel.getLocalProfile()?.let {
+        recruiterViewModel.getLocalProfile()?.let {
             textViewName.setText(it.name)
             textViewCollege.setText(it.collegeName)
             textViewCourse.setText(it.course)

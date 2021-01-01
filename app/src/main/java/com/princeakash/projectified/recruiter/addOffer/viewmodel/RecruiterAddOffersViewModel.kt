@@ -11,11 +11,10 @@ import com.princeakash.projectified.MyApplication.Companion.handleError
 import com.princeakash.projectified.recruiter.RecruiterRepository
 import com.princeakash.projectified.recruiter.addOffer.model.BodyAddOffer
 import com.princeakash.projectified.recruiter.addOffer.model.ResponseAddOffer
-import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterExistingOffersViewModel
+import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterViewModel
 import com.princeakash.projectified.user.ProfileRepository
 import kotlinx.coroutines.launch
 import java.lang.Exception
-import java.util.*
 
 class RecruiterAddOffersViewModel(val app: Application): AndroidViewModel(app) {
 
@@ -27,6 +26,7 @@ class RecruiterAddOffersViewModel(val app: Application): AndroidViewModel(app) {
     //MutableLiveData variables of responses for all kinds of requests handled by RecruiterAddOffersViewModel
     //which can be put to observation in Activities/Fragments
     private val responseAddOffer : MutableLiveData<Event<ResponseAddOffer>> = MutableLiveData()
+    private val currentDomainName: MutableLiveData<String> = MutableLiveData()
     private val errorString: MutableLiveData<Event<String>> = MutableLiveData()
 
     //LiveData variables of responses for all kinds of requests handled by RecruiterAddOffersViewModel
@@ -34,17 +34,18 @@ class RecruiterAddOffersViewModel(val app: Application): AndroidViewModel(app) {
     fun responseAddOffer() : LiveData<Event<ResponseAddOffer>> = responseAddOffer
     fun errorString(): LiveData<Event<String>> = errorString
 
-    fun addOffer(offerName:String, domainName:String, requirements: String, skills: String, expectation: String){
+    fun addOffer(offerName:String, requirements: String, skills: String, expectation: String){
         val token = profileRepository.getToken()
         val recruiterID: String = profileRepository.getUserId()
         if(token == "") {
-            errorString.postValue(Event(RecruiterExistingOffersViewModel.INVALID_TOKEN))
+            errorString.postValue(Event(RecruiterViewModel.INVALID_TOKEN))
             return
         }
         if(recruiterID.equals("")){
             errorString.postValue(Event("Invalid User ID. Please log in again."))
             return
         }
+        val domainName = currentDomainName.value!!
         viewModelScope.launch {
             try {
                 val bodyAddOffer = BodyAddOffer(offerName, domainName, requirements, skills, expectation, recruiterID)
@@ -53,6 +54,10 @@ class RecruiterAddOffersViewModel(val app: Application): AndroidViewModel(app) {
                 handleError(e, errorString)
             }
         }
+    }
+
+    fun setDomain(domainName: String){
+        currentDomainName.postValue(domainName)
     }
 
     fun getLocalProfile() = profileRepository.getLocalProfile()

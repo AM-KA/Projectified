@@ -1,28 +1,26 @@
 package com.princeakash.projectified.recruiter.myOffers.view
 
-import android.app.Activity
-import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.Toast.LENGTH_LONG
-import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
 //import com.princeakash.projectified.CustomProgressBar
 import com.princeakash.projectified.R
 import com.princeakash.projectified.recruiter.myOffers.model.*
-import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterExistingOffersViewModel
+import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterViewModel
 import kotlinx.android.synthetic.main.frag_my_offer_details.view.*
 
 class MyOfferDetailsFragment() : Fragment() {
-
     //Views
     private lateinit var editTextOfferName: TextInputEditText
     private lateinit var editTextRequirements: TextInputEditText
@@ -36,20 +34,14 @@ class MyOfferDetailsFragment() : Fragment() {
     private lateinit var listener: CompoundButton.OnCheckedChangeListener
 
     //ViewModel
-    private lateinit var recruiterExistingOffersViewModel: RecruiterExistingOffersViewModel
-
-    //Offer Data
-    private var offerId: String = ""
-
-
+    private lateinit var recruiterViewModel: RecruiterViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
         val v = inflater.inflate(R.layout.frag_my_offer_details, container, false)
 
-        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Offer Details"
-
+        Log.d(TAG, "onCreateView: stating to create view")
         editTextOfferName = v.editTextOfferName
         editTextExpectations = v.editTextExpectation
         editTextSkills = v.editTextSkills
@@ -76,75 +68,100 @@ class MyOfferDetailsFragment() : Fragment() {
 
         listener = CompoundButton.OnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             run {
+                Log.d(TAG, "onCreateView: Running stuff")
                 progressCircularLayout.visibility = View.VISIBLE
-                recruiterExistingOffersViewModel.toggleVisibility(offerId, BodyToggleVisibility(isChecked))
+                recruiterViewModel.toggleVisibility(isChecked)
             }
         }
 
+        Log.d(TAG, "onCreateView: Returning view")
         return v
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
+        Log.d(TAG, "onViewCreated: ")
+        //recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
+        recruiterViewModel = ViewModelProvider(requireActivity()).get(RecruiterViewModel::class.java)
 
-        recruiterExistingOffersViewModel.responseGetOfferByIdRecruiter().observe(viewLifecycleOwner, {
+        /*recruiterExistingOffersViewModel.offerIdForDetails().observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let{ offerId->
+                Log.d("OffDetails", "onViewCreated: Beginning to fetch data")
+                progressCircularLayout.visibility = View.VISIBLE
+                recruiterExistingOffersViewModel.getOfferByIdRecruiter(offerId)
+            }
+        })*/
+        
+        recruiterViewModel.responseGetOfferByIdRecruiter().observe(viewLifecycleOwner, {
+            Log.d(TAG, "onViewCreated: Got the offer")
             populateViews(it)
             progressCircularLayout.visibility = View.INVISIBLE
         })
 
-        recruiterExistingOffersViewModel.responseToggleVisibility().observe(viewLifecycleOwner, {
+        recruiterViewModel.responseToggleVisibility().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it.message, LENGTH_LONG).show()
             }
         })
 
-        recruiterExistingOffersViewModel.responseUpdateOffer().observe(viewLifecycleOwner, {
+        recruiterViewModel.responseUpdateOffer().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
-                progressCircularLayout.visibility = View.INVISIBLE
+                //progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it.message, LENGTH_LONG).show()
-                fetchOfferDetails()
             }
         })
 
-        recruiterExistingOffersViewModel.responseDeleteOffer().observe(viewLifecycleOwner, {
+        recruiterViewModel.responseDeleteOffer().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it.message, LENGTH_LONG).show()
-                parentFragmentManager.popBackStackImmediate()
             }
         })
 
-        recruiterExistingOffersViewModel.errorString().observe(viewLifecycleOwner, {
+        recruiterViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it, LENGTH_LONG).show()
             }
         })
 
-        if (savedInstanceState == null) {
-            //First loadup of Fragment
-            offerId = requireArguments().getString(OFFER_ID)!!
-            fetchOfferDetails()
-        } else {
-            //Restore state
-            offerId = savedInstanceState.getString(OFFER_ID)!!
-        }
+        recruiterViewModel.safeToVisitCandidates().observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let{ safeToVisit->
+                if(safeToVisit){
+                    view.findNavController().navigate(R.id.offer_details_to_view_applicants)
+                }
+            }
+        })
+
+        recruiterViewModel.safeToVisitOfferList().observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let{ safeToVisit->
+                if(safeToVisit){
+                    view.findNavController().navigate(R.id.offer_details_to_my_offers)
+                }
+            }
+        })
     }
 
     override fun onResume() {
         super.onResume()
-        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Offer Details"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Offer Details"
     }
 
     private fun viewApplicants() {
-        val bundle = Bundle()
+        progressCircularLayout.visibility = View.VISIBLE
+        recruiterViewModel.getOfferApplicants()
+        /*val bundle = Bundle()
         bundle.putString(OFFER_ID, offerId)
         parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_offers, MyOfferApplicantsFragment::class.java, bundle, "MyOfferApplicantsFragment")
+        //childFragmentManager.beginTransaction()
+                //.replace(R.id.fragment_offers, MyOfferApplicantsFragment::class.java, bundle, "MyOfferApplicantsFragment")
+                .replace(R.id.fragment, MyOfferApplicantsFragment::class.java, bundle, "MyOfferApplicantsFragment")
                 .addToBackStack("MyOfferApplicants" + offerId)
-                .commit()
+                .commit()*/
+        /*val fragment = MyOfferApplicantsFragment()
+        fragment.arguments = bundle
+        StateManager.getInstance().showFragment(R.id.myOffersFragment, fragment)*/
     }
 
     private fun updateOffer() {
@@ -174,18 +191,8 @@ class MyOfferDetailsFragment() : Fragment() {
         val expectation = editTextExpectations.text.toString()
 
         progressCircularLayout.visibility = View.VISIBLE
-        val bodyUpdateOffer = BodyUpdateOffer(offerName, requirement, skills, expectation)
-        recruiterExistingOffersViewModel.updateOffer(offerId, bodyUpdateOffer)
-    }
 
-    private fun fetchOfferDetails() {
-        progressCircularLayout.visibility = View.VISIBLE
-        recruiterExistingOffersViewModel.getOfferByIdRecruiter(offerId)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(OFFER_ID, offerId)
+        recruiterViewModel.updateOffer(offerName, requirement, skills, expectation)
     }
 
     private fun populateViews(responseGetOfferByIdRecruiter: ResponseGetOfferByIdRecruiter) {
@@ -204,7 +211,7 @@ class MyOfferDetailsFragment() : Fragment() {
                 .setMessage("Are you sure you want to delete this offer? You cannot undo this action later.")
                 .setPositiveButton("Yes") { dialog, which ->
                     progressCircularLayout.visibility = View.VISIBLE
-                    recruiterExistingOffersViewModel.deleteOffer(offerId)
+                    recruiterViewModel.deleteOffer()
                 }
                 .setNegativeButton("No") { dialog, which -> }
                 .create().show()
@@ -212,5 +219,6 @@ class MyOfferDetailsFragment() : Fragment() {
 
     companion object {
         val OFFER_ID = "OfferId"
+        val TAG = "OfferDetails"
     }
 }

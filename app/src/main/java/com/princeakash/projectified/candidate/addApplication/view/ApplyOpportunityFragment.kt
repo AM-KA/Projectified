@@ -10,13 +10,13 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
-import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
-import com.princeakash.projectified.candidate.addApplication.viewModel.CandidateAddApplicationViewModel
+import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateViewModel
 import kotlinx.android.synthetic.main.frag_apply_opportunity_self.view.*
 
 
@@ -31,20 +31,10 @@ class ApplyOpportunityFragment : Fragment() {
     private lateinit var editTextResume: TextInputEditText
     private lateinit var buttonApply: Button
     private lateinit var buttonCancel: Button
-    private lateinit var offerId: String
     private lateinit var progressCircularLayout: RelativeLayout
-    private var code: Int = 0
 
     //ViewModels
-    private lateinit var candidateAddApplicationViewModel: CandidateAddApplicationViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        offerId = if (savedInstanceState == null)
-            requireArguments().getString(OFFER_IDC)!!
-        else
-            savedInstanceState.getString(OFFER_IDC)!!
-    }
+    private lateinit var candidateViewModel: CandidateViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -61,40 +51,37 @@ class ApplyOpportunityFragment : Fragment() {
         buttonCancel = view.buttonCancel
         progressCircularLayout = view.progress_circular_layout
         buttonApply.setOnClickListener {
-
             validateParameters()
         }
         buttonCancel.setOnClickListener {
-            /*parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_apply, HomeFragment::class.java, null, "HomeFragment")
-                    .addToBackStack(null)
-                    .commit()*/
-            parentFragmentManager.popBackStackImmediate()
+            view.findNavController().navigate(R.id.back_to_offers_by_domain)
         }
-
-        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Apply"
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        candidateAddApplicationViewModel = ViewModelProvider(requireParentFragment()).get(CandidateAddApplicationViewModel::class.java)
-        candidateAddApplicationViewModel.responseAddApplication().observe(viewLifecycleOwner, {
+        candidateViewModel = ViewModelProvider(requireActivity()).get(CandidateViewModel::class.java)
+        candidateViewModel.responseAddApplication().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it.message, LENGTH_LONG).show()
                 if(it.code.equals("200")){
-                    /*parentFragmentManager.beginTransaction()
-                            .replace(R.id.fragment_apply, HomeFragment::class.java, null, "HomeFragment")
-                            .addToBackStack(null)
-                            .commit()*/
-                    parentFragmentManager.popBackStackImmediate()
+                    view.findNavController().navigate(R.id.back_to_offers_by_domain)
                 }
             }
         })
 
-        candidateAddApplicationViewModel.errorString().observe(viewLifecycleOwner, {
+        candidateViewModel.safeToVisitDomainOffers().observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let{safeToVisit->
+                if(safeToVisit){
+                    view.findNavController().navigate(R.id.back_to_offers_by_domain)
+                }
+            }
+        })
+
+        candidateViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it, LENGTH_LONG).show()
@@ -105,7 +92,7 @@ class ApplyOpportunityFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Apply"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Apply Opportunity"
     }
 
     private fun validateParameters() {
@@ -125,7 +112,7 @@ class ApplyOpportunityFragment : Fragment() {
                 .setMessage("Are you sure you want to apply for this offer with the filled details?")
                 .setPositiveButton("Yes") { dialog, which ->
                     progressCircularLayout.visibility = View.VISIBLE
-                    candidateAddApplicationViewModel.addApplication(resume, previousWork, offerId)
+                    candidateViewModel.addApplication(resume, previousWork)
                 }
                 .setNegativeButton("No") { dialog, which -> }
                 .create().show()
@@ -133,20 +120,11 @@ class ApplyOpportunityFragment : Fragment() {
 
     private fun loadLocalProfile() {
         progressCircularLayout.visibility = View.VISIBLE
-        val profileModel = candidateAddApplicationViewModel.getLocalProfile()!!
+        val profileModel = candidateViewModel.getLocalProfile()!!
         textName.setText(profileModel.name)
         textCollege.setText(profileModel.collegeName)
         textCourse.setText(profileModel.course)
         textSemester.setText(profileModel.semester)
         progressCircularLayout.visibility = View.INVISIBLE
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(OFFER_IDC, offerId)
-    }
-
-    companion object {
-        val OFFER_IDC = "offerId"
     }
 }

@@ -1,6 +1,5 @@
 package com.princeakash.projectified.candidate.myApplications.view
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +9,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.myApplications.model.*
-import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateExistingApplicationViewModel
+import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateViewModel
 import kotlinx.android.synthetic.main.frag_myapplicationdetail.view.*
 
 class MyApplicationDetailsFragment : Fragment() {
@@ -35,10 +35,7 @@ class MyApplicationDetailsFragment : Fragment() {
     private lateinit var progressCircularLayout: RelativeLayout
 
     //ViewModels and Observable Objects
-    private lateinit var candidateExistingApplicationViewModel: CandidateExistingApplicationViewModel
-
-    //Application Data
-    private var applicationId: String? = null
+    private lateinit var candidateViewModel: CandidateViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.frag_myapplicationdetail, container, false)
@@ -56,40 +53,43 @@ class MyApplicationDetailsFragment : Fragment() {
         buttonDeleteApplication = v.buttonDeleteApplication
         buttonUpdateDetails = v.buttonUpdateDetails
         progressCircularLayout = v.progress_circular_layout
-
         return v
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        candidateExistingApplicationViewModel = ViewModelProvider(requireParentFragment()).get(CandidateExistingApplicationViewModel::class.java)
-        candidateExistingApplicationViewModel!!.responseGetApplicationDetailByIdCandidate().observe(viewLifecycleOwner, {
+        candidateViewModel = ViewModelProvider(requireActivity()).get(CandidateViewModel::class.java)
+        candidateViewModel.responseGetApplicationDetailByIdCandidate().observe(viewLifecycleOwner, {
             progressCircularLayout.visibility = View.INVISIBLE
             populateViews(it)
-
         })
 
 
-        candidateExistingApplicationViewModel!!.responseUpdateApplication().observe(viewLifecycleOwner, {
+        candidateViewModel.responseUpdateApplication().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-                fetchApplicationDetails()
             }
         })
 
 
-        candidateExistingApplicationViewModel!!.responseDeleteApplication().observe(viewLifecycleOwner, {
+        candidateViewModel.responseDeleteApplication().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-                parentFragmentManager.popBackStackImmediate()
             }
         })
 
+        candidateViewModel.safeToVisitApplicationList().observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let {safeToVisit->
+                if(safeToVisit){
+                    view.findNavController().navigate(R.id.details_to_my_applications_home)
+                }
+            }
+        })
 
-        candidateExistingApplicationViewModel!!.errorString().observe(viewLifecycleOwner, {
+        candidateViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
@@ -102,23 +102,11 @@ class MyApplicationDetailsFragment : Fragment() {
         buttonDeleteApplication?.setOnClickListener {
             deleteApplication()
         }
-
-        //(requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Application Details"
-
-        if (savedInstanceState == null) {
-            //First LoadUp of Fragment
-            applicationId = requireArguments().getString(APPLICATION_IDC)
-            fetchApplicationDetails()
-        } else {
-            //Restore state
-            //responseGetApplicationDetailsByIdCandidate = savedInstanceState.getSerializable(RESPONSE_GET_APPLICATIONS_DETAILS) as ResponseGetApplicationDetailsByIdCandidate
-            applicationId = savedInstanceState.getString(APPLICATION_IDC)
-        }
     }
 
     override fun onResume() {
         super.onResume()
-        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Application Details"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Application Details"
     }
 
     private fun updateOffer() {
@@ -135,19 +123,7 @@ class MyApplicationDetailsFragment : Fragment() {
         val resume = editTextResume!!.text!!.toString()
 
         progressCircularLayout.visibility = View.VISIBLE
-        val bodyUpdateApplication = BodyUpdateApplication(resume, previousWork)
-        candidateExistingApplicationViewModel!!.updateApplication(applicationId!!, bodyUpdateApplication)
-    }
-
-    private fun fetchApplicationDetails() {
-        //TODO:Start ProgressBar
-        progressCircularLayout.visibility = View.VISIBLE
-        applicationId?.let { candidateExistingApplicationViewModel!!.getApplicationDetailByIdCandidate(it) }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(APPLICATION_IDC, applicationId)
+        candidateViewModel!!.updateApplication(resume, previousWork)
     }
 
     private fun populateViews(it:ResponseGetApplicationDetailByIdCandidate) {
@@ -184,13 +160,9 @@ class MyApplicationDetailsFragment : Fragment() {
                 .setMessage("Are you sure you want to delete this application? You cannot undo this action later.")
                 .setPositiveButton("Yes") { dialog, which ->
                     progressCircularLayout.visibility = View.VISIBLE
-                    candidateExistingApplicationViewModel!!.deleteApplication(applicationId!!)
+                    candidateViewModel.deleteApplication()
                 }
                 .setNegativeButton("No") { dialog, which -> }
                 .create().show()
-    }
-
-    companion object {
-        const val APPLICATION_IDC = "applicationId"
     }
 }

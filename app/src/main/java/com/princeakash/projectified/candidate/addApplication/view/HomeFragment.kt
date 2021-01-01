@@ -1,16 +1,16 @@
 package com.princeakash.projectified.candidate.addApplication.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.princeakash.projectified.R
-import com.princeakash.projectified.candidate.addApplication.view.GetOffersByDomainFragment.Companion.DOMAIN_NAME
 import com.princeakash.projectified.candidate.addApplication.view.HomeAdapter.Companion.AI
 import com.princeakash.projectified.candidate.addApplication.view.HomeAdapter.Companion.ANDROID
 import com.princeakash.projectified.candidate.addApplication.view.HomeAdapter.Companion.CONTENT
@@ -21,12 +21,16 @@ import com.princeakash.projectified.candidate.addApplication.view.HomeAdapter.Co
 import com.princeakash.projectified.candidate.addApplication.view.HomeAdapter.Companion.WEB
 import com.princeakash.projectified.candidate.addApplication.view.HomeAdapter.HomeItem
 import com.princeakash.projectified.candidate.addApplication.view.HomeAdapter.HomeListener
+import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateViewModel
+import kotlinx.android.synthetic.main.frag_home.view.*
+
 //import java.util.*
 
 
 class HomeFragment : Fragment(), HomeListener {
 
     private lateinit var list: ArrayList<HomeItem>
+    private lateinit var candidateAddApplicationsViewModel: CandidateViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -44,29 +48,30 @@ class HomeFragment : Fragment(), HomeListener {
         list.add(HomeItem("Others", R.mipmap.misc, OTHERS))
         recyclerView.adapter = context?.let { HomeAdapter(list, it, this) }
         recyclerView.layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
-
-        val frag = parentFragmentManager.findFragmentByTag("GetOff")
-        if (frag != null) {
-            Log.d("Home", "onCreateView: got something")
-            parentFragmentManager.beginTransaction().remove(frag)
-        }
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        candidateAddApplicationsViewModel = ViewModelProvider(requireActivity()).get(CandidateViewModel::class.java)
+
+        candidateAddApplicationsViewModel.safeToVisitDomainOffers().observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let{safeToVisit->
+                if(safeToVisit){
+                    view.findNavController().navigate(R.id.home_to_offers_by_domain)
+                }
+            }
+        })
     }
 
     override fun onResume() {
         super.onResume()
-        (requireParentFragment().requireActivity() as AppCompatActivity).supportActionBar?.title = "Projectified"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Projectified"
     }
 
     override fun onDomainClick(position: Int) {
+        requireView().progress_circular_layout.visibility = View.VISIBLE
         val domainArg = list[position].domainArg
-        val bundle = Bundle()
-        bundle.putString(DOMAIN_NAME, domainArg)
-        parentFragmentManager.executePendingTransactions()
-        parentFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment_apply, GetOffersByDomainFragment::class.java, bundle, "GetOff")
-                .addToBackStack("GetOff")
-                .commit()
+        candidateAddApplicationsViewModel.getOffersByDomain(domainArg)
     }
 }
