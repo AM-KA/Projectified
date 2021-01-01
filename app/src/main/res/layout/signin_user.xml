@@ -83,8 +83,6 @@
             android:hint="@string/email"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:paddingLeft="15dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -105,8 +103,6 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:inputType="textPassword"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:paddingLeft="15dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 

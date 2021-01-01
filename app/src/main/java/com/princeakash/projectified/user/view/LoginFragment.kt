@@ -13,26 +13,8 @@ import com.princeakash.projectified.R
 //Parent Fragment for MyOffers Feature
 class LoginFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_password_reset_parent, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        if(savedInstanceState==null){
-            childFragmentManager
-                    .beginTransaction()
-                    .replace(
-                            R.id.fragment_password_reset_parent,
-                            LoginHomeFragment(),
-                            "LoginHomeFragment"
-                    )
-                    .commit()
-        }
     }
 }

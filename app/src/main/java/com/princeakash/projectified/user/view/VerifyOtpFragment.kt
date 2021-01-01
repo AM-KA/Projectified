@@ -13,6 +13,7 @@ import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.tasks.TaskExecutors
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
@@ -33,23 +34,16 @@ import java.util.concurrent.TimeUnit
 class VerifyOtpFragment : Fragment() {
 
 
-    private var EditTextOtp: AutoCompleteTextView? = null
-    private var VerifyButton: Button? = null
-    private var progressCircularLayout: RelativeLayout? = null
+    private lateinit var EditTextOtp: AutoCompleteTextView
+    private lateinit var VerifyButton: Button
+    private lateinit var progressCircularLayout: RelativeLayout
     private lateinit var auth: FirebaseAuth
-    private lateinit var bodySignUp: BodySignUp
     private lateinit var responseLogin: ResponseLogin
     private lateinit var profileViewModel: ProfileViewModel
 
     private var storedVerificationId: String? = null
     private var resendToken: PhoneAuthProvider.ForceResendingToken? = null
     private var phoneno: String? = null
-    private var ph: String? = null
-    private var code: String? = null
-    private var name: String? = null
-    private var email: String? = null
-    private var password: String? = null
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -59,19 +53,11 @@ class VerifyOtpFragment : Fragment() {
         EditTextOtp = v.editTextOtp
         VerifyButton = v.VerifyButton
         progressCircularLayout = v.progress_circular_layout
-        progressCircularLayout?.visibility = View.INVISIBLE
+        progressCircularLayout.visibility = View.INVISIBLE
 
-
-        ph = requireArguments().getString(PHONE_NO)
-        name = requireArguments().getString(N_AME)
-        email = requireArguments().getString(E_MAIL)
-        password = requireArguments().getString(PASS_WORD)
-        phoneno = "+91" + ph
-        sendVerificationCodetoTheUser()
-
-        VerifyButton?.setOnClickListener {
-            if (EditTextOtp?.text!!.isNotEmpty()) {
-                val credential = PhoneAuthProvider.getCredential(storedVerificationId!!, EditTextOtp?.text.toString())
+        VerifyButton.setOnClickListener {
+            if (EditTextOtp.text!!.isNotEmpty()) {
+                val credential = PhoneAuthProvider.getCredential(storedVerificationId!!, EditTextOtp.text.toString())
                 signInWithPhoneAuthCredential(credential)
             } else {
                 Toast.makeText(context, "Enter the OTP Received", Toast.LENGTH_SHORT).show()
@@ -86,23 +72,30 @@ class VerifyOtpFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
+
+        profileViewModel.bodySignUp().observe(viewLifecycleOwner, {
+            if(savedInstanceState==null){
+                //First loadup, hence safe to send OTP
+                phoneno = "+91" + it.phone
+                sendVerificationCodetoTheUser()
+            }
+        })
+
         profileViewModel.responseSignUp().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
                 if (it.code == 200) {
-                    val bodyLogin = LoginBody(email = bodySignUp.email, password = bodySignUp.password)
-                    profileViewModel.logIn(bodyLogin)
+                    profileViewModel.logIn()
                 }
             }
         })
+
         profileViewModel.responseLogin().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 responseLogin = it
                 if (responseLogin.code != 200) {
                     Toast.makeText(context, responseLogin.message, Toast.LENGTH_SHORT).show()
                 } else {
-                    /*profileViewModel.setToken(responseLogin.token!!)
-                    profileViewModel.setLoginStatus(true)*/
                     if (responseLogin.profileCompleted!!) {
                         //Navigate to main activity
                         val intent = Intent(activity, MainActivity::class.java)
@@ -110,9 +103,6 @@ class VerifyOtpFragment : Fragment() {
                         requireActivity().finish()
                     } else {
                         //Navigate to CreateProfileFragment
-                        /*responseLogin.profile?.let {
-                            profileViewModel.setLocalProfile(it)
-                        }*/
                         val bundle = Bundle()
                         bundle.putString(USER_NAME, responseLogin.name)
                         val intent = Intent(requireActivity(), CreateProfileActivity::class.java)
@@ -152,10 +142,6 @@ class VerifyOtpFragment : Fragment() {
 
             Log.d(TAG, "onVerificationCompleted:$credential")
             Toast.makeText(context, "Verification Completed", Toast.LENGTH_SHORT).show()
-            /*parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_initial, CreateProfileFragment::class.java, null, "Create Profile")
-                    .addToBackStack(null)
-                    .commit()*/
             signInWithPhoneAuthCredential(credential)
         }
 
@@ -168,10 +154,7 @@ class VerifyOtpFragment : Fragment() {
             } else if (e is FirebaseTooManyRequestsException) {
                 Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
             }
-            parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_initial, SignUp::class.java, null, "verify")
-                    //.addToBackStack(null)
-                    .commit()
+            findNavController().navigate(R.id.verify_otp_to_home)
         }
 
         override fun onCodeSent(
@@ -201,15 +184,7 @@ class VerifyOtpFragment : Fragment() {
 
                         val user = task.result?.user
 
-
-                        bodySignUp = BodySignUp(name!!, email!!, ph!!, password!!)
-                        profileViewModel.signUp(bodySignUp)
-
-
-                        /*parentFragmentManager.beginTransaction()
-                                .replace(R.id.fragment_initial, CreateProfileFragment::class.java, null, "verify")
-                                //.addToBackStack(null)
-                                .commit()*/
+                        profileViewModel.signUp()
 
                         // ...
                     } else {
@@ -222,13 +197,6 @@ class VerifyOtpFragment : Fragment() {
                         }
                     }
                 }
-    }
-
-    companion object {
-        val PHONE_NO = "phoneno"
-        val E_MAIL = "email"
-        val N_AME = "name"
-        val PASS_WORD = "password"
     }
 }
 

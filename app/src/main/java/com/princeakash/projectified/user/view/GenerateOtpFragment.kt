@@ -14,6 +14,7 @@ import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.Fragment
 
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.princeakash.projectified.MainActivity
 import com.princeakash.projectified.R
 import com.princeakash.projectified.user.model.BodyGenerateOtp
@@ -23,8 +24,8 @@ import kotlinx.android.synthetic.main.fragment_generate_otp.view.*
 
 class GenerateOtpFragment : Fragment() {
 
-    private var editTextEmail: EditText? = null
-    private var buttonGenerateOtp: Button? = null
+    private lateinit var editTextEmail: EditText
+    private lateinit var buttonGenerateOtp: Button
     private lateinit var progressCircularLayout: RelativeLayout
 
     //View Models and Fun Objects
@@ -37,7 +38,7 @@ class GenerateOtpFragment : Fragment() {
         buttonGenerateOtp = v.buttonGenerateOtp
         progressCircularLayout = v.progress_circular_layout
 
-        buttonGenerateOtp?.setOnClickListener {
+        buttonGenerateOtp.setOnClickListener {
             generateOtp()
         }
 
@@ -54,10 +55,7 @@ class GenerateOtpFragment : Fragment() {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, responseGenerateOtp.message, LENGTH_LONG).show()
                 if (responseGenerateOtp.code.equals("200")) {
-                    parentFragmentManager.beginTransaction()
-                            .replace(R.id.fragment_password_reset_parent, VerifyEmailOtpFragment(), "VerifyEmailOtpFragment")
-                            .addToBackStack(null)
-                            .commit()
+                    findNavController().navigate(R.id.generate_to_verify_otp)
                 }
             }
         })

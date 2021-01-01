@@ -161,10 +161,19 @@ class ProfileRepository(retrofit: Retrofit, app: MyApplication) {
             editor.commit()
         } catch(e: Exception){
             e.printStackTrace()
-            //TODO:Show "Error in token" Toast
         }
     }
 
+    fun getDarkModeStatus() = sharedPref.getBoolean("NightMode", false)
+
+    fun setDarkModeStatus(status: Boolean){
+        try{
+            editor.putBoolean("NightMode",status)
+            editor.commit()
+        }catch (e: Exception){
+            e.printStackTrace()
+        }
+    }
     companion object{
         val SHARED_PREFS = "SharedPreferences"
         val LOGIN_STATUS = "LoginStatus"

@@ -27,6 +27,7 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
     private var responseGenerateOtp: MutableLiveData<Event<ResponseGenerateOtp>> = MutableLiveData()
     private var responseVerifyOtp: MutableLiveData<Event<ResponseVerifyOtp>> = MutableLiveData()
     private var responseUpdatePassword: MutableLiveData<Event<ResponseUpdatePassword>> = MutableLiveData()
+    private var bodySignUp: MutableLiveData<BodySignUp> = MutableLiveData()
 
     //LiveData for all exposed data
     fun errorString(): LiveData<Event<String>> = errorString
@@ -38,6 +39,7 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
     fun responseGenerateOtp(): LiveData<Event<ResponseGenerateOtp>> = responseGenerateOtp
     fun responseVerifyOtp(): LiveData<Event<ResponseVerifyOtp>> = responseVerifyOtp
     fun responseUpdatePassword(): LiveData<Event<ResponseUpdatePassword>> = responseUpdatePassword
+    fun bodySignUp(): LiveData<BodySignUp> = bodySignUp
 
     //Functions based on *Local Data*
     fun getLoginStatus() = profileRepository.getLoginStatus()
@@ -51,12 +53,14 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
     private fun setUserId(id: String) = profileRepository.setUserId(id)
     fun getResetEmail() = profileRepository.getResetEmail()
     fun setResetEmail(email: String) = profileRepository.setResetEmail(email)
+    fun getDarkModeStatus() = profileRepository.getDarkModeStatus()
+    fun setDarkModeStatus(status: Boolean) = profileRepository.setDarkModeStatus(status)
 
     //Functions based on *Server Data*
-    fun signUp(bodySignUp: BodySignUp) {
+    fun signUp() {
         viewModelScope.launch {
             try {
-                val response = profileRepository.signUp(bodySignUp)
+                val response = profileRepository.signUp(bodySignUp.value!!)
                 if (response.code == 200)
                     responseSignUp.postValue(Event(response))
                 else
@@ -67,10 +71,12 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun checksignup(bodySignUp: BodySignUp) {
+    fun checksignup(name:String, email:String, phone:String, password: String) {
         viewModelScope.launch {
             try {
-                val response = profileRepository.checksignUp(bodySignUp)
+                val body = BodySignUp(name, email, phone, password)
+                bodySignUp.postValue(body)
+                val response = profileRepository.checksignUp(body)
                 if (response.code == 200)
                     responsecheckSignUp.postValue((Event(response)))
                 else if (response.code == 300)
@@ -83,9 +89,10 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun logIn(bodyLogin: LoginBody) {
+    fun logIn(email: String, password: String) {
         viewModelScope.launch {
             try {
+                val bodyLogin: LoginBody = LoginBody(email, password)
                 val response = profileRepository.logIn(bodyLogin)
                 setLoginStatus(true)
                 if (response.code == 200) {
@@ -111,20 +118,35 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /*fun createProfile(bodyCreateProfile: BodyCreateProfile) {
+    //Special logIn function for SignUp-Login flow
+    fun logIn() {
         viewModelScope.launch {
             try {
-                val token = profileRepository.getToken()
-                val userID = profileRepository.getUserId()
-                bodyCreateProfile.userID = userID
-                Log.d(TAG, "createProfile: $token")
-                responseCreateProfile.postValue(Event(profileRepository.createProfile("Bearer $token", bodyCreateProfile)))
-                setLocalProfile(ProfileModel(bodyCreateProfile))
+                val bodyLogin: LoginBody = LoginBody(bodySignUp.value!!.email, bodySignUp.value!!.password)
+                val response = profileRepository.logIn(bodyLogin)
+                setLoginStatus(true)
+                if (response.code == 200) {
+                    setToken(response.token!!)
+                    setUserId(response._id!!)
+                    Log.d(TAG, "logIn: " + response.token)
+                    //TODO: Fetch Profile and save to SharedPreference using setLocalProfile()
+                    if (response.profileCompleted!!) {
+                        //val bodyProfile = response.profile
+                        val bodyProfile = ProfileModel(response.name!!,
+                                response.collegeName!!, response.course!!,
+                                response.semester!!, response.languages!!,
+                                response.interest1!!, response.interest2!!,
+                                response.interest3!!, response.description!!,
+                                response.hobbies!!)
+                        setLocalProfile(bodyProfile!!)
+                    }
+                }
+                responseLogin.postValue(Event(response))
             } catch (e: Exception) {
                 handleError(e, errorString)
             }
         }
-    }*/
+    }
 
     fun updateProfile(bodyUpdateProfile: BodyUpdateProfile) {
         viewModelScope.launch {

@@ -14,20 +14,4 @@ class SignUpFrgment :Fragment() {
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_blanksignup, container, false)
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        if(savedInstanceState==null){
-            childFragmentManager
-                    .beginTransaction()
-                    .replace(
-                            R.id.fragment_signup,
-                            SignUp::class.java,
-                            null,
-                            "MyApplicationFragment"
-                    )
-                    .addToBackStack(null)
-                    .commit()
-        }
-    }
 }

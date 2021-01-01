@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.Toast.LENGTH_LONG
-import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.Fragment
 
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.princeakash.projectified.MainActivity
 import com.princeakash.projectified.R
 import com.princeakash.projectified.user.model.LoginBody
@@ -27,8 +27,7 @@ class LoginHomeFragment : Fragment() {
     private var textViewForgotPassword: TextView? = null
     private lateinit var progressCircularLayout: RelativeLayout
 
-    //View Models and Fun Objects
-
+    //ViewModels
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var responseLogin: ResponseLogin
 
@@ -65,6 +64,7 @@ class LoginHomeFragment : Fragment() {
                         //Navigate to main activity
                         val intent = Intent(activity, MainActivity::class.java)
                         startActivity(intent)
+                        requireActivity().finish()
                     } else {
                         //Navigate to CreateProfileFragment
                         val bundle = Bundle()
@@ -98,15 +98,11 @@ class LoginHomeFragment : Fragment() {
         val password = editTextPassword!!.text!!.toString()
 
         progressCircularLayout.visibility = View.VISIBLE
-        val logIn = LoginBody(email, password)
-        profileViewModel.logIn(logIn)
+        profileViewModel.logIn(email, password)
     }
 
     fun takeToGenerateOtp(){
-        parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_password_reset_parent, GenerateOtpFragment(), "GenerateOtp")
-                .addToBackStack("GenerateOtp")
-                .commit()
+        findNavController().navigate(R.id.home_to_generate_otp)
     }
 
     companion object {

@@ -3,6 +3,7 @@ package com.princeakash.projectified
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -35,9 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recruiterViewModel: RecruiterViewModel
     private lateinit var candidateViewModel: CandidateViewModel
     private lateinit var switch: SwitchMaterial
-    private val appSettingsPrefs : SharedPreferences = getSharedPreferences("AppSettingPrefs" ,0)
-    private  val isNightModeOn : Boolean = appSettingsPrefs.getBoolean("NightMode", false)
-    private  val sharedPrefsEdit: SharedPreferences.Editor  = appSettingsPrefs.edit()
+    private var isNightModeOn: Boolean = false;
 
     var toolbar: Toolbar? = null
     var drawerLayout: DrawerLayout? = null
@@ -47,21 +46,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.kk)
         window?.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
+        recruiterViewModel = ViewModelProvider(this).get(RecruiterViewModel::class.java)
+        candidateViewModel = ViewModelProvider(this).get(CandidateViewModel::class.java)
+        recruiterViewModel.issueInitialInstructions()
+        candidateViewModel.issueInitialInstructions()
 
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         drawerLayout = findViewById(R.id.drawerLayout)
         navigationView = findViewById(R.id.navigation_view)
+        //switch = navigationView.findViewById(R.id.switch_darkMode)
         navigationView.setNavigationItemSelectedListener { onNavigationItemSelected(it) }
 
         bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigation)
 
         navController = findNavController(R.id.fragment)
-        //val appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.myOffersFragment, R.id.myApplicationsFragment, R.id.profileFragment))
-        //setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNavigationView.setupWithNavController(navController)
+
+        switch = navigationView.getHeaderView(0).findViewById(R.id.switch_darkMode)
 
         val drawerToggle: ActionBarDrawerToggle = object : ActionBarDrawerToggle(
                 this,
@@ -75,29 +80,23 @@ class MainActivity : AppCompatActivity() {
         drawerLayout?.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
+        isNightModeOn = profileViewModel.getDarkModeStatus()
+
         if(isNightModeOn) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        }else
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
+        }else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
 
         switch.setOnClickListener(View.OnClickListener {
             if (isNightModeOn) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                sharedPrefsEdit.putBoolean("NightMode",false)
-                sharedPrefsEdit.apply()
+                profileViewModel.setDarkModeStatus(false);
             }else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                sharedPrefsEdit.putBoolean("NightMode",true)
-                sharedPrefsEdit.apply()
+                profileViewModel.setDarkModeStatus(true)
             }
         })
-
-
-        recruiterViewModel = ViewModelProvider(this).get(RecruiterViewModel::class.java)
-        candidateViewModel = ViewModelProvider(this).get(CandidateViewModel::class.java)
-        recruiterViewModel.issueInitialInstructions()
-        candidateViewModel.issueInitialInstructions()
     }
 
    fun onNavigationItemSelected(menuItem: MenuItem): Boolean {

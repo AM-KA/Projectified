@@ -14,6 +14,7 @@ import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.Fragment
 
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.princeakash.projectified.MainActivity
 import com.princeakash.projectified.R
 import com.princeakash.projectified.user.viewmodel.ProfileViewModel
@@ -22,9 +23,9 @@ import kotlinx.android.synthetic.main.fragment_password_reset.view.*
 
 class PasswordResetFragment : Fragment() {
 
-    private var editTextPassword: EditText? = null
-    private var editTextConfirmPassword: EditText? = null
-    private var buttonSetPassword: Button? = null
+    private lateinit var editTextPassword: EditText
+    private lateinit var editTextConfirmPassword: EditText
+    private lateinit var buttonSetPassword: Button
     private lateinit var progressCircularLayout: RelativeLayout
 
     //View Models and Fun Objects
@@ -37,7 +38,7 @@ class PasswordResetFragment : Fragment() {
         buttonSetPassword = v.buttonSetPassword
         progressCircularLayout = v.progress_circular_layout
 
-        buttonSetPassword?.setOnClickListener {
+        buttonSetPassword.setOnClickListener {
             setNewPassword()
         }
 
@@ -54,10 +55,7 @@ class PasswordResetFragment : Fragment() {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, responseUpdatePassword.message, LENGTH_LONG).show()
                 if(responseUpdatePassword.code == "200"){
-                    parentFragmentManager.beginTransaction()
-                            .replace(R.id.fragment_password_reset_parent, LoginHomeFragment(), "LoginHome")
-                            .addToBackStack(null)
-                            .commit()
+                    findNavController().navigate(R.id.reset_to_login)
                 }
             }
         })

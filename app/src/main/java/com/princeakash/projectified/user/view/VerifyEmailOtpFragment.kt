@@ -14,6 +14,7 @@ import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.Fragment
 
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.princeakash.projectified.MainActivity
 import com.princeakash.projectified.R
 import com.princeakash.projectified.user.model.LoginBody
@@ -26,8 +27,8 @@ import kotlinx.android.synthetic.main.verifyphoneno.view.*
 
 class VerifyEmailOtpFragment : Fragment() {
 
-    private var editTextOtp: EditText? = null
-    private var verifyButton: Button? = null
+    private lateinit var editTextOtp: EditText
+    private lateinit var verifyButton: Button
     private lateinit var progressCircularLayout: RelativeLayout
 
     //View Models and Fun Objects
@@ -39,7 +40,7 @@ class VerifyEmailOtpFragment : Fragment() {
         verifyButton = v.VerifyButton
         progressCircularLayout = v.progress_circular_layout
 
-        verifyButton?.setOnClickListener {
+        verifyButton.setOnClickListener {
             verifyOtp()
         }
 
@@ -57,10 +58,7 @@ class VerifyEmailOtpFragment : Fragment() {
                 Toast.makeText(context, responseVerifyOtp.message, LENGTH_LONG).show()
                 if (responseVerifyOtp.code.equals("200")){
                     //TODO: Allowed to update password
-                    parentFragmentManager.beginTransaction()
-                            .replace(R.id.fragment_password_reset_parent, PasswordResetFragment(), "PasswordReset")
-                            .addToBackStack(null)
-                            .commit()
+                    findNavController().navigate(R.id.verify_to_password_reset)
                 }
             }
         })

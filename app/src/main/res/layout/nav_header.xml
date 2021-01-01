@@ -5,6 +5,7 @@
     android:layout_height="176dp"
     android:background="@color/colorPrimary"    android:gravity="bottom"
     android:padding="16dp"
+    android:fitsSystemWindows="true"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
@@ -25,7 +26,7 @@
         android:id="@+id/switch_darkMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="250dp"
+        android:layout_gravity="end"
         android:text="@string/darkmode"
         android:textColor="#303030"
         android:textStyle="bold"/>
