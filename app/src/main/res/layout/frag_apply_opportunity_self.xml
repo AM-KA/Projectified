@@ -62,7 +62,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="10dp"
-                android:background="@drawable/bg_stroke"
                 android:id="@+id/cardViewPersonalDetails"
                 app:layout_constraintStart_toStartOf="@id/guideline1"
                 app:layout_constraintEnd_toEndOf="@id/guideline2"

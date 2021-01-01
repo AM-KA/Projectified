@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintGuide_percent="0.85" />
+            app:layout_constraintGuide_percent="1" />
 
 
         <androidx.constraintlayout.widget.Guideline
@@ -48,12 +48,6 @@
             app:layout_constraintGuide_percent="0.05" />
 
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.95" />
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -189,6 +183,8 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:indeterminateTint="@android:color/white" />
+
+
         </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

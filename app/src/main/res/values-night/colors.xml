@@ -3,7 +3,7 @@
     <color name="colorPrimary">#FF8500</color>
     <color name="colorPrimaryDark">#FFB000</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="bg">#f0f0f0</color>
+    <color name="bg">#303030</color>
     <color name="bg2">#ffffff</color>
     <color name ="chipsSelected">#ADD8E6</color>
     <color name="cardHighlighter">#FAFAFA</color>

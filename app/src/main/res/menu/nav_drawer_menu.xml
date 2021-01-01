@@ -2,10 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-           android:icon="@mipmap/baseline_games_black_18dp"
-            android:id="@+id/MyOffers"
-            android:title="My Offers" />
-        <item
             android:icon="@mipmap/baseline_feedback_black_18dp"
             android:id="@+id/Help"
             android:title="Help and Feedback" />

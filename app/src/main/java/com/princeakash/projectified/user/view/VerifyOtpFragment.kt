@@ -74,9 +74,10 @@ class VerifyOtpFragment : Fragment() {
                 val credential = PhoneAuthProvider.getCredential(storedVerificationId!!, EditTextOtp?.text.toString())
                 signInWithPhoneAuthCredential(credential)
             } else {
-                Toast.makeText(context, "Please type OTP number", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Enter the OTP Received", Toast.LENGTH_SHORT).show()
             }
         }
+
         return v
     }
 
@@ -106,6 +107,7 @@ class VerifyOtpFragment : Fragment() {
                         //Navigate to main activity
                         val intent = Intent(activity, MainActivity::class.java)
                         startActivity(intent)
+                        requireActivity().finish()
                     } else {
                         //Navigate to CreateProfileFragment
                         /*responseLogin.profile?.let {
@@ -119,7 +121,9 @@ class VerifyOtpFragment : Fragment() {
                         requireActivity().finish()
                     }
                 }
+
             }
+
         })
         profileViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
@@ -128,6 +132,7 @@ class VerifyOtpFragment : Fragment() {
         })
 
     }
+
 
     private fun sendVerificationCodetoTheUser() {
 

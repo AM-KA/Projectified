@@ -4,10 +4,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.FrameLayout
-import androidx.activity.viewModels
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -17,6 +17,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.princeakash.projectified.Faq.FaqActivity
 import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateViewModel
 
@@ -28,19 +29,23 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     lateinit var bottomNavigationView: BottomNavigationView
-    private lateinit var profileViewModel: ProfileViewModel
+    private lateinit var profileViewModel:ProfileViewModel
     private lateinit var navigationView: NavigationView
-    private lateinit var fragments: FrameLayout
 
     private lateinit var recruiterViewModel: RecruiterViewModel
     private lateinit var candidateViewModel: CandidateViewModel
+    private lateinit var switch: SwitchMaterial
+    private val appSettingsPrefs : SharedPreferences = getSharedPreferences("AppSettingPrefs" ,0)
+    private  val isNightModeOn : Boolean = appSettingsPrefs.getBoolean("NightMode", false)
+    private  val sharedPrefsEdit: SharedPreferences.Editor  = appSettingsPrefs.edit()
 
     var toolbar: Toolbar? = null
     var drawerLayout: DrawerLayout? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.kk)
-        fragments = findViewById(R.id.fragment)
         window?.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
 
@@ -69,6 +74,25 @@ class MainActivity : AppCompatActivity() {
         drawerToggle.isDrawerIndicatorEnabled = true
         drawerLayout?.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
+
+        if(isNightModeOn) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }else
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+
+        switch.setOnClickListener(View.OnClickListener {
+            if (isNightModeOn) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                sharedPrefsEdit.putBoolean("NightMode",false)
+                sharedPrefsEdit.apply()
+            }else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                sharedPrefsEdit.putBoolean("NightMode",true)
+                sharedPrefsEdit.apply()
+            }
+        })
+
 
         recruiterViewModel = ViewModelProvider(this).get(RecruiterViewModel::class.java)
         candidateViewModel = ViewModelProvider(this).get(CandidateViewModel::class.java)
