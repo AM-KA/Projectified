@@ -53,6 +53,8 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
     private fun setUserId(id: String) = profileRepository.setUserId(id)
     fun getResetEmail() = profileRepository.getResetEmail()
     fun setResetEmail(email: String) = profileRepository.setResetEmail(email)
+    fun getUserName() = profileRepository.getUserName()
+    fun setUserName(name: String) = profileRepository.setUserName(name)
     fun getDarkModeStatus() = profileRepository.getDarkModeStatus()
     fun setDarkModeStatus(status: Boolean) = profileRepository.setDarkModeStatus(status)
 
@@ -98,10 +100,9 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
                 if (response.code == 200) {
                     setToken(response.token!!)
                     setUserId(response._id!!)
-                    Log.d(TAG, "logIn: " + response.token)
-                    //TODO: Fetch Profile and save to SharedPreference using setLocalProfile()
+                    setProfileStatus(response.profileCompleted!!)
+                    setUserName(response.name!!)
                     if (response.profileCompleted!!) {
-                        //val bodyProfile = response.profile
                         val bodyProfile = ProfileModel(response.name!!,
                                 response.collegeName!!, response.course!!,
                                 response.semester!!, response.languages!!,
@@ -128,10 +129,9 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
                 if (response.code == 200) {
                     setToken(response.token!!)
                     setUserId(response._id!!)
-                    Log.d(TAG, "logIn: " + response.token)
-                    //TODO: Fetch Profile and save to SharedPreference using setLocalProfile()
+                    setProfileStatus(response.profileCompleted!!)
+                    setUserName(response.name!!)
                     if (response.profileCompleted!!) {
-                        //val bodyProfile = response.profile
                         val bodyProfile = ProfileModel(response.name!!,
                                 response.collegeName!!, response.course!!,
                                 response.semester!!, response.languages!!,

@@ -103,8 +103,7 @@ class CreateProfileActivity : AppCompatActivity() {
     }
 
     private fun prepareName() {
-        val bundle = intent.getBundleExtra(LoginHomeFragment.USER_NAME)
-        userName = bundle.getString(LoginHomeFragment.USER_NAME)!!
+        userName = profileViewModel.getUserName()
         editTextName.setText(userName)
         //userId = bundle.getString(LoginFragment.USER_ID)!!
     }

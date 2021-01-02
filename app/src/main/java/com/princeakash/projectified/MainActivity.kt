@@ -50,8 +50,8 @@ class MainActivity : AppCompatActivity() {
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         recruiterViewModel = ViewModelProvider(this).get(RecruiterViewModel::class.java)
         candidateViewModel = ViewModelProvider(this).get(CandidateViewModel::class.java)
-        recruiterViewModel.issueInitialInstructions()
-        candidateViewModel.issueInitialInstructions()
+        //recruiterViewModel.issueInitialInstructions()
+        //candidateViewModel.issueInitialInstructions()
 
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)

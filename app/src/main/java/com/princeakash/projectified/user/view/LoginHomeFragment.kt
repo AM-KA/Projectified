@@ -67,10 +67,7 @@ class LoginHomeFragment : Fragment() {
                         requireActivity().finish()
                     } else {
                         //Navigate to CreateProfileFragment
-                        val bundle = Bundle()
-                        bundle.putString(USER_NAME, responseLogin.name)
                         val intent = Intent(requireActivity(), CreateProfileActivity::class.java)
-                        intent.putExtra(USER_NAME, bundle)
                         startActivity(intent)
                         requireActivity().finish()
                     }

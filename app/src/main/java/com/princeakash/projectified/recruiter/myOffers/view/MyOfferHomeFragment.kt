@@ -40,14 +40,6 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
 
         recruiterViewModel = ViewModelProvider(requireActivity()).get(RecruiterViewModel::class.java)
 
-        /*recruiterExistingOffersViewModel.fetchMyOffersInstruction().observe(viewLifecycleOwner, {
-            it.getContentIfNotHandled()?.let {
-                Log.d("MyOffers", "onViewCreated: Start fetching my offers")
-                progress_circular_layout.visibility = View.VISIBLE
-                recruiterExistingOffersViewModel.getOffersByRecruiter()
-            }
-        })*/
-
         recruiterViewModel.safeToVisitOfferDetails().observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let { safeToVisit ->
                 if (safeToVisit) {
@@ -71,6 +63,15 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
             }
         })
 
+        if(savedInstanceState==null){
+            //view.progress_circular_layout.visibility = View.VISIBLE
+            //recruiterViewModel.getOffersByRecruiter()
+            Log.d(TAG, "onViewCreated: savedInstanceState is null")
+            view.progress_circular_layout.visibility = View.VISIBLE
+            recruiterViewModel.loadUpOfferList()
+            //recruiterViewModel.falsifySafeToVisitOfferList()
+        }
+        
         view.recyclerViewOffers.apply {
             layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
             setHasFixedSize(true)
@@ -80,12 +81,15 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
     override fun onResume() {
         super.onResume()
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "My Offers"
-
     }
 
     override fun onViewDetailsClick(itemPosition: Int) {
         progress_circular_layout.visibility = View.VISIBLE
         val offId = offerList.get(itemPosition).offer_id
         recruiterViewModel.getOfferByIdRecruiter(offId)
+    }
+    
+    companion object{
+        private const val TAG = "MyOfferHomeFragment"
     }
 }

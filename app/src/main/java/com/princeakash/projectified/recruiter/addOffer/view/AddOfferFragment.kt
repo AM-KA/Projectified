@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateViewModel
@@ -62,7 +63,7 @@ class AddOfferFragment : Fragment() {
         }
 
         buttonCancel.setOnClickListener {
-
+            findNavController().navigate(R.id.back_to_offers_by_domain)
         }
 
         return view

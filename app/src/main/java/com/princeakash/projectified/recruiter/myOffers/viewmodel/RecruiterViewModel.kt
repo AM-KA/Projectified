@@ -130,7 +130,23 @@ class RecruiterViewModel(val app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             try {
                 responseUpdateOffer.postValue(Event(recruiterRepository.updateOffer("Bearer $token", offerID, bodyUpdateOffer)))
-                getOfferByIdRecruiter(currentOfferId.value!!)
+                refreshOffer()
+            } catch(e: Exception){
+                handleError(e, errorString)
+            }
+        }
+    }
+
+    fun refreshOffer(){
+        val token = profileRepository.getToken()
+        if(token.equals("")) {
+            errorString.postValue(Event(INVALID_TOKEN))
+            return
+        }
+        viewModelScope.launch {
+            try {
+                val offerID = currentOfferId.value!!
+                responseGetOfferByIdRecruiter.postValue(recruiterRepository.getOfferByIdRecruiter("Bearer $token", offerID))
             } catch(e: Exception){
                 handleError(e, errorString)
             }
@@ -165,6 +181,7 @@ class RecruiterViewModel(val app: Application) : AndroidViewModel(app) {
             try {
                 responseDeleteOffer.postValue(Event(recruiterRepository.deleteOffer("Bearer $token", offerID)))
                 getOffersByRecruiter()
+                currentOfferId.postValue(OFFERS_REQUESTED_ONCE.toString())
             } catch(e: Exception){
                 handleError(e, errorString)
             }
@@ -315,9 +332,32 @@ class RecruiterViewModel(val app: Application) : AndroidViewModel(app) {
         currentDomainName.postValue(domainName)
     }
 
+    //Falsification functions
+    fun falsifySafeToVisitOfferList(){
+        safeToVisitOfferList.postValue(Event(false))
+    }
+
+    fun falsifySafeToVisitOfferDetails(){
+        safeToVisitOfferDetails.postValue(Event(false))
+    }
+
+    fun falsifySafeToVisitCandidates(){
+        safeToVisitCandidates.postValue(Event(false))
+    }
+
+    fun falsifySafeToVisitCandidateDetails(){
+        safeToVisitCandidateDetails.postValue(Event(false))
+    }
+
+    fun loadUpOfferList(){
+        if(currentOfferId.value == null || currentOfferId.value != OFFERS_REQUESTED_ONCE.toString())
+            getOffersByRecruiter()
+    }
+
     fun getLocalProfile() = profileRepository.getLocalProfile()
 
     companion object {
         const val INVALID_TOKEN = "Invalid Token. Please log in again.";
+        const val OFFERS_REQUESTED_ONCE = 0;
     }
 }

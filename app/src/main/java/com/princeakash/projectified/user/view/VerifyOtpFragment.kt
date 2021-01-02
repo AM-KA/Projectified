@@ -125,7 +125,7 @@ class VerifyOtpFragment : Fragment() {
 
 
     private fun sendVerificationCodetoTheUser() {
-
+        auth = Firebase.auth
         phoneno?.let {
             val options = PhoneAuthOptions.newBuilder(auth)
                     .setPhoneNumber(it)

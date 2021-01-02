@@ -164,6 +164,26 @@ class ProfileRepository(retrofit: Retrofit, app: MyApplication) {
         }
     }
 
+    fun getUserName() : String {
+        try{
+            return sharedPref.getString(USER_NAME, "")!!
+        } catch (e: Exception){
+            e.printStackTrace()
+            return ""
+        }
+    }
+
+    fun setUserName(name : String){
+        try{
+            if(name.equals(""))
+                throw NullPointerException()
+            editor.putString(USER_NAME, name)
+            editor.commit()
+        } catch(e: Exception){
+            e.printStackTrace()
+        }
+    }
+
     fun getDarkModeStatus() = sharedPref.getBoolean("NightMode", false)
 
     fun setDarkModeStatus(status: Boolean){
@@ -180,6 +200,7 @@ class ProfileRepository(retrofit: Retrofit, app: MyApplication) {
         val USER_ID = "UserId"
         val USER_PROFILE = "UserProfile"
         val USER_TOKEN = "UserToken"
+        val USER_NAME = "UserName"
         val PROFILE_STATUS = "ProfileStatus"
         val RESET_EMAIL = "ResetUserEmail"
     }

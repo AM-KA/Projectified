@@ -53,7 +53,7 @@ class MyOfferDetailsFragment() : Fragment() {
         progressCircularLayout = v.progress_circular_layout
 
         buttonDelist.setOnClickListener {
-            progressCircularLayout.visibility = View.VISIBLE
+            //progressCircularLayout.visibility = View.VISIBLE
             delistOpportunity()
         }
 
@@ -141,6 +141,10 @@ class MyOfferDetailsFragment() : Fragment() {
                 }
             }
         })
+
+        if(savedInstanceState==null){
+            //recruiterViewModel.falsifySafeToVisitOfferDetails()
+        }
     }
 
     override fun onResume() {
