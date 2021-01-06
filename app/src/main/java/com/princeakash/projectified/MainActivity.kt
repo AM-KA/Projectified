@@ -3,7 +3,6 @@ package com.princeakash.projectified
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -20,9 +19,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.princeakash.projectified.Faq.FaqActivity
-import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateViewModel
 
-import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterViewModel
+import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 import com.princeakash.projectified.user.viewmodel.ProfileViewModel
 
 
@@ -33,8 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var profileViewModel:ProfileViewModel
     private lateinit var navigationView: NavigationView
 
-    private lateinit var recruiterViewModel: RecruiterViewModel
-    private lateinit var candidateViewModel: CandidateViewModel
+    private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
     private lateinit var switch: SwitchMaterial
     private var isNightModeOn: Boolean = false;
 
@@ -48,17 +45,14 @@ class MainActivity : AppCompatActivity() {
         window?.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
 
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
-        recruiterViewModel = ViewModelProvider(this).get(RecruiterViewModel::class.java)
-        candidateViewModel = ViewModelProvider(this).get(CandidateViewModel::class.java)
-        //recruiterViewModel.issueInitialInstructions()
-        //candidateViewModel.issueInitialInstructions()
-
+        recruiterCandidateViewModel = ViewModelProvider(this).get(RecruiterCandidateViewModel::class.java)
+        recruiterCandidateViewModel.issueInitialInstructions()
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         drawerLayout = findViewById(R.id.drawerLayout)
         navigationView = findViewById(R.id.navigation_view)
-        //switch = navigationView.findViewById(R.id.switch_darkMode)
+
         navigationView.setNavigationItemSelectedListener { onNavigationItemSelected(it) }
 
         bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigation)

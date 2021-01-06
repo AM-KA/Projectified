@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.myApplications.model.ApplicationCardModelCandidate
 import com.princeakash.projectified.candidate.myApplications.model.MyApplicationsAdapter
-import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateViewModel
+import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 import kotlinx.android.synthetic.main.frag_myapplication.*
 import kotlinx.android.synthetic.main.frag_myapplication.view.*
 
@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.frag_myapplication.view.*
 class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplicationsListener {
 
     lateinit var progressCircularLayout: RelativeLayout
-    private lateinit var candidateViewModel: CandidateViewModel
+    private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
     var applicationList: ArrayList<ApplicationCardModelCandidate> = ArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -42,15 +42,15 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        candidateViewModel= ViewModelProvider(requireActivity()).get(CandidateViewModel::class.java)
+        recruiterCandidateViewModel= ViewModelProvider(requireActivity()).get(RecruiterCandidateViewModel::class.java)
 
-        candidateViewModel.responseGetApplicationByCandidate().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.responseGetApplicationByCandidate().observe(viewLifecycleOwner, {
             applicationList = it?.applications as ArrayList<ApplicationCardModelCandidate>
             recyclerViewApplications.adapter = MyApplicationsAdapter(applicationList, this@MyApplicationsHomeFragment)
             progressCircularLayout.visibility = View.INVISIBLE
         })
 
-        candidateViewModel.safeToVisitApplicationDetails().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.safeToVisitApplicationDetails().observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let{safeToVisit->
                 if(safeToVisit){
                     view.findNavController().navigate(R.id.home_to_application_details)
@@ -58,12 +58,16 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
             }
         })
 
-        candidateViewModel.errorString().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(this@MyApplicationsHomeFragment.context,it, LENGTH_LONG).show()
             }
         })
+
+        if(savedInstanceState==null){
+            recruiterCandidateViewModel.nullifySafeToVisitApplicationsList()
+        }
     }
 
     override fun onResume() {
@@ -74,6 +78,6 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
     override fun onViewDetailsClick(itemPosition: Int) {
         progressCircularLayout.visibility = View.VISIBLE
         val applicationID = applicationList.get(itemPosition).application_id
-        candidateViewModel.getApplicationDetailByIdCandidate(applicationID)
+        recruiterCandidateViewModel.getApplicationDetailByIdCandidate(applicationID)
     }
 }

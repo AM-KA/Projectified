@@ -16,13 +16,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.princeakash.projectified.R
 import com.princeakash.projectified.recruiter.myOffers.model.ApplicantCardModel
 import com.princeakash.projectified.recruiter.myOffers.model.MyOfferApplicantsAdapter
-import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterViewModel
+import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 import kotlinx.android.synthetic.main.frag_candidates.*
 import kotlinx.android.synthetic.main.frag_candidates.view.*
 
 class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferApplicantListener {
 
-    private lateinit var recruiterViewModel: RecruiterViewModel
+    private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
     private var applicantList: ArrayList<ApplicantCardModel>? = ArrayList()
     private lateinit var progressCircularLayout: RelativeLayout
 
@@ -42,42 +42,46 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recruiterViewModel = ViewModelProvider(requireActivity()).get(RecruiterViewModel::class.java)
+        recruiterCandidateViewModel = ViewModelProvider(requireActivity()).get(RecruiterCandidateViewModel::class.java)
 
-        recruiterViewModel.responseGetOfferApplicants().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.responseGetOfferApplicants().observe(viewLifecycleOwner, {
             applicantList = it.applicants as ArrayList<ApplicantCardModel>
             recyclerViewApplicants.adapter = MyOfferApplicantsAdapter(applicantList, this)
             progressCircularLayout.visibility = View.INVISIBLE
         })
 
-        recruiterViewModel.errorString().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it, LENGTH_LONG).show()
             }
         })
 
-        recruiterViewModel.responseMarkAsSeen().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.responseMarkAsSeen().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { iter ->
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, iter.message, LENGTH_LONG).show()
             }
         })
 
-        recruiterViewModel.responseMarkAsSelected().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.responseMarkAsSelected().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { iter ->
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, iter.message, LENGTH_LONG).show()
             }
         })
 
-        recruiterViewModel.safeToVisitCandidateDetails().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.safeToVisitCandidateDetails().observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let{safeToVisit ->
                 if(safeToVisit){
                     view.findNavController().navigate(R.id.candidates_to_candidate_details)
                 }
             }
         })
+
+        if(savedInstanceState==null){
+            recruiterCandidateViewModel.nullifySafeToVisitCandidateList()
+        }
     }
 
     override fun onResume() {
@@ -87,7 +91,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
 
     override fun onViewDetailsClick(itemPosition: Int) {
         val applicationID = applicantList!!.get(itemPosition).application_id
-        recruiterViewModel.getApplicationById(applicationID)
+        recruiterCandidateViewModel.getApplicationById(applicationID)
     }
 
     override fun onSeenClick(itemPosition: Int) {
@@ -95,7 +99,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
         val application_id = applicantList!!.get(itemPosition).application_id
         val currentStatus = applicantList!!.get(itemPosition).is_Seen
         progressCircularLayout.visibility = View.VISIBLE
-        recruiterViewModel.markSeen(application_id, !currentStatus)
+        recruiterCandidateViewModel.markSeen(application_id, !currentStatus)
     }
 
     override fun onSelectedClick(itemPosition: Int) {
@@ -103,7 +107,7 @@ class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferAp
         val application_id = applicantList!!.get(itemPosition).application_id
         val currentStatus = applicantList!!.get(itemPosition).is_Selected
         progressCircularLayout.visibility = View.VISIBLE
-        recruiterViewModel.markSelected(application_id, !currentStatus)
+        recruiterCandidateViewModel.markSelected(application_id, !currentStatus)
     }
 
     companion object {

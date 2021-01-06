@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.addApplication.model.ResponseGetOfferById
-import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateViewModel
+import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 import kotlinx.android.synthetic.main.frag_apply_opportunity_view.view.*
 
 class GetOfferDetailsCandidateFragment : Fragment() {
@@ -31,7 +31,7 @@ class GetOfferDetailsCandidateFragment : Fragment() {
     private lateinit var progressCircularLayout: RelativeLayout
 
     //View Models and Observable Objects
-    private lateinit var candidateViewModel: CandidateViewModel
+    private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.frag_apply_opportunity_view, container, false)
@@ -52,13 +52,13 @@ class GetOfferDetailsCandidateFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        candidateViewModel = ViewModelProvider(requireActivity()).get(CandidateViewModel::class.java)
+        recruiterCandidateViewModel = ViewModelProvider(requireActivity()).get(RecruiterCandidateViewModel::class.java)
 
-        candidateViewModel.responseGetOfferById().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.responseGetOfferById().observe(viewLifecycleOwner, {
             populateViews(it)
         })
 
-        candidateViewModel.errorString().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it, Toast.LENGTH_LONG).show()
@@ -75,6 +75,10 @@ class GetOfferDetailsCandidateFragment : Fragment() {
         buttonCancelOpportunity.setOnClickListener()
         {
             view.findNavController().navigate(R.id.back_to_offers_by_domain)
+        }
+
+        if(savedInstanceState==null){
+            recruiterCandidateViewModel.nullifySafeToVisitDomainOfferDetails()
         }
     }
 

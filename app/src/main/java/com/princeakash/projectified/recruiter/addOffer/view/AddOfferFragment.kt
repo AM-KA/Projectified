@@ -18,8 +18,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
-import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateViewModel
-import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterViewModel
+import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 import kotlinx.android.synthetic.main.frag_float_opportunity.view.*
 
 class AddOfferFragment : Fragment() {
@@ -38,8 +37,8 @@ class AddOfferFragment : Fragment() {
     private lateinit var buttonCancel: Button
 
     //ViewModels
-    private lateinit var recruiterViewModel: RecruiterViewModel
-    private lateinit var candidateViewModel: CandidateViewModel
+    private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
+    //private lateinit var recruiterCandidateViewModel: CandidateViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -71,17 +70,16 @@ class AddOfferFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recruiterViewModel = ViewModelProvider(requireActivity()).get(RecruiterViewModel::class.java)
-        candidateViewModel = ViewModelProvider(requireActivity()).get(CandidateViewModel::class.java)
+        this.recruiterCandidateViewModel = ViewModelProvider(requireActivity()).get(RecruiterCandidateViewModel::class.java)
 
-        recruiterViewModel.responseAddOffer().observe(viewLifecycleOwner, {
+        this.recruiterCandidateViewModel.responseAddOffer().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it.message, LENGTH_LONG).show()
             }
         })
 
-        candidateViewModel.safeToVisitDomainOffers().observe(viewLifecycleOwner, {
+        this.recruiterCandidateViewModel.safeToVisitDomainOffers().observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let{safeToVisit->
                 if(safeToVisit){
                     view.findNavController().navigate(R.id.back_to_offers_by_domain)
@@ -89,7 +87,7 @@ class AddOfferFragment : Fragment() {
             }
         })
 
-        recruiterViewModel.errorString().observe(viewLifecycleOwner, {
+        this.recruiterCandidateViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it, LENGTH_LONG).show()
@@ -135,7 +133,7 @@ class AddOfferFragment : Fragment() {
                 .setMessage("Are you sure you want to float this offer?")
                 .setPositiveButton("Yes") { dialog, which ->
                     progressCircularLayout.visibility = View.VISIBLE
-                    recruiterViewModel.addOffer(offerName, requirements, skills, expectation)
+                    this.recruiterCandidateViewModel.addOffer(offerName, requirements, skills, expectation)
                 }
                 .setNegativeButton("No") { dialog, which -> }
                 .create().show()
@@ -146,7 +144,7 @@ class AddOfferFragment : Fragment() {
      */
     private fun loadRecruiterDetails() {
         progressCircularLayout.visibility = View.VISIBLE
-        recruiterViewModel.getLocalProfile()?.let {
+        this.recruiterCandidateViewModel.getLocalProfile()?.let {
             textViewName.setText(it.name)
             textViewCollege.setText(it.collegeName)
             textViewCourse.setText(it.course)

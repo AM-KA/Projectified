@@ -16,8 +16,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
-import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateViewModel
+import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 import kotlinx.android.synthetic.main.frag_apply_opportunity_self.view.*
+import java.net.URL
 
 
 class ApplyOpportunityFragment : Fragment() {
@@ -34,7 +35,7 @@ class ApplyOpportunityFragment : Fragment() {
     private lateinit var progressCircularLayout: RelativeLayout
 
     //ViewModels
-    private lateinit var candidateViewModel: CandidateViewModel
+    private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -62,8 +63,8 @@ class ApplyOpportunityFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        candidateViewModel = ViewModelProvider(requireActivity()).get(CandidateViewModel::class.java)
-        candidateViewModel.responseAddApplication().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel = ViewModelProvider(requireActivity()).get(RecruiterCandidateViewModel::class.java)
+        recruiterCandidateViewModel.responseAddApplication().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it.message, LENGTH_LONG).show()
@@ -73,7 +74,7 @@ class ApplyOpportunityFragment : Fragment() {
             }
         })
 
-        candidateViewModel.safeToVisitDomainOffers().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.safeToVisitDomainOffers().observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let{safeToVisit->
                 if(safeToVisit){
                     view.findNavController().navigate(R.id.back_to_offers_by_domain)
@@ -81,7 +82,7 @@ class ApplyOpportunityFragment : Fragment() {
             }
         })
 
-        candidateViewModel.errorString().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it, LENGTH_LONG).show()
@@ -101,18 +102,26 @@ class ApplyOpportunityFragment : Fragment() {
             return
         }
         if (editTextResume.text.isNullOrEmpty()) {
-            editTextResume.error = "Enter Resume."
+            editTextResume.error = "Enter resume link."
             return
         }
 
         val previousWork = editTextPreviousWork.text.toString()
         val resume = editTextResume.text.toString()
+
+        try{
+            val uri = URL(resume).toURI()
+        }catch (e: Exception){
+            editTextResume.error = "Enter a valid URL."
+            return
+        }
+
         AlertDialog.Builder(requireContext())
                 .setTitle("Confirm Application")
                 .setMessage("Are you sure you want to apply for this offer with the filled details?")
                 .setPositiveButton("Yes") { dialog, which ->
                     progressCircularLayout.visibility = View.VISIBLE
-                    candidateViewModel.addApplication(resume, previousWork)
+                    recruiterCandidateViewModel.addApplication(resume, previousWork)
                 }
                 .setNegativeButton("No") { dialog, which -> }
                 .create().show()
@@ -120,7 +129,7 @@ class ApplyOpportunityFragment : Fragment() {
 
     private fun loadLocalProfile() {
         progressCircularLayout.visibility = View.VISIBLE
-        val profileModel = candidateViewModel.getLocalProfile()!!
+        val profileModel = recruiterCandidateViewModel.getLocalProfile()!!
         textName.setText(profileModel.name)
         textCollege.setText(profileModel.collegeName)
         textCourse.setText(profileModel.course)

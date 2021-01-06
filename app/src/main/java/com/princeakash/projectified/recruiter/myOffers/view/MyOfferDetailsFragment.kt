@@ -17,7 +17,7 @@ import com.google.android.material.textfield.TextInputEditText
 //import com.princeakash.projectified.CustomProgressBar
 import com.princeakash.projectified.R
 import com.princeakash.projectified.recruiter.myOffers.model.*
-import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterViewModel
+import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 import kotlinx.android.synthetic.main.frag_my_offer_details.view.*
 
 class MyOfferDetailsFragment() : Fragment() {
@@ -34,7 +34,7 @@ class MyOfferDetailsFragment() : Fragment() {
     private lateinit var listener: CompoundButton.OnCheckedChangeListener
 
     //ViewModel
-    private lateinit var recruiterViewModel: RecruiterViewModel
+    private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -70,7 +70,7 @@ class MyOfferDetailsFragment() : Fragment() {
             run {
                 Log.d(TAG, "onCreateView: Running stuff")
                 progressCircularLayout.visibility = View.VISIBLE
-                recruiterViewModel.toggleVisibility(isChecked)
+                recruiterCandidateViewModel.toggleVisibility(isChecked)
             }
         }
 
@@ -82,51 +82,42 @@ class MyOfferDetailsFragment() : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated: ")
         //recruiterExistingOffersViewModel = ViewModelProvider(requireParentFragment()).get(RecruiterExistingOffersViewModel::class.java)
-        recruiterViewModel = ViewModelProvider(requireActivity()).get(RecruiterViewModel::class.java)
-
-        /*recruiterExistingOffersViewModel.offerIdForDetails().observe(viewLifecycleOwner, {
-            it.getContentIfNotHandled()?.let{ offerId->
-                Log.d("OffDetails", "onViewCreated: Beginning to fetch data")
-                progressCircularLayout.visibility = View.VISIBLE
-                recruiterExistingOffersViewModel.getOfferByIdRecruiter(offerId)
-            }
-        })*/
+        recruiterCandidateViewModel = ViewModelProvider(requireActivity()).get(RecruiterCandidateViewModel::class.java)
         
-        recruiterViewModel.responseGetOfferByIdRecruiter().observe(viewLifecycleOwner, {
-            Log.d(TAG, "onViewCreated: Got the offer")
+        recruiterCandidateViewModel.responseGetOfferByIdRecruiter().observe(viewLifecycleOwner, {
             populateViews(it)
             progressCircularLayout.visibility = View.INVISIBLE
         })
 
-        recruiterViewModel.responseToggleVisibility().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.responseToggleVisibility().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it.message, LENGTH_LONG).show()
             }
         })
 
-        recruiterViewModel.responseUpdateOffer().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.responseUpdateOffer().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 //progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it.message, LENGTH_LONG).show()
             }
         })
 
-        recruiterViewModel.responseDeleteOffer().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.responseDeleteOffer().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it.message, LENGTH_LONG).show()
             }
         })
 
-        recruiterViewModel.errorString().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it, LENGTH_LONG).show()
             }
         })
 
-        recruiterViewModel.safeToVisitCandidates().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.safeToVisitCandidates().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{ safeToVisit->
                 if(safeToVisit){
                     view.findNavController().navigate(R.id.offer_details_to_view_applicants)
@@ -134,7 +125,7 @@ class MyOfferDetailsFragment() : Fragment() {
             }
         })
 
-        recruiterViewModel.safeToVisitOfferList().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.safeToVisitOfferList().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{ safeToVisit->
                 if(safeToVisit){
                     view.findNavController().navigate(R.id.offer_details_to_my_offers)
@@ -143,7 +134,7 @@ class MyOfferDetailsFragment() : Fragment() {
         })
 
         if(savedInstanceState==null){
-            //recruiterViewModel.falsifySafeToVisitOfferDetails()
+            recruiterCandidateViewModel.nullifySafeToVisitOfferDetails()
         }
     }
 
@@ -154,18 +145,7 @@ class MyOfferDetailsFragment() : Fragment() {
 
     private fun viewApplicants() {
         progressCircularLayout.visibility = View.VISIBLE
-        recruiterViewModel.getOfferApplicants()
-        /*val bundle = Bundle()
-        bundle.putString(OFFER_ID, offerId)
-        parentFragmentManager.beginTransaction()
-        //childFragmentManager.beginTransaction()
-                //.replace(R.id.fragment_offers, MyOfferApplicantsFragment::class.java, bundle, "MyOfferApplicantsFragment")
-                .replace(R.id.fragment, MyOfferApplicantsFragment::class.java, bundle, "MyOfferApplicantsFragment")
-                .addToBackStack("MyOfferApplicants" + offerId)
-                .commit()*/
-        /*val fragment = MyOfferApplicantsFragment()
-        fragment.arguments = bundle
-        StateManager.getInstance().showFragment(R.id.myOffersFragment, fragment)*/
+        recruiterCandidateViewModel.getOfferApplicants()
     }
 
     private fun updateOffer() {
@@ -196,7 +176,7 @@ class MyOfferDetailsFragment() : Fragment() {
 
         progressCircularLayout.visibility = View.VISIBLE
 
-        recruiterViewModel.updateOffer(offerName, requirement, skills, expectation)
+        recruiterCandidateViewModel.updateOffer(offerName, requirement, skills, expectation)
     }
 
     private fun populateViews(responseGetOfferByIdRecruiter: ResponseGetOfferByIdRecruiter) {
@@ -215,7 +195,7 @@ class MyOfferDetailsFragment() : Fragment() {
                 .setMessage("Are you sure you want to delete this offer? You cannot undo this action later.")
                 .setPositiveButton("Yes") { dialog, which ->
                     progressCircularLayout.visibility = View.VISIBLE
-                    recruiterViewModel.deleteOffer()
+                    recruiterCandidateViewModel.deleteOffer()
                 }
                 .setNegativeButton("No") { dialog, which -> }
                 .create().show()

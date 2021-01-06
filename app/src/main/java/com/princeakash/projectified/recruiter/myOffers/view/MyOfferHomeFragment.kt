@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.princeakash.projectified.R
 import com.princeakash.projectified.recruiter.myOffers.model.OfferCardModelRecruiter
 import com.princeakash.projectified.recruiter.myOffers.model.MyOffersAdapter
-import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterViewModel
+import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 import kotlinx.android.synthetic.main.frag_my_offers.*
 import kotlinx.android.synthetic.main.frag_my_offers.view.*
 
@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.frag_my_offers.view.*
 class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
 
     //ViewModel
-    private lateinit var recruiterViewModel: RecruiterViewModel
+    private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
 
     //Offer List for RecyclerView
     var offerList: ArrayList<OfferCardModelRecruiter> = ArrayList()
@@ -38,9 +38,9 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recruiterViewModel = ViewModelProvider(requireActivity()).get(RecruiterViewModel::class.java)
+        recruiterCandidateViewModel = ViewModelProvider(requireActivity()).get(RecruiterCandidateViewModel::class.java)
 
-        recruiterViewModel.safeToVisitOfferDetails().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.safeToVisitOfferDetails().observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let { safeToVisit ->
                 if (safeToVisit) {
                     Log.d("OFFERHOME", "onViewCreated: Its ok to visit offer details")
@@ -50,13 +50,13 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
             }
         })
 
-        recruiterViewModel.responseGetOffersByRecruiter().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.responseGetOffersByRecruiter().observe(viewLifecycleOwner, {
             offerList = it.offers as ArrayList<OfferCardModelRecruiter>
             view.progress_circular_layout.visibility = View.INVISIBLE
             view.recyclerViewOffers.adapter = MyOffersAdapter(offerList, this@MyOfferHomeFragment)
         })
 
-        recruiterViewModel.errorString().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let{
                 requireView().progress_circular_layout.visibility = View.INVISIBLE
                 Toast.makeText(this@MyOfferHomeFragment.context, it, LENGTH_LONG).show()
@@ -64,14 +64,9 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
         })
 
         if(savedInstanceState==null){
-            //view.progress_circular_layout.visibility = View.VISIBLE
-            //recruiterViewModel.getOffersByRecruiter()
-            Log.d(TAG, "onViewCreated: savedInstanceState is null")
-            view.progress_circular_layout.visibility = View.VISIBLE
-            recruiterViewModel.loadUpOfferList()
-            //recruiterViewModel.falsifySafeToVisitOfferList()
+            recruiterCandidateViewModel.nullifySafeToVisitOfferList()
         }
-        
+
         view.recyclerViewOffers.apply {
             layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
             setHasFixedSize(true)
@@ -86,7 +81,7 @@ class MyOfferHomeFragment() : Fragment(), MyOffersAdapter.MyOffersListener {
     override fun onViewDetailsClick(itemPosition: Int) {
         progress_circular_layout.visibility = View.VISIBLE
         val offId = offerList.get(itemPosition).offer_id
-        recruiterViewModel.getOfferByIdRecruiter(offId)
+        recruiterCandidateViewModel.getOfferByIdRecruiter(offId)
     }
     
     companion object{

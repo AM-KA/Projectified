@@ -13,8 +13,9 @@ import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.myApplications.model.*
-import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateViewModel
+import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 import kotlinx.android.synthetic.main.frag_myapplicationdetail.view.*
+import java.net.URL
 
 class MyApplicationDetailsFragment : Fragment() {
 
@@ -35,7 +36,7 @@ class MyApplicationDetailsFragment : Fragment() {
     private lateinit var progressCircularLayout: RelativeLayout
 
     //ViewModels and Observable Objects
-    private lateinit var candidateViewModel: CandidateViewModel
+    private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.frag_myapplicationdetail, container, false)
@@ -59,14 +60,14 @@ class MyApplicationDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        candidateViewModel = ViewModelProvider(requireActivity()).get(CandidateViewModel::class.java)
-        candidateViewModel.responseGetApplicationDetailByIdCandidate().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel = ViewModelProvider(requireActivity()).get(RecruiterCandidateViewModel::class.java)
+        recruiterCandidateViewModel.responseGetApplicationDetailByIdCandidate().observe(viewLifecycleOwner, {
             progressCircularLayout.visibility = View.INVISIBLE
             populateViews(it)
         })
 
 
-        candidateViewModel.responseUpdateApplication().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.responseUpdateApplication().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
@@ -74,14 +75,14 @@ class MyApplicationDetailsFragment : Fragment() {
         })
 
 
-        candidateViewModel.responseDeleteApplication().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.responseDeleteApplication().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
             }
         })
 
-        candidateViewModel.safeToVisitApplicationList().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.safeToVisitApplicationList().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {safeToVisit->
                 if(safeToVisit){
                     view.findNavController().navigate(R.id.details_to_my_applications_home)
@@ -89,7 +90,7 @@ class MyApplicationDetailsFragment : Fragment() {
             }
         })
 
-        candidateViewModel.errorString().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
@@ -101,6 +102,10 @@ class MyApplicationDetailsFragment : Fragment() {
         }
         buttonDeleteApplication?.setOnClickListener {
             deleteApplication()
+        }
+
+        if(savedInstanceState==null){
+            recruiterCandidateViewModel.nullifySafeToVisitApplicationDetails()
         }
     }
 
@@ -122,8 +127,15 @@ class MyApplicationDetailsFragment : Fragment() {
         val previousWork = editTextPreviousWork!!.text!!.toString()
         val resume = editTextResume!!.text!!.toString()
 
+        try{
+            val uri = URL(resume).toURI()
+        }catch (e: Exception){
+            editTextResume.error = "Enter a valid URL."
+            return
+        }
+
         progressCircularLayout.visibility = View.VISIBLE
-        candidateViewModel!!.updateApplication(resume, previousWork)
+        recruiterCandidateViewModel!!.updateApplication(resume, previousWork)
     }
 
     private fun populateViews(it:ResponseGetApplicationDetailByIdCandidate) {
@@ -160,7 +172,7 @@ class MyApplicationDetailsFragment : Fragment() {
                 .setMessage("Are you sure you want to delete this application? You cannot undo this action later.")
                 .setPositiveButton("Yes") { dialog, which ->
                     progressCircularLayout.visibility = View.VISIBLE
-                    candidateViewModel.deleteApplication()
+                    recruiterCandidateViewModel.deleteApplication()
                 }
                 .setNegativeButton("No") { dialog, which -> }
                 .create().show()

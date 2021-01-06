@@ -1,5 +1,7 @@
 package com.princeakash.projectified.recruiter.myOffers.view
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,13 +16,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.princeakash.projectified.R
 import com.princeakash.projectified.recruiter.myOffers.model.ResponseGetApplicationByIdRecruiter
-import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterViewModel
+import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 import kotlinx.android.synthetic.main.frag_candidate_details_recruiter.view.*
 
 class MyOfferApplicationFragment : Fragment() {
 
     //ViewModel and Necessary LiveData Observer objects
-    private lateinit var recruiterViewModel: RecruiterViewModel
+    private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
     private var responseGetApplicationByIdRecruiter: ResponseGetApplicationByIdRecruiter? = null
     private lateinit var progressCircularLayout: RelativeLayout
 
@@ -48,27 +50,38 @@ class MyOfferApplicationFragment : Fragment() {
         imageViewSeen = v.imageViewSeen
         imageViewSelected = v.imageViewSelected
         progressCircularLayout = v.progress_circular_layout
+
+        textViewResume.setOnClickListener {
+            try {
+                val uri = Uri.parse(textViewResume.text.toString())
+                startActivity(Intent(Intent.ACTION_VIEW, uri))
+            }catch (e:Exception){
+                e.printStackTrace()
+                Toast.makeText(context, "Sorry, the Resume URL is not valid.", LENGTH_LONG).show()
+            }
+        }
+
         return v
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recruiterViewModel = ViewModelProvider(requireActivity()).get(RecruiterViewModel::class.java)
+        recruiterCandidateViewModel = ViewModelProvider(requireActivity()).get(RecruiterCandidateViewModel::class.java)
 
-        recruiterViewModel.responseGetApplicationById().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.responseGetApplicationById().observe(viewLifecycleOwner, {
             responseGetApplicationByIdRecruiter = it
             populateViews(it)
         })
 
-        recruiterViewModel.errorString().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.errorString().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, it, LENGTH_LONG).show()
             }
         })
 
-        recruiterViewModel.responseMarkAsSeen().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.responseMarkAsSeen().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 //Take action as per response
@@ -78,7 +91,7 @@ class MyOfferApplicationFragment : Fragment() {
             }
         })
 
-        recruiterViewModel.responseMarkAsSelected().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.responseMarkAsSelected().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
                 progressCircularLayout.visibility = View.INVISIBLE
                 //Take action as per response
@@ -131,7 +144,7 @@ class MyOfferApplicationFragment : Fragment() {
             if (it.application != null)
                 status = it.application?.is_Seen!!
             progressCircularLayout.visibility = View.VISIBLE
-            recruiterViewModel.markSeen(!status)
+            recruiterCandidateViewModel.markSeen(null, !status)
         }
     }
 
@@ -141,7 +154,7 @@ class MyOfferApplicationFragment : Fragment() {
             if (it.application != null)
                 status = it.application?.is_Selected!!
             progressCircularLayout.visibility = View.VISIBLE
-            recruiterViewModel.markSelected(!status)
+            recruiterCandidateViewModel.markSelected(null, !status)
         }
     }
 

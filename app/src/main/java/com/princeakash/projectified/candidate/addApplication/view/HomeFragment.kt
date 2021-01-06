@@ -21,7 +21,7 @@ import com.princeakash.projectified.candidate.addApplication.view.HomeAdapter.Co
 import com.princeakash.projectified.candidate.addApplication.view.HomeAdapter.Companion.WEB
 import com.princeakash.projectified.candidate.addApplication.view.HomeAdapter.HomeItem
 import com.princeakash.projectified.candidate.addApplication.view.HomeAdapter.HomeListener
-import com.princeakash.projectified.candidate.myApplications.viewModel.CandidateViewModel
+import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 import kotlinx.android.synthetic.main.frag_home.view.*
 
 //import java.util.*
@@ -30,7 +30,7 @@ import kotlinx.android.synthetic.main.frag_home.view.*
 class HomeFragment : Fragment(), HomeListener {
 
     private lateinit var list: ArrayList<HomeItem>
-    private lateinit var candidateAddApplicationsViewModel: CandidateViewModel
+    private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -53,9 +53,9 @@ class HomeFragment : Fragment(), HomeListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        candidateAddApplicationsViewModel = ViewModelProvider(requireActivity()).get(CandidateViewModel::class.java)
+        recruiterCandidateViewModel = ViewModelProvider(requireActivity()).get(RecruiterCandidateViewModel::class.java)
 
-        candidateAddApplicationsViewModel.safeToVisitDomainOffers().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.safeToVisitDomainOffers().observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let{safeToVisit->
                 if(safeToVisit){
                     view.findNavController().navigate(R.id.home_to_offers_by_domain)
@@ -72,6 +72,6 @@ class HomeFragment : Fragment(), HomeListener {
     override fun onDomainClick(position: Int) {
         requireView().progress_circular_layout.visibility = View.VISIBLE
         val domainArg = list[position].domainArg
-        candidateAddApplicationsViewModel.getOffersByDomain(domainArg)
+        recruiterCandidateViewModel.getOffersByDomain(domainArg)
     }
 }

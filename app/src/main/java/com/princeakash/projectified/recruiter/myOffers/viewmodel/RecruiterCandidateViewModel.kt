@@ -8,6 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.princeakash.projectified.Event
 import com.princeakash.projectified.MyApplication
 import com.princeakash.projectified.MyApplication.Companion.handleError
+import com.princeakash.projectified.candidate.CandidateRepository
+import com.princeakash.projectified.candidate.addApplication.model.BodyAddApplication
+import com.princeakash.projectified.candidate.addApplication.model.ResponseAddApplication
+import com.princeakash.projectified.candidate.addApplication.model.ResponseGetOfferById
+import com.princeakash.projectified.candidate.addApplication.model.ResponseGetOffersByDomain
+import com.princeakash.projectified.candidate.myApplications.model.*
 import com.princeakash.projectified.recruiter.*
 import com.princeakash.projectified.recruiter.addOffer.model.BodyAddOffer
 import com.princeakash.projectified.recruiter.addOffer.model.ResponseAddOffer
@@ -15,12 +21,15 @@ import com.princeakash.projectified.recruiter.myOffers.model.*
 import com.princeakash.projectified.user.ProfileRepository
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
 
-class RecruiterViewModel(val app: Application) : AndroidViewModel(app) {
+class RecruiterCandidateViewModel(val app: Application) : AndroidViewModel(app) {
 
     //RecruiterRepository instance, guaranteed to be singular because of being
     val recruiterRepository: RecruiterRepository = (app as MyApplication).recruiterRepository
     val profileRepository: ProfileRepository = (app as MyApplication).profileRepository
+    val candidateRepository: CandidateRepository = (app as MyApplication).candidateRepository
 
     //MutableLiveData variables of responses for all kinds of requests
     //which can be put to observation in Activities/Fragments
@@ -75,9 +84,8 @@ class RecruiterViewModel(val app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             try {
                 responseGetOffersByRecruiter.postValue(recruiterRepository.getOffersByRecruiter("Bearer $token", recruiterID))
-                responseDeleteOffer.value?.let{
-                    safeToVisitOfferList.postValue(Event(true))
-                }
+                safeToVisitOfferList.postValue(Event(true))
+                getApplicationsByCandidate()
             } catch(e: Exception){
                 handleError(e, errorString)
             }
@@ -205,51 +213,20 @@ class RecruiterViewModel(val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun markSeen(is_Seen: Boolean){
+    fun markSeen(applicationID: String?, is_Seen: Boolean){
         val token = profileRepository.getToken()
         if(token.equals("")) {
             errorString.postValue(Event(INVALID_TOKEN))
             return
         }
-        val bodyMarkAsSeen = BodyMarkAsSeen(is_Seen)
-        val applicationID = currentApplicationId.value!!
-        viewModelScope.launch {
-            try {
-                val response = recruiterRepository.markSeen("Bearer $token", applicationID, bodyMarkAsSeen)
-                responseMarkAsSeen.postValue(Event(response))
-            } catch(e: Exception){
-                handleError(e, errorString)
-            }
-        }
-    }
-
-    fun markSelected(is_Selected: Boolean){
-        val token = profileRepository.getToken()
-        if(token.equals("")) {
-            errorString.postValue(Event(INVALID_TOKEN))
-            return
-        }
-        val bodyMarkAsSelected = BodyMarkAsSelected(is_Selected)
-        val applicationID = currentApplicationId.value!!
-        viewModelScope.launch {
-            try {
-                responseMarkAsSelected.postValue(Event(recruiterRepository.markSelected("Bearer $token", applicationID, bodyMarkAsSelected)))
-            } catch(e: Exception){
-                handleError(e, errorString)
-            }
-        }
-    }
-
-    fun markSeen(applicationID: String, is_Seen: Boolean){
-        val token = profileRepository.getToken()
-        if(token.equals("")) {
-            errorString.postValue(Event(INVALID_TOKEN))
-            return
+        var app_id = applicationID
+        if(app_id==null){
+            app_id= currentApplicationId.value!!
         }
         val bodyMarkAsSeen = BodyMarkAsSeen(is_Seen)
         viewModelScope.launch {
             try {
-                val response = recruiterRepository.markSeen("Bearer $token", applicationID, bodyMarkAsSeen)
+                val response = recruiterRepository.markSeen("Bearer $token", app_id!!, bodyMarkAsSeen)
                 responseMarkAsSeen.postValue(Event(response))
                 (responseGetOfferApplicants.value!!.applicants as ArrayList<ApplicantCardModel>)?.let {
                     for (listItem in it) {
@@ -266,16 +243,22 @@ class RecruiterViewModel(val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun markSelected(applicationID: String, is_Selected: Boolean){
+    fun markSelected(applicationID: String?, is_Selected: Boolean){
         val token = profileRepository.getToken()
         if(token.equals("")) {
             errorString.postValue(Event(INVALID_TOKEN))
             return
         }
+
+        var app_id = applicationID
+        if(app_id==null){
+            app_id = currentApplicationId.value!!
+        }
+
         val bodyMarkAsSelected = BodyMarkAsSelected(is_Selected)
         viewModelScope.launch {
             try {
-                val response = recruiterRepository.markSelected("Bearer $token", applicationID, bodyMarkAsSelected)
+                val response = recruiterRepository.markSelected("Bearer $token", app_id!!, bodyMarkAsSelected)
                 responseMarkAsSelected.postValue(Event(response))
                 (responseGetOfferApplicants.value!!.applicants as ArrayList<ApplicantCardModel>)?.let {
                     for (listItem in it) {
@@ -309,7 +292,7 @@ class RecruiterViewModel(val app: Application) : AndroidViewModel(app) {
         val token = profileRepository.getToken()
         val recruiterID: String = profileRepository.getUserId()
         if(token == "") {
-            errorString.postValue(Event(RecruiterViewModel.INVALID_TOKEN))
+            errorString.postValue(Event(RecruiterCandidateViewModel.INVALID_TOKEN))
             return
         }
         if(recruiterID.equals("")){
@@ -322,6 +305,7 @@ class RecruiterViewModel(val app: Application) : AndroidViewModel(app) {
                 val bodyAddOffer = BodyAddOffer(offerName, domainName, requirements, skills, expectation, recruiterID)
                 responseAddOffer.postValue(Event(recruiterRepository.addOffer(bodyAddOffer, "Bearer $token")))
                 getOffersByRecruiter()
+                getOffersByDomain(currentDomainName.value!!)
             } catch(e: Exception){
                 handleError(e, errorString)
             }
@@ -332,29 +316,187 @@ class RecruiterViewModel(val app: Application) : AndroidViewModel(app) {
         currentDomainName.postValue(domainName)
     }
 
-    //Falsification functions
-    fun falsifySafeToVisitOfferList(){
-        safeToVisitOfferList.postValue(Event(false))
+    private var responseUpdateApplication: MutableLiveData<Event<ResponseUpdateApplication>> = MutableLiveData()
+    private var responseDeleteApplication: MutableLiveData<Event<ResponseDeleteApplication>> = MutableLiveData()
+    private var responseGetApplicationByCandidate: MutableLiveData<ResponseGetApplicationsByCandidate> = MutableLiveData()
+    private var responseGetApplicationDetailByIdCandidate: MutableLiveData<ResponseGetApplicationDetailByIdCandidate> = MutableLiveData()
+    private var responseGetOffersByDomain: MutableLiveData<ResponseGetOffersByDomain> = MutableLiveData()
+    private var responseAddApplication: MutableLiveData<Event<ResponseAddApplication>> = MutableLiveData()
+    private var responseGetOfferById: MutableLiveData<ResponseGetOfferById> = MutableLiveData()
+    private var safeToVisitDomainOffers: MutableLiveData<Event<Boolean>> = MutableLiveData()
+    private var safeToVisitDomainOfferDetails: MutableLiveData<Event<Boolean>> = MutableLiveData()
+    private var safeToVisitApplicationDetails:MutableLiveData<Event<Boolean>> = MutableLiveData()
+    private var safeToVisitApplicationList: MutableLiveData<Event<Boolean>> = MutableLiveData()
+
+    fun responseUpdateApplication(): LiveData<Event<ResponseUpdateApplication>> = responseUpdateApplication
+    fun responseDeleteApplication(): LiveData<Event<ResponseDeleteApplication>> = responseDeleteApplication
+    fun responseGetApplicationByCandidate(): LiveData<ResponseGetApplicationsByCandidate> = responseGetApplicationByCandidate
+    fun responseGetApplicationDetailByIdCandidate(): LiveData<ResponseGetApplicationDetailByIdCandidate> = responseGetApplicationDetailByIdCandidate
+    fun responseGetOffersByDomain(): LiveData<ResponseGetOffersByDomain> = responseGetOffersByDomain
+    fun responseAddApplication(): LiveData<Event<ResponseAddApplication>> = responseAddApplication
+    fun responseGetOfferById(): LiveData<ResponseGetOfferById> = responseGetOfferById
+    fun safeToVisitDomainOffers(): LiveData<Event<Boolean>> = safeToVisitDomainOffers
+    fun safeToVisitDomainOfferDetails(): LiveData<Event<Boolean>> = safeToVisitDomainOfferDetails
+    fun safeToVisitApplicationDetails(): LiveData<Event<Boolean>> = safeToVisitApplicationDetails
+    fun safeToVisitApplicationList(): LiveData<Event<Boolean>> = safeToVisitApplicationList
+    fun currentDomainName(): LiveData<String> = currentDomainName
+
+    fun getApplicationsByCandidate() {
+        val token: String = profileRepository.getToken()
+        val applicantID: String = profileRepository.getUserId()
+        if (token.equals("")) {
+            errorString.postValue(Event(RecruiterCandidateViewModel.INVALID_TOKEN))
+            return
+        }
+        if (applicantID.equals("")) {
+            errorString.postValue(Event("Invalid User ID. Please log in again."))
+            return
+        }
+        viewModelScope.launch {
+            try {
+                responseGetApplicationByCandidate.postValue(candidateRepository.getApplicationByCandidate("Bearer $token", applicantID))
+                safeToVisitApplicationList.postValue(Event(true))
+            } catch (e: Exception) {
+                handleError(e, errorString)
+            }
+        }
     }
 
-    fun falsifySafeToVisitOfferDetails(){
-        safeToVisitOfferDetails.postValue(Event(false))
+    fun getApplicationDetailByIdCandidate(applicationID: String) {
+        val token = profileRepository.getToken()
+        if (token.equals("")) {
+            errorString.postValue(Event(RecruiterCandidateViewModel.INVALID_TOKEN))
+            return
+        }
+        viewModelScope.launch {
+            try {
+                currentApplicationId.postValue(applicationID)
+                responseGetApplicationDetailByIdCandidate.postValue(candidateRepository.getApplicationDetailByIdCandidate("Bearer $token", applicationID))
+                safeToVisitApplicationDetails.postValue(Event(true))
+            } catch (e: Exception) {
+                handleError(e, errorString)
+            }
+        }
     }
 
-    fun falsifySafeToVisitCandidates(){
-        safeToVisitCandidates.postValue(Event(false))
+
+    fun updateApplication(resume:String, previousWork:String) {
+        val token = profileRepository.getToken()
+        if (token.equals("")) {
+            errorString.postValue(Event(RecruiterCandidateViewModel.INVALID_TOKEN))
+            return
+        }
+        val applicationID = currentApplicationId.value!!
+        val bodyUpdateApplication = BodyUpdateApplication(resume, previousWork)
+        viewModelScope.launch {
+            try {
+                responseUpdateApplication.postValue(Event(candidateRepository.updateApplication("Bearer $token", applicationID, bodyUpdateApplication)))
+                getApplicationDetailByIdCandidate(currentApplicationId.value!!)
+            } catch (e: Exception) {
+                handleError(e, errorString)
+            }
+        }
     }
 
-    fun falsifySafeToVisitCandidateDetails(){
-        safeToVisitCandidateDetails.postValue(Event(false))
+
+    fun deleteApplication() {
+        val token = profileRepository.getToken()
+        if (token.equals("")) {
+            errorString.postValue(Event(RecruiterCandidateViewModel.INVALID_TOKEN))
+            return
+        }
+        val applicationID = currentApplicationId.value!!
+        viewModelScope.launch {
+            try {
+                responseDeleteApplication.postValue(Event(candidateRepository.deleteApplication("Bearer $token", applicationID)))
+                getApplicationsByCandidate()
+            } catch (e: Exception) {
+                handleError(e, errorString)
+            }
+        }
     }
 
-    fun loadUpOfferList(){
-        if(currentOfferId.value == null || currentOfferId.value != OFFERS_REQUESTED_ONCE.toString())
-            getOffersByRecruiter()
+    fun getOffersByDomain(domainName: String) {
+        val token = profileRepository.getToken()
+        if (token == "") {
+            errorString.postValue(Event(RecruiterCandidateViewModel.INVALID_TOKEN))
+            return
+        }
+        viewModelScope.launch {
+            try {
+                currentDomainName.postValue(domainName)
+                responseGetOffersByDomain.postValue(candidateRepository.getOffersByDomain("Bearer $token", domainName))
+                safeToVisitDomainOffers.postValue(Event(true))
+            } catch (e: Exception) {
+                handleError(e, errorString)
+            }
+        }
     }
 
+    fun addApplication(Resume: String, PreviousWork: String) {
+        val token = profileRepository.getToken()
+        val applicantID: String = profileRepository.getUserId()
+        if (token == "") {
+            errorString.postValue(Event(RecruiterCandidateViewModel.INVALID_TOKEN))
+            return
+        }
+        val offerId = currentOfferId.value!!
+        viewModelScope.launch {
+            try {
+
+                val bodyAddApplication = BodyAddApplication(Date(), Resume, PreviousWork, applicantID, offerId)
+                responseAddApplication.postValue(Event(candidateRepository.addApplication("Bearer $token", bodyAddApplication)))
+                getApplicationsByCandidate()
+            } catch (e: Exception) {
+                handleError(e, errorString)
+            }
+        }
+    }
+
+    fun getOfferById(offerId: String) {
+        val token = profileRepository.getToken()
+        if (token == "") {
+            errorString.postValue(Event(RecruiterCandidateViewModel.INVALID_TOKEN))
+            return
+        }
+        viewModelScope.launch {
+            try {
+                currentOfferId.postValue(offerId)
+                responseGetOfferById.postValue(candidateRepository.getOfferById("Bearer $token", offerId))
+                safeToVisitDomainOfferDetails.postValue(Event(true))
+            } catch (e: Exception) {
+                handleError(e, errorString)
+            }
+        }
+    }
+
+    //Nullifier Functions
+    fun nullifySafeToVisitOfferList(){
+        safeToVisitOfferList.postValue(Event(false));
+    }
+    fun nullifySafeToVisitOfferDetails(){
+        safeToVisitOfferDetails.postValue(Event(false));
+    }
+    fun nullifySafeToVisitCandidateList(){
+        safeToVisitCandidates.postValue(Event(false));
+    }
+    fun nullifySafeToVisitCandidateDetails(){
+        safeToVisitCandidateDetails.postValue(Event(false));
+    }
+    fun nullifySafeToVisitDomainOffers(){
+        safeToVisitDomainOffers.postValue(Event(false));
+    }
+    fun nullifySafeToVisitDomainOfferDetails(){
+        safeToVisitDomainOfferDetails.postValue(Event(false));
+    }
+    fun nullifySafeToVisitApplicationsList(){
+        safeToVisitApplicationList.postValue(Event(false));
+    }
+    fun nullifySafeToVisitApplicationDetails(){
+        safeToVisitApplicationDetails.postValue(Event(false));
+    }
     fun getLocalProfile() = profileRepository.getLocalProfile()
+
 
     companion object {
         const val INVALID_TOKEN = "Invalid Token. Please log in again.";
