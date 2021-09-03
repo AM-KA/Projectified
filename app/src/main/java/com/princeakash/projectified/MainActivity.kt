@@ -8,70 +8,53 @@ import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationView
 import com.google.android.material.switchmaterial.SwitchMaterial
+import com.princeakash.projectified.databinding.ActivityMainBinding
 import com.princeakash.projectified.faq.FaqActivity
 
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 import com.princeakash.projectified.user.viewmodel.ProfileViewModel
 
-
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var navController: NavController
-    lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var profileViewModel:ProfileViewModel
-    private lateinit var navigationView: NavigationView
-
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
-    private lateinit var switch: SwitchMaterial
     private var isNightModeOn: Boolean = false;
 
-    var toolbar: Toolbar? = null
-    var drawerLayout: DrawerLayout? = null
-
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var switch: SwitchMaterial
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.kk)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         window?.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
 
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         recruiterCandidateViewModel = ViewModelProvider(this).get(RecruiterCandidateViewModel::class.java)
         recruiterCandidateViewModel.issueInitialInstructions()
-        toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
 
-        drawerLayout = findViewById(R.id.drawerLayout)
-        navigationView = findViewById(R.id.navigation_view)
+        binding.navigationView.setNavigationItemSelectedListener { onNavigationItemSelected(it) }
 
-        navigationView.setNavigationItemSelectedListener { onNavigationItemSelected(it) }
+        binding.bottomNavigation.setupWithNavController(findNavController(R.id.fragment))
 
-        bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigation)
-
-        navController = findNavController(R.id.fragment)
-        bottomNavigationView.setupWithNavController(navController)
-
-        switch = navigationView.getHeaderView(0).findViewById(R.id.switch_darkMode)
+        switch = binding.navigationView.getHeaderView(0).findViewById(R.id.switch_darkMode)
 
         val drawerToggle: ActionBarDrawerToggle = object : ActionBarDrawerToggle(
                 this,
-                drawerLayout,
-                toolbar,
+                binding.drawerLayout,
+                binding.toolbar,
                 R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close
         ){}
 
         drawerToggle.isDrawerIndicatorEnabled = true
-        drawerLayout?.addDrawerListener(drawerToggle)
+        binding.drawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
         isNightModeOn = profileViewModel.getDarkModeStatus()

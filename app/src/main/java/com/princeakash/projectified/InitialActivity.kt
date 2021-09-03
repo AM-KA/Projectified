@@ -13,7 +13,6 @@ class InitialActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_initial, SplashScreenFragment(), "Splash")
                     .commit()
-
         }
     }
 }
