@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.princeakash.projectified.R
@@ -21,14 +21,13 @@ import com.princeakash.projectified.candidate.addApplication.view.HomeAdapter.Co
 import com.princeakash.projectified.candidate.addApplication.view.HomeAdapter.Companion.WEB
 import com.princeakash.projectified.candidate.addApplication.view.HomeAdapter.HomeItem
 import com.princeakash.projectified.candidate.addApplication.view.HomeAdapter.HomeListener
+import com.princeakash.projectified.databinding.FragHomeBinding
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
-import kotlinx.android.synthetic.main.frag_home.view.*
-
-//import java.util.*
 
 
 class HomeFragment : Fragment(), HomeListener {
 
+    private lateinit var fragmentBinding: FragHomeBinding
     private lateinit var list: ArrayList<HomeItem>
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
 
@@ -36,7 +35,32 @@ class HomeFragment : Fragment(), HomeListener {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.frag_home, container, false)
-        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        fragmentBinding = FragHomeBinding.bind(view)
+
+        populateRecyclerView()
+
+        recruiterCandidateViewModel = ViewModelProvider(requireActivity()).get(RecruiterCandidateViewModel::class.java)
+
+        subscribeToObservers()
+    }
+
+    private fun subscribeToObservers() {
+        recruiterCandidateViewModel.safeToVisitDomainOffers().observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let{safeToVisit->
+                if(safeToVisit){
+                    findNavController().navigate(R.id.home_to_offers_by_domain)
+                }
+            }
+        })
+    }
+
+    private fun populateRecyclerView() {
         list = ArrayList()
         list.add(HomeItem("App Development", R.mipmap.app_dev,ANDROID))
         list.add(HomeItem("Web Development", R.mipmap.web, WEB))
@@ -46,22 +70,8 @@ class HomeFragment : Fragment(), HomeListener {
         list.add(HomeItem("UI/UX Design", R.mipmap.ui, UIUX))
         list.add(HomeItem("Video Editing", R.mipmap.video, VIDEO))
         list.add(HomeItem("Others", R.mipmap.misc, OTHERS))
-        recyclerView.adapter = context?.let { HomeAdapter(list, it, this) }
-        recyclerView.layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
-        return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        recruiterCandidateViewModel = ViewModelProvider(requireActivity()).get(RecruiterCandidateViewModel::class.java)
-
-        recruiterCandidateViewModel.safeToVisitDomainOffers().observe(viewLifecycleOwner, {
-            it.getContentIfNotHandled()?.let{safeToVisit->
-                if(safeToVisit){
-                    view.findNavController().navigate(R.id.home_to_offers_by_domain)
-                }
-            }
-        })
+        fragmentBinding.recyclerView.adapter = HomeAdapter(list, this)
+        fragmentBinding.recyclerView.layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
     }
 
     override fun onResume() {
@@ -70,7 +80,7 @@ class HomeFragment : Fragment(), HomeListener {
     }
 
     override fun onDomainClick(position: Int) {
-        requireView().progress_circular_layout.visibility = View.VISIBLE
+        fragmentBinding.progressCircularLayout.visibility = View.VISIBLE
         val domainArg = list[position].domainArg
         recruiterCandidateViewModel.getOffersByDomain(domainArg)
     }

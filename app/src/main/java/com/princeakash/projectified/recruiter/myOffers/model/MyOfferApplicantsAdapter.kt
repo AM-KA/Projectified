@@ -5,48 +5,34 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.princeakash.projectified.R
-import kotlinx.android.synthetic.main.card_my_offers_candidate.view.*
+import com.princeakash.projectified.databinding.CardMyOffersCandidateBinding
 
-class MyOfferApplicantsAdapter(var applicantList: List<ApplicantCardModel>?, val listener: MyOfferApplicantListener) : RecyclerView.Adapter<MyOfferApplicantsAdapter.MyOfferApplicantViewHolder>(){
+class MyOfferApplicantsAdapter(private var applicantList: List<ApplicantCardModel>?, private val listener: MyOfferApplicantListener) : RecyclerView.Adapter<MyOfferApplicantsAdapter.MyOfferApplicantViewHolder>(){
 
+    class MyOfferApplicantViewHolder(val binding: CardMyOffersCandidateBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyOfferApplicantViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.card_my_offers_candidate, parent, false)
-        return MyOfferApplicantViewHolder(v, listener)
+        val binding = CardMyOffersCandidateBinding.inflate(LayoutInflater.from(parent.context))
+        return MyOfferApplicantViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: MyOfferApplicantViewHolder, position: Int) {
-        holder.textViewCollege.text = applicantList!!.get(position).collegeName
-        holder.textViewDate.text = applicantList!!.get(position).date.toString()
-        if(applicantList!!.get(position).is_Seen)
-            holder.imageViewSeen.setImageResource(R.drawable.ic_baseline_favorite_24)
-        if(applicantList!!.get(position).is_Selected)
-            holder.imageViewSelected.setImageResource(R.drawable.ic_baseline_done_24)
+        holder.binding.apply {
+            textViewCollege.text = applicantList!!.get(position).collegeName
+            textViewDate.text = applicantList!!.get(position).date.toString()
+            if(applicantList!!.get(position).is_Seen)
+                imageViewSeen.setImageResource(R.drawable.ic_baseline_favorite_24)
+            if(applicantList!!.get(position).is_Selected)
+                imageViewSelected.setImageResource(R.drawable.ic_baseline_done_24)
+
+            imageViewSeen.setOnClickListener { listener.onSeenClick(position) }
+            imageViewSelected.setOnClickListener { listener.onSelectedClick(position) }
+            root.setOnClickListener { listener.onViewDetailsClick(position) }
+        }
     }
 
     override fun getItemCount() = applicantList!!.size
 
-    class MyOfferApplicantViewHolder(itemView: View, listener: MyOfferApplicantListener) : RecyclerView.ViewHolder(itemView){
-        val textViewCollege = itemView.textViewCollege
-        val textViewDate = itemView.textViewDate
-        val imageViewSeen = itemView.imageViewSeen
-        val imageViewSelected = itemView.imageViewSelected
-        //val button = itemView.button
-        val myListener = listener
-        init {
-            imageViewSeen.setOnClickListener {
-                myListener.onSeenClick(adapterPosition)
-            }
-
-            imageViewSelected.setOnClickListener{
-                myListener.onSelectedClick(adapterPosition)
-            }
-
-            itemView.setOnClickListener{
-                myListener.onViewDetailsClick(adapterPosition)
-            }
-        }
-    }
     interface MyOfferApplicantListener{
         fun onViewDetailsClick(itemPosition: Int)
         fun onSeenClick(itemPosition: Int)

@@ -1,57 +1,32 @@
 package com.princeakash.projectified.candidate.myApplications.model
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.princeakash.projectified.R
-import kotlinx.android.synthetic.main.card_my_offers_candidate.view.*
-import kotlinx.android.synthetic.main.card_myapplication.view.*
-//import kotlinx.android.synthetic.main.card_myapplication.view.button
-import kotlinx.android.synthetic.main.card_myapplication.view.imageViewSeen
-import kotlinx.android.synthetic.main.card_myapplication.view.imageViewSelected
-import kotlinx.android.synthetic.main.card_myapplication.view.textViewCollege
-import kotlinx.android.synthetic.main.card_myapplication.view.textViewDate
+import com.princeakash.projectified.databinding.CardMyapplicationBinding
 import java.text.SimpleDateFormat
 
-class MyApplicationsAdapter(var applicationList : List<ApplicationCardModelCandidate>? , val listener: MyApplicationsListener): RecyclerView.Adapter<MyApplicationsAdapter.MyApplicationsViewHolder>()
-{
+class MyApplicationsAdapter(private var applicationList : List<ApplicationCardModelCandidate>? , private val listener: MyApplicationsListener): RecyclerView.Adapter<MyApplicationsAdapter.MyApplicationsViewHolder>() {
 
-
-    class MyApplicationsViewHolder(itemView: View, listener: MyApplicationsListener):RecyclerView.ViewHolder(itemView), View.OnClickListener{
-        val textViewName = itemView.textViewName
-        val textViewPost = itemView.textViewPost
-        val textViewCollege = itemView.textViewCollege
-        val textViewDate = itemView.textViewDate
-        //val buttonViewDetails = itemView.button
-        val imageViewSeen = itemView.imageViewSeen
-        val imageViewSelected = itemView.imageViewSelected
-        val myListener = listener
-
-        init{
-            itemView.setOnClickListener(this)
-        }
-
-
-        override fun onClick(v: View?) {
-            myListener.onViewDetailsClick(adapterPosition)
-        }
-    }
+    class MyApplicationsViewHolder(val binding: CardMyapplicationBinding):RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):MyApplicationsViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.card_myapplication, parent, false)
-        return MyApplicationsViewHolder(v,listener)
+        val binding = CardMyapplicationBinding.inflate(LayoutInflater.from(parent.context))
+        return MyApplicationsViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: MyApplicationsViewHolder, position: Int) {
-        holder.textViewName.text = applicationList?.get(position)?.recruiter_name
-        holder.textViewPost.text = applicationList?.get(position)?.offer_name
-        holder.textViewCollege.text= applicationList?.get(position)?.collegeName
-        holder.textViewDate.text = (SimpleDateFormat("dd MMMM yyyy HH:mm:ss z")).format(applicationList?.get(position)?.float_date)
+        holder.binding.textViewName.text = applicationList?.get(position)?.recruiter_name
+        holder.binding.textViewPost.text = applicationList?.get(position)?.offer_name
+        holder.binding.textViewCollege.text= applicationList?.get(position)?.collegeName
+        holder.binding.textViewDate.text = (SimpleDateFormat("dd MMMM yyyy HH:mm:ss z")).format(applicationList?.get(position)?.float_date)
+        holder.binding.root.setOnClickListener { listener.onViewDetailsClick(position) }
+
         if(applicationList!!.get(position).is_Seen)
-            holder.imageViewSeen.setImageResource(R.drawable.ic_baseline_favorite_24)
+            holder.binding.imageViewSeen.setImageResource(R.drawable.ic_baseline_favorite_24)
         if(applicationList!!.get(position).is_Selected)
-            holder.imageViewSelected.setImageResource(R.drawable.ic_baseline_done_24)
+            holder.binding.imageViewSelected.setImageResource(R.drawable.ic_baseline_done_24)
     }
 
     override fun getItemCount(): Int = applicationList!!.size
@@ -60,4 +35,3 @@ class MyApplicationsAdapter(var applicationList : List<ApplicationCardModelCandi
         fun onViewDetailsClick(itemPosition: Int)
     }
 }
-
