@@ -1,4 +1,4 @@
-package com.princeakash.projectified.Faq
+package com.princeakash.projectified.faq
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

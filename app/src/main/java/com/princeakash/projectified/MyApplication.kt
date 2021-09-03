@@ -5,7 +5,7 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.FirebaseApp
-import com.princeakash.projectified.Faq.FaqRepository
+import com.princeakash.projectified.faq.FaqRepository
 import com.princeakash.projectified.candidate.CandidateRepository
 import com.princeakash.projectified.recruiter.RecruiterRepository
 import com.princeakash.projectified.user.ProfileRepository

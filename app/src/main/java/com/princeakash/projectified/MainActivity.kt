@@ -18,7 +18,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.switchmaterial.SwitchMaterial
-import com.princeakash.projectified.Faq.FaqActivity
+import com.princeakash.projectified.faq.FaqActivity
 
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 import com.princeakash.projectified.user.viewmodel.ProfileViewModel

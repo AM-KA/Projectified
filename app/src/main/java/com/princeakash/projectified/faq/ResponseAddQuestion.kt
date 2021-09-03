@@ -1,4 +1,4 @@
-package com.princeakash.projectified.Faq
+package com.princeakash.projectified.faq
 
 class ResponseAddQuestion(
         val code: String,

@@ -1,4 +1,4 @@
-package com.princeakash.projectified.Faq
+package com.princeakash.projectified.faq
 
 data class ResponseGetFaq(
         val code: Int,

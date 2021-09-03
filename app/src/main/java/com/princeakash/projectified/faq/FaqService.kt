@@ -1,4 +1,4 @@
-package com.princeakash.projectified.Faq
+package com.princeakash.projectified.faq
 
 import retrofit2.http.Body
 import retrofit2.http.GET

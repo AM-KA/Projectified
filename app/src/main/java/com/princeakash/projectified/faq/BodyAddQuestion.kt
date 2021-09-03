@@ -1,3 +1,3 @@
-package com.princeakash.projectified.Faq
+package com.princeakash.projectified.faq
 
 class BodyAddQuestion(val question: String)

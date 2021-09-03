@@ -1,4 +1,4 @@
-package com.princeakash.projectified.Faq
+package com.princeakash.projectified.faq
 
 import android.app.Dialog
 import android.content.Context
@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.dialog_new_faq.view.*
 
 class NewFaqDialogFragment: DialogFragment() {
     var editText: EditText? = null
-    var listener: NewFaqDialogListener? = null
+    lateinit var listener: NewFaqDialogListener
     val TAG = "NewFaqDialogFragment"
 
     override fun onAttach(context: Context) {
@@ -37,11 +37,12 @@ class NewFaqDialogFragment: DialogFragment() {
                         editText!!.error = "Enter a valid question"
                         return@OnClickListener
                     }
-                    listener!!.onDialogPositiveClick(this, question = editText!!.text.toString())
+                    listener.onDialogPositiveClick(this, question = editText!!.text.toString())
                 })
-                .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which -> listener!!.onDialogNegativeClick(this) })
+                .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which -> listener.onDialogNegativeClick(this) })
         return builder.create()
     }
+
     interface NewFaqDialogListener{
         fun onDialogPositiveClick(dialogFragment: DialogFragment, question: String)
         fun onDialogNegativeClick(dialogFragment: DialogFragment)
