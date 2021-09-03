@@ -11,7 +11,7 @@ class MyOffersAdapter(var offerList: List<OfferCardModelRecruiter>?, val listene
     class MyOffersViewHolder(val binding: CardMyOffersBinding):RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyOffersViewHolder {
-        val binding = CardMyOffersBinding.inflate(LayoutInflater.from(parent.context))
+        val binding = CardMyOffersBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyOffersViewHolder(binding)
     }
 

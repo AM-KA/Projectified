@@ -31,12 +31,9 @@ class HomeFragment : Fragment(), HomeListener {
     private lateinit var list: ArrayList<HomeItem>
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.frag_home, container, false)
-        return view
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+        = inflater.inflate(R.layout.frag_home, container, false)
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -12,7 +12,7 @@ class HomeAdapter(private val list: ArrayList<HomeItem>, private val homeListene
     class HomeViewHolder(var binding: CardHomeJobBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
-        val binding = CardHomeJobBinding.inflate(LayoutInflater.from(parent.context))
+        val binding = CardHomeJobBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return HomeViewHolder(binding)
     }
 

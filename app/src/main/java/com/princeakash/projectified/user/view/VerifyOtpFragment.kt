@@ -7,14 +7,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.tasks.TaskExecutors
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
@@ -22,62 +18,49 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.princeakash.projectified.MainActivity
 import com.princeakash.projectified.R
-import com.princeakash.projectified.user.model.BodySignUp
-import com.princeakash.projectified.user.model.LoginBody
+import com.princeakash.projectified.databinding.FragmentVerifyOtpBinding
 import com.princeakash.projectified.user.viewmodel.ProfileViewModel
-import com.princeakash.projectified.user.model.ResponseLogin
 import com.princeakash.projectified.user.view.LoginHomeFragment.Companion.USER_NAME
-import kotlinx.android.synthetic.main.verifyphoneno.view.*
 import java.util.concurrent.TimeUnit
 
 
 class VerifyOtpFragment : Fragment() {
 
-
-    private lateinit var EditTextOtp: AutoCompleteTextView
-    private lateinit var VerifyButton: Button
-    private lateinit var progressCircularLayout: RelativeLayout
-    private lateinit var auth: FirebaseAuth
-    private lateinit var responseLogin: ResponseLogin
     private lateinit var profileViewModel: ProfileViewModel
+    private lateinit var binding: FragmentVerifyOtpBinding
 
     private var storedVerificationId: String? = null
     private var resendToken: PhoneAuthProvider.ForceResendingToken? = null
-    private var phoneno: String? = null
+    private var phoneNo: String? = null
+    private lateinit var auth: FirebaseAuth
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+        = inflater.inflate(R.layout.fragment_verify_otp, container, false)
 
-        val v = inflater.inflate(R.layout.verifyphoneno, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        EditTextOtp = v.editTextOtp
-        VerifyButton = v.VerifyButton
-        progressCircularLayout = v.progress_circular_layout
-        progressCircularLayout.visibility = View.INVISIBLE
-
-        VerifyButton.setOnClickListener {
-            if (EditTextOtp.text!!.isNotEmpty()) {
-                val credential = PhoneAuthProvider.getCredential(storedVerificationId!!, EditTextOtp.text.toString())
+        binding = FragmentVerifyOtpBinding.bind(view)
+        binding.VerifyButton.setOnClickListener {
+            if (binding.editTextOtp.text!!.isNotEmpty()) {
+                val credential = PhoneAuthProvider.getCredential(storedVerificationId!!, binding.editTextOtp.text.toString())
                 signInWithPhoneAuthCredential(credential)
             } else {
                 Toast.makeText(context, "Enter the OTP Received", Toast.LENGTH_SHORT).show()
             }
         }
-
-        return v
-    }
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
 
+        subscribeToObservers(savedInstanceState)
+
+    }
+
+    private fun subscribeToObservers(savedInstanceState: Bundle?) {
         profileViewModel.bodySignUp().observe(viewLifecycleOwner, {
             if(savedInstanceState==null){
                 //First loadup, hence safe to send OTP
-                phoneno = "+91" + it.phone
-                sendVerificationCodetoTheUser()
+                phoneNo = "+91" + it.phone
+                sendVerificationCodeToTheUser()
             }
         })
 
@@ -91,8 +74,7 @@ class VerifyOtpFragment : Fragment() {
         })
 
         profileViewModel.responseLogin().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let {
-                responseLogin = it
+            it?.getContentIfNotHandled()?.let { responseLogin ->
                 if (responseLogin.code != 200) {
                     Toast.makeText(context, responseLogin.message, Toast.LENGTH_SHORT).show()
                 } else {
@@ -120,13 +102,12 @@ class VerifyOtpFragment : Fragment() {
                 Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
             }
         })
-
     }
 
 
-    private fun sendVerificationCodetoTheUser() {
+    private fun sendVerificationCodeToTheUser() {
         auth = Firebase.auth
-        phoneno?.let {
+        phoneNo?.let {
             val options = PhoneAuthOptions.newBuilder(auth)
                     .setPhoneNumber(it)
                     .setTimeout(60, TimeUnit.SECONDS)
@@ -177,24 +158,11 @@ class VerifyOtpFragment : Fragment() {
         auth.signInWithCredential(credential)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithCredential:success")
-
                         Toast.makeText(context, "Sign Up Done Successfully", Toast.LENGTH_SHORT).show()
-
-                        val user = task.result?.user
-
                         profileViewModel.signUp()
-
-                        // ...
-                    } else {
-                        // Sign in failed, display a message and update the UI
-                        Log.w(TAG, "signInWithCredential:failure", task.exception)
-                        if (task.exception is FirebaseAuthInvalidCredentialsException) {
-                            // The verification code entered was invalid
-
-
-                        }
+                    } else if (task.exception is FirebaseAuthInvalidCredentialsException) {
+                        // The verification code entered was invalid
+                        Toast.makeText(context, "Incorrect OTP", Toast.LENGTH_SHORT).show()
                     }
                 }
     }

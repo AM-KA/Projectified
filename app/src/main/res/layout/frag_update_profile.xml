@@ -160,21 +160,21 @@
                     style="@style/Widget.MaterialComponents.Chip.Filter"
                     android:text="@string/css"/>
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chipC2"
+                    android:id="@+id/chipC"
                     android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.Chip.Filter"
                     android:text="@string/c"/>
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chipCpp2"
+                    android:id="@+id/chipCpp"
                     android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.Chip.Filter"
                     android:text="@string/cpp"/>
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chipJava2"
+                    android:id="@+id/chipJava"
                     android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -182,21 +182,21 @@
                     android:text="@string/java"/>
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chipPython2"
+                    android:id="@+id/chipPython"
                     android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.Chip.Filter"
                     android:text="@string/python"/>
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chipKotlin2"
+                    android:id="@+id/chipKotlin"
                     android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.Chip.Filter"
                     android:text="@string/kotlin"/>
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chipJavaScript2"
+                    android:id="@+id/chipJavaScript"
                     android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

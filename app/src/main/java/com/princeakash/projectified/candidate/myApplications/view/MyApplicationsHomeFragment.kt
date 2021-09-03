@@ -5,69 +5,66 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.myApplications.model.ApplicationCardModelCandidate
 import com.princeakash.projectified.candidate.myApplications.model.MyApplicationsAdapter
+import com.princeakash.projectified.databinding.FragMyApplicationBinding
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
-import kotlinx.android.synthetic.main.frag_myapplication.*
-import kotlinx.android.synthetic.main.frag_myapplication.view.*
 
+class MyApplicationsHomeFragment: Fragment(), MyApplicationsAdapter.MyApplicationsListener {
 
-class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplicationsListener {
-
-    lateinit var progressCircularLayout: RelativeLayout
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
-    var applicationList: ArrayList<ApplicationCardModelCandidate> = ArrayList()
+    private var applicationList: ArrayList<ApplicationCardModelCandidate> = ArrayList()
+    private lateinit var binding: FragMyApplicationBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val v = inflater.inflate(R.layout.frag_myapplication, container, false)
-        progressCircularLayout = v.progress_circular_layout
-        v.recyclerViewApplications.apply {
-            layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-            //adapter = MyApplicationsAdapter(applicationList,this@MyApplicationsHomeFragment)
-            setHasFixedSize(true)
-        }
-        return v
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+         = inflater.inflate(R.layout.frag_my_application, container, false)
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recruiterCandidateViewModel= ViewModelProvider(requireActivity()).get(RecruiterCandidateViewModel::class.java)
+        binding = FragMyApplicationBinding.bind(view)
+        binding.recyclerViewApplications.apply{
+            layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+            setHasFixedSize(true)
+        }
 
+        recruiterCandidateViewModel = ViewModelProvider(requireActivity()).get(RecruiterCandidateViewModel::class.java)
+        subscribeToObservers()
+
+        if(savedInstanceState==null)
+            recruiterCandidateViewModel.nullifySafeToVisitApplicationsList()
+    }
+
+    private fun subscribeToObservers() {
         recruiterCandidateViewModel.responseGetApplicationByCandidate().observe(viewLifecycleOwner, {
             applicationList = it?.applications as ArrayList<ApplicationCardModelCandidate>
-            recyclerViewApplications.adapter = MyApplicationsAdapter(applicationList, this@MyApplicationsHomeFragment)
-            progressCircularLayout.visibility = View.INVISIBLE
+            binding.recyclerViewApplications.adapter = MyApplicationsAdapter(applicationList, this@MyApplicationsHomeFragment)
+            binding.progressCircularLayout.visibility = View.INVISIBLE
         })
 
         recruiterCandidateViewModel.safeToVisitApplicationDetails().observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let{safeToVisit->
                 if(safeToVisit){
-                    view.findNavController().navigate(R.id.home_to_application_details)
+                    findNavController().navigate(R.id.home_to_application_details)
                 }
             }
         })
 
         recruiterCandidateViewModel.errorString().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let{
-                progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(this@MyApplicationsHomeFragment.context,it, LENGTH_LONG).show()
+            it?.getContentIfNotHandled()?.let{ message ->
+                binding.progressCircularLayout.visibility = View.INVISIBLE
+                Toast.makeText(this@MyApplicationsHomeFragment.context, message, LENGTH_LONG).show()
             }
         })
-
-        if(savedInstanceState==null){
-            recruiterCandidateViewModel.nullifySafeToVisitApplicationsList()
-        }
     }
 
     override fun onResume() {
@@ -76,8 +73,8 @@ class MyApplicationsHomeFragment() : Fragment(), MyApplicationsAdapter.MyApplica
     }
 
     override fun onViewDetailsClick(itemPosition: Int) {
-        progressCircularLayout.visibility = View.VISIBLE
-        val applicationID = applicationList.get(itemPosition).application_id
+        binding.progressCircularLayout.visibility = View.VISIBLE
+        val applicationID = applicationList[itemPosition].application_id
         recruiterCandidateViewModel.getApplicationDetailByIdCandidate(applicationID)
     }
 }

@@ -9,9 +9,7 @@ import com.princeakash.projectified.R
 import com.princeakash.projectified.candidate.myApplications.view.MyApplicationsHomeFragment
 
 
-class SignUpFrgment :Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_blanksignup, container, false)
-    }
+class SignUpFragment :Fragment() {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+        = inflater.inflate(R.layout.fragment_blanksignup, container, false)
 }

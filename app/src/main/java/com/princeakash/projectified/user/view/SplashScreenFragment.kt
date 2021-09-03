@@ -2,7 +2,6 @@ package com.princeakash.projectified.user.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,25 +16,22 @@ class SplashScreenFragment : Fragment() {
 
     private lateinit var profileViewModel: ProfileViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+        = inflater.inflate(R.layout.fragment_splash_screen, container, false)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_splash_screen, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
+
         val background = object : Thread() {
             override fun run() {
                 try {
                     //Sleep 3 seconds
                     sleep((3 * 1000).toLong())
                     val loginStatus = profileViewModel.getLoginStatus()
-                    if (loginStatus == false) {
+                    if (!loginStatus) {
                         takeToLogin()
                     } else {
                         val token = profileViewModel.getToken()
@@ -60,8 +56,7 @@ class SplashScreenFragment : Fragment() {
     }
 
     fun takeToLogin() {
-        Log.d("Login", "Login Competed")
-        startActivity(Intent(requireActivity(), LoginSignupScreens::class.java))
+        startActivity(Intent(requireActivity(), LoginSignupActivity::class.java))
         requireActivity().finish()
 
     }

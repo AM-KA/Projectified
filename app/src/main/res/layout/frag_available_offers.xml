@@ -58,6 +58,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewOffers"
+        tools:listitem="@layout/card_offer_candidate_version"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="@id/guideline1"

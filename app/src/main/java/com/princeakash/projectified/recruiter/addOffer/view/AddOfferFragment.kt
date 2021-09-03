@@ -5,96 +5,59 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.RelativeLayout
-import android.widget.TextView
-
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.textfield.TextInputEditText
 import com.princeakash.projectified.R
+import com.princeakash.projectified.databinding.FragFloatOpportunityBinding
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
-import kotlinx.android.synthetic.main.frag_float_opportunity.view.*
 
 class AddOfferFragment : Fragment() {
 
-    //Views
-    private lateinit var editTextOfferName: TextInputEditText
-    private lateinit var editTextRequirements: TextInputEditText
-    private lateinit var editTextSkills: TextInputEditText
-    private lateinit var editTextExpectation: TextInputEditText
-    private lateinit var textViewName: TextView
-    private lateinit var textViewCollege: TextView
-    private lateinit var textViewCourse: TextView
-    private lateinit var textViewSemester: TextView
-    private lateinit var progressCircularLayout: RelativeLayout
-    private lateinit var buttonEnlist: Button
-    private lateinit var buttonCancel: Button
-
-    //ViewModels
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
-    //private lateinit var recruiterCandidateViewModel: CandidateViewModel
+    private lateinit var binding: FragFloatOpportunityBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.frag_float_opportunity, container, false)
-        editTextOfferName = view.editTextOfferName
-        editTextRequirements = view.editTextRequirement
-        editTextSkills = view.editTextSkills
-        editTextExpectation = view.editTextExpectation
-        textViewName = view.textViewNameData
-        textViewCollege = view.textViewCollegeData
-        textViewCourse = view.textViewCourseData
-        textViewSemester = view.textViewSemesterData
-        buttonEnlist = view.EnlistButton
-        buttonCancel = view.buttonCancel
-        progressCircularLayout = view.progress_circular_layout
-
-        buttonEnlist.setOnClickListener {
-            validateParameters()
-        }
-
-        buttonCancel.setOnClickListener {
-            findNavController().navigate(R.id.back_to_offers_by_domain)
-        }
-
-        return view
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
+        = inflater.inflate(R.layout.frag_float_opportunity, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        this.recruiterCandidateViewModel = ViewModelProvider(requireActivity()).get(RecruiterCandidateViewModel::class.java)
 
-        this.recruiterCandidateViewModel.responseAddOffer().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let{
-                progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(context, it.message, LENGTH_LONG).show()
+        binding = FragFloatOpportunityBinding.bind(view)
+        binding.EnlistButton.setOnClickListener { validateParameters() }
+        binding.buttonCancel.setOnClickListener { findNavController().navigate(R.id.back_to_offers_by_domain) }
+
+        recruiterCandidateViewModel = ViewModelProvider(requireActivity()).get(RecruiterCandidateViewModel::class.java)
+        subscribeToObservers()
+
+        loadRecruiterDetails()
+    }
+
+    private fun subscribeToObservers() {
+        recruiterCandidateViewModel.responseAddOffer().observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let{ response ->
+                binding.progressCircularLayout.visibility = View.INVISIBLE
+                Toast.makeText(context, response.message, LENGTH_LONG).show()
             }
         })
 
-        this.recruiterCandidateViewModel.safeToVisitDomainOffers().observe(viewLifecycleOwner, {
+        recruiterCandidateViewModel.safeToVisitDomainOffers().observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let{safeToVisit->
                 if(safeToVisit){
-                    view.findNavController().navigate(R.id.back_to_offers_by_domain)
+                    findNavController().navigate(R.id.back_to_offers_by_domain)
                 }
             }
         })
 
-        this.recruiterCandidateViewModel.errorString().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let{
-                progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(context, it, LENGTH_LONG).show()
+        recruiterCandidateViewModel.errorString().observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let{ message ->
+                binding.progressCircularLayout.visibility = View.INVISIBLE
+                Toast.makeText(context, message, LENGTH_LONG).show()
             }
         })
-
-        loadRecruiterDetails()
     }
 
     override fun onResume() {
@@ -103,53 +66,49 @@ class AddOfferFragment : Fragment() {
     }
 
     private fun validateParameters() {
+        binding.apply{
+            //Ensuring non-empty input
+            if(editTextOfferName.text.isNullOrEmpty()){
+                editTextOfferName.error = "Enter offer name."
+                return
+            }
+            if(editTextRequirement.text.isNullOrEmpty()){
+                editTextRequirement.error = "Enter requirements."
+                return
+            }
+            if(editTextSkills.text.isNullOrEmpty()){
+                editTextSkills.error = "Enter skills."
+                return
+            }
+            if(editTextExpectation.text.isNullOrEmpty()){
+                editTextExpectation.error = "Enter expectation."
+                return
+            }
 
-        //Ensuring non-empty input
-        if(editTextOfferName.text.isNullOrEmpty()){
-            editTextOfferName.error = "Enter offer name."
-            return
-        }
-        if(editTextRequirements.text.isNullOrEmpty()){
-            editTextRequirements.error = "Enter requirements."
-            return
-        }
-        if(editTextSkills.text.isNullOrEmpty()){
-            editTextSkills.error = "Enter skills."
-            return
-        }
-        if(editTextExpectation.text.isNullOrEmpty()){
-            editTextExpectation.error = "Enter expectation."
-            return
-        }
-
-        //Obtaining inputs to pass into addOffer function
-        val offerName = editTextOfferName.text.toString()
-        val requirements = editTextRequirements.text.toString()
-        val skills = editTextSkills.text.toString()
-        val expectation = editTextExpectation.text.toString()
-
-        AlertDialog.Builder(requireContext())
+            AlertDialog.Builder(requireContext())
                 .setTitle("Confirm")
                 .setMessage("Are you sure you want to float this offer?")
-                .setPositiveButton("Yes") { dialog, which ->
-                    progressCircularLayout.visibility = View.VISIBLE
-                    this.recruiterCandidateViewModel.addOffer(offerName, requirements, skills, expectation)
+                .setPositiveButton("Yes") { _,_ ->
+                    binding.progressCircularLayout.visibility = View.VISIBLE
+                    recruiterCandidateViewModel.addOffer(
+                        offerName = editTextOfferName.text.toString(), requirements = editTextRequirement.text.toString(),
+                        skills = editTextSkills.text.toString(), expectation = editTextExpectation.text.toString())
                 }
-                .setNegativeButton("No") { dialog, which -> }
+                .setNegativeButton("No") { _,_ -> }
                 .create().show()
+        }
     }
 
-    /*
-        Loading Recruiter Details through locally stored profile
-     */
     private fun loadRecruiterDetails() {
-        progressCircularLayout.visibility = View.VISIBLE
-        this.recruiterCandidateViewModel.getLocalProfile()?.let {
-            textViewName.setText(it.name)
-            textViewCollege.setText(it.collegeName)
-            textViewCourse.setText(it.course)
-            textViewSemester.setText(it.semester)
+        binding.apply {
+            progressCircularLayout.visibility = View.VISIBLE
+            recruiterCandidateViewModel.getLocalProfile()?.let {
+                textViewNameData.text = it.name
+                textViewCollegeData.text = it.collegeName
+                textViewCourseData.text = it.course
+                textViewSemesterData.setText(it.semester)
+            }
+            progressCircularLayout.visibility = View.INVISIBLE
         }
-        progressCircularLayout.visibility = View.INVISIBLE
     }
 }

@@ -226,9 +226,9 @@ class RecruiterCandidateViewModel(val app: Application) : AndroidViewModel(app) 
         val bodyMarkAsSeen = BodyMarkAsSeen(is_Seen)
         viewModelScope.launch {
             try {
-                val response = recruiterRepository.markSeen("Bearer $token", app_id!!, bodyMarkAsSeen)
+                val response = recruiterRepository.markSeen("Bearer $token", app_id, bodyMarkAsSeen)
                 responseMarkAsSeen.postValue(Event(response))
-                (responseGetOfferApplicants.value!!.applicants as ArrayList<ApplicantCardModel>)?.let {
+                (responseGetOfferApplicants.value!!.applicants as ArrayList<ApplicantCardModel>).let {
                     for (listItem in it) {
                         if (listItem.application_id.equals(currentApplicationId.value!!)) {
                             listItem.is_Seen = true
@@ -258,9 +258,9 @@ class RecruiterCandidateViewModel(val app: Application) : AndroidViewModel(app) 
         val bodyMarkAsSelected = BodyMarkAsSelected(is_Selected)
         viewModelScope.launch {
             try {
-                val response = recruiterRepository.markSelected("Bearer $token", app_id!!, bodyMarkAsSelected)
+                val response = recruiterRepository.markSelected("Bearer $token", app_id, bodyMarkAsSelected)
                 responseMarkAsSelected.postValue(Event(response))
-                (responseGetOfferApplicants.value!!.applicants as ArrayList<ApplicantCardModel>)?.let {
+                (responseGetOfferApplicants.value!!.applicants as ArrayList<ApplicantCardModel>).let {
                     for (listItem in it) {
                         if (listItem.application_id.equals(currentApplicationId.value!!)) {
                             listItem.is_Selected = true
@@ -472,34 +472,34 @@ class RecruiterCandidateViewModel(val app: Application) : AndroidViewModel(app) 
 
     //Nullifier Functions
     fun nullifySafeToVisitOfferList(){
-        safeToVisitOfferList.postValue(Event(false));
+        safeToVisitOfferList.postValue(Event(false))
     }
     fun nullifySafeToVisitOfferDetails(){
-        safeToVisitOfferDetails.postValue(Event(false));
+        safeToVisitOfferDetails.postValue(Event(false))
     }
     fun nullifySafeToVisitCandidateList(){
-        safeToVisitCandidates.postValue(Event(false));
+        safeToVisitCandidates.postValue(Event(false))
     }
     fun nullifySafeToVisitCandidateDetails(){
-        safeToVisitCandidateDetails.postValue(Event(false));
+        safeToVisitCandidateDetails.postValue(Event(false))
     }
     fun nullifySafeToVisitDomainOffers(){
-        safeToVisitDomainOffers.postValue(Event(false));
+        safeToVisitDomainOffers.postValue(Event(false))
     }
     fun nullifySafeToVisitDomainOfferDetails(){
-        safeToVisitDomainOfferDetails.postValue(Event(false));
+        safeToVisitDomainOfferDetails.postValue(Event(false))
     }
     fun nullifySafeToVisitApplicationsList(){
-        safeToVisitApplicationList.postValue(Event(false));
+        safeToVisitApplicationList.postValue(Event(false))
     }
     fun nullifySafeToVisitApplicationDetails(){
-        safeToVisitApplicationDetails.postValue(Event(false));
+        safeToVisitApplicationDetails.postValue(Event(false))
     }
     fun getLocalProfile() = profileRepository.getLocalProfile()
 
 
     companion object {
-        const val INVALID_TOKEN = "Invalid Token. Please log in again.";
-        const val OFFERS_REQUESTED_ONCE = 0;
+        const val INVALID_TOKEN = "Invalid Token. Please log in again."
+        const val OFFERS_REQUESTED_ONCE = 0
     }
 }

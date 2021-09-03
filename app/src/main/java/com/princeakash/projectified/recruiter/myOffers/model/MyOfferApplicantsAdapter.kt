@@ -12,7 +12,7 @@ class MyOfferApplicantsAdapter(private var applicantList: List<ApplicantCardMode
     class MyOfferApplicantViewHolder(val binding: CardMyOffersCandidateBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyOfferApplicantViewHolder {
-        val binding = CardMyOffersCandidateBinding.inflate(LayoutInflater.from(parent.context))
+        val binding = CardMyOffersCandidateBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyOfferApplicantViewHolder(binding)
     }
 

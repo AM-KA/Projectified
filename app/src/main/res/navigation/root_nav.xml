@@ -152,7 +152,7 @@
             android:id="@+id/myApplicationsHomeFragment"
             android:name="com.princeakash.projectified.candidate.myApplications.view.MyApplicationsHomeFragment"
             android:label="My Applications"
-            tools:layout="@layout/frag_myapplication">
+            tools:layout="@layout/frag_my_application">
             <action
                 android:id="@+id/home_to_application_details"
                 app:enterAnim="@anim/slide_in_right"
@@ -165,7 +165,7 @@
             android:id="@+id/myApplicationDetailsFragment"
             android:name="com.princeakash.projectified.candidate.myApplications.view.MyApplicationDetailsFragment"
             android:label="Application Details"
-            tools:layout="@layout/frag_myapplicationdetail">
+            tools:layout="@layout/frag_my_application_details">
             <action
                 android:id="@+id/details_to_my_applications_home"
                 app:enterAnim="@anim/slide_in_right"

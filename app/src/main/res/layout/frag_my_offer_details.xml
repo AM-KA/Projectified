@@ -153,7 +153,7 @@
                         app:layout_constraintEnd_toEndOf="@id/guideline6"
                         app:layout_constraintTop_toBottomOf="@id/editTextLayoutOfferName">
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editTextRequirement"
+                            android:id="@+id/editTextRequirements"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:drawablePadding="10dp"
@@ -182,7 +182,7 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/editTextLayoutExpectation"
+                        android:id="@+id/editTextLayoutExpectations"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="0dp"
                         android:layout_marginTop="10dp"
@@ -192,7 +192,7 @@
                         app:layout_constraintTop_toBottomOf="@id/editTextLayoutSkills"
                         app:layout_constraintBottom_toTopOf="@id/guideline8">
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editTextExpectation"
+                            android:id="@+id/editTextExpectations"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:drawablePadding="10dp"
