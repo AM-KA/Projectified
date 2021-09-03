@@ -14,15 +14,11 @@ import com.princeakash.projectified.R
 import com.princeakash.projectified.databinding.FragmentGenerateOtpBinding
 import com.princeakash.projectified.user.viewmodel.ProfileViewModel
 
-class GenerateOtpFragment : Fragment() {
+class GenerateOtpFragment : Fragment(R.layout.fragment_generate_otp) {
 
     // ViewModel
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var binding: FragmentGenerateOtpBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-        = inflater.inflate(R.layout.fragment_generate_otp, container, false)
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

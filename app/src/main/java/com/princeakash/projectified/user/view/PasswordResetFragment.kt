@@ -14,15 +14,11 @@ import com.princeakash.projectified.R
 import com.princeakash.projectified.databinding.FragmentPasswordResetBinding
 import com.princeakash.projectified.user.viewmodel.ProfileViewModel
 
-class PasswordResetFragment : Fragment() {
+class PasswordResetFragment : Fragment(R.layout.fragment_password_reset) {
 
     private lateinit var profileViewModel: ProfileViewModel
 
     private lateinit var binding: FragmentPasswordResetBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-        = inflater.inflate(R.layout.fragment_password_reset, container, false)
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

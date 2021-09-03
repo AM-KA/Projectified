@@ -15,13 +15,10 @@ import com.princeakash.projectified.R
 import com.princeakash.projectified.databinding.FragFloatOpportunityBinding
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 
-class AddOfferFragment : Fragment() {
+class AddOfferFragment : Fragment(R.layout.frag_float_opportunity) {
 
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
     private lateinit var binding: FragFloatOpportunityBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
-        = inflater.inflate(R.layout.frag_float_opportunity, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

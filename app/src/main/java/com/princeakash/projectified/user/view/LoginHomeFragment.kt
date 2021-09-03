@@ -17,16 +17,12 @@ import com.princeakash.projectified.databinding.SigninUserBinding
 import com.princeakash.projectified.user.viewmodel.ProfileViewModel
 import com.princeakash.projectified.user.model.ResponseLogin
 
-class LoginHomeFragment : Fragment() {
+class LoginHomeFragment : Fragment(R.layout.signin_user) {
 
     //ViewModels
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var responseLogin: ResponseLogin
     private lateinit var binding: SigninUserBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-        = inflater.inflate(R.layout.signin_user, container, false)
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

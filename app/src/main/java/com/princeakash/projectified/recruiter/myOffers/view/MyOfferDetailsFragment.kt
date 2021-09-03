@@ -18,16 +18,12 @@ import com.princeakash.projectified.databinding.FragMyOfferDetailsBinding
 import com.princeakash.projectified.recruiter.myOffers.model.*
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 
-class MyOfferDetailsFragment: Fragment() {
+class MyOfferDetailsFragment: Fragment(R.layout.frag_my_offer_details) {
 
     private lateinit var listener: CompoundButton.OnCheckedChangeListener
 
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
     private lateinit var binding: FragMyOfferDetailsBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-        = inflater.inflate(R.layout.frag_my_offer_details, container, false)
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

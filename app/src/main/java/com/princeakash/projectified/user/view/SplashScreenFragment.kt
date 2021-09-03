@@ -12,13 +12,9 @@ import com.princeakash.projectified.MainActivity
 import com.princeakash.projectified.R
 import com.princeakash.projectified.user.viewmodel.ProfileViewModel
 
-class SplashScreenFragment : Fragment() {
+class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
 
     private lateinit var profileViewModel: ProfileViewModel
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-        = inflater.inflate(R.layout.fragment_splash_screen, container, false)
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

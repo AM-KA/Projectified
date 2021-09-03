@@ -18,7 +18,7 @@ import com.princeakash.projectified.recruiter.myOffers.model.OfferCardModelRecru
 import com.princeakash.projectified.recruiter.myOffers.model.MyOffersAdapter
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 
-class MyOfferHomeFragment : Fragment(), MyOffersAdapter.MyOffersListener {
+class MyOfferHomeFragment : Fragment(R.layout.frag_my_offers), MyOffersAdapter.MyOffersListener {
 
     //ViewModel
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
@@ -26,10 +26,6 @@ class MyOfferHomeFragment : Fragment(), MyOffersAdapter.MyOffersListener {
 
     //Offer List for RecyclerView
     private var offerList: ArrayList<OfferCardModelRecruiter> = ArrayList()
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-        = inflater.inflate(R.layout.frag_my_offers, container, false)
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -24,7 +24,7 @@ import com.princeakash.projectified.user.view.LoginHomeFragment.Companion.USER_N
 import java.util.concurrent.TimeUnit
 
 
-class VerifyOtpFragment : Fragment() {
+class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
 
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var binding: FragmentVerifyOtpBinding
@@ -33,9 +33,6 @@ class VerifyOtpFragment : Fragment() {
     private var resendToken: PhoneAuthProvider.ForceResendingToken? = null
     private var phoneNo: String? = null
     private lateinit var auth: FirebaseAuth
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-        = inflater.inflate(R.layout.fragment_verify_otp, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

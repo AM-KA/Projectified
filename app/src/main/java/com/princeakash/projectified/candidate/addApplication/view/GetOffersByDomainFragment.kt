@@ -16,14 +16,11 @@ import com.princeakash.projectified.candidate.myApplications.model.OfferCardMode
 import com.princeakash.projectified.databinding.FragAvailableOffersBinding
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 
-class GetOffersByDomainFragment : Fragment() , GetOffersByDomainAdapter.GetOffersListener{
+class GetOffersByDomainFragment : Fragment(R.layout.frag_available_offers) , GetOffersByDomainAdapter.GetOffersListener{
 
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
     private var offerList: ArrayList<OfferCardModelCandidate> = ArrayList()
     private lateinit var binding: FragAvailableOffersBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-        = inflater.inflate(R.layout.frag_available_offers, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

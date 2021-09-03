@@ -14,14 +14,11 @@ import com.princeakash.projectified.R
 import com.princeakash.projectified.databinding.FragmentVerifyOtpBinding
 import com.princeakash.projectified.user.viewmodel.ProfileViewModel
 
-class VerifyEmailOtpFragment : Fragment() {
+class VerifyEmailOtpFragment : Fragment(R.layout.fragment_verify_otp) {
 
     //View Models and Fun Objects
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var binding: FragmentVerifyOtpBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-        = inflater.inflate(R.layout.fragment_verify_otp, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

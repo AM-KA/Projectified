@@ -15,7 +15,7 @@ import com.princeakash.projectified.user.viewmodel.ProfileViewModel
 import com.princeakash.projectified.user.model.ResponseSignUp
 
 
-class SignUpHomeFragment : Fragment() {
+class SignUpHomeFragment : Fragment(R.layout.sign_up_user) {
 
     ///ViewModels
     private lateinit var profileViewModel: ProfileViewModel
@@ -23,10 +23,6 @@ class SignUpHomeFragment : Fragment() {
     private lateinit var binding: SignUpUserBinding
 
     private var errorShown = false
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-        =  inflater.inflate(R.layout.sign_up_user, container, false)
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

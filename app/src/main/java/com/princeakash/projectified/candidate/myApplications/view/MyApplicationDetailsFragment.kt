@@ -16,15 +16,11 @@ import com.princeakash.projectified.databinding.FragMyApplicationDetailsBinding
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 import java.net.URL
 
-class MyApplicationDetailsFragment : Fragment() {
+class MyApplicationDetailsFragment : Fragment(R.layout.frag_my_application_details) {
 
     //ViewModels and Observable Objects
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
     private lateinit var binding: FragMyApplicationDetailsBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-        = inflater.inflate(R.layout.frag_my_application_details, container, false)
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

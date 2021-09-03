@@ -18,15 +18,12 @@ import com.princeakash.projectified.recruiter.myOffers.model.ApplicantCardModel
 import com.princeakash.projectified.recruiter.myOffers.model.MyOfferApplicantsAdapter
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 
-class MyOfferApplicantsFragment : Fragment(), MyOfferApplicantsAdapter.MyOfferApplicantListener {
+class MyOfferApplicantsFragment : Fragment(R.layout.frag_candidates), MyOfferApplicantsAdapter.MyOfferApplicantListener {
 
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
     private lateinit var binding: FragCandidatesBinding
 
     private var applicantList: ArrayList<ApplicantCardModel> = ArrayList()
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-        = inflater.inflate(R.layout.frag_candidates, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

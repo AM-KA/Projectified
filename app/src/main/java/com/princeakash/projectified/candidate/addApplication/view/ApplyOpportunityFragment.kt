@@ -16,14 +16,10 @@ import com.princeakash.projectified.databinding.FragApplyOpportunitySelfBinding
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 import java.net.URL
 
-class ApplyOpportunityFragment : Fragment() {
+class ApplyOpportunityFragment : Fragment(R.layout.frag_apply_opportunity_self) {
 
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
     private lateinit var binding: FragApplyOpportunitySelfBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-         = inflater.inflate(R.layout.frag_apply_opportunity_self, container, false)
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

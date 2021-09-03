@@ -25,15 +25,11 @@ import com.princeakash.projectified.databinding.FragHomeBinding
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 
 
-class HomeFragment : Fragment(), HomeListener {
+class HomeFragment : Fragment(R.layout.frag_home), HomeListener {
 
     private lateinit var fragmentBinding: FragHomeBinding
     private lateinit var list: ArrayList<HomeItem>
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-        = inflater.inflate(R.layout.frag_home, container, false)
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

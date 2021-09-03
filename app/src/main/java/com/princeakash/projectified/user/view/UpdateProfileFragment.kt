@@ -14,17 +14,13 @@ import com.princeakash.projectified.databinding.FragUpdateProfileBinding
 import com.princeakash.projectified.user.model.BodyUpdateProfile
 import com.princeakash.projectified.user.viewmodel.ProfileViewModel
 
-class UpdateProfileFragment : Fragment() {
+class UpdateProfileFragment : Fragment(R.layout.frag_update_profile) {
 
     private var num: IntArray = intArrayOf(0, 0, 0, 0, 0, 0)
 
-    //  View Models and fun Instances
+    //  ViewModels
     lateinit var profileViewModel: ProfileViewModel
     private lateinit var binding: FragUpdateProfileBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-        = inflater.inflate(R.layout.frag_update_profile, container, false)
-
 
     private fun setAdapters() {
         val adapterCourse = ArrayAdapter.createFromResource(requireContext(), R.array.courses, android.R.layout.simple_spinner_dropdown_item)

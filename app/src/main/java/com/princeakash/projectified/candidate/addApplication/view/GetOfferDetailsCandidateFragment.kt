@@ -14,13 +14,10 @@ import com.princeakash.projectified.candidate.addApplication.model.ResponseGetOf
 import com.princeakash.projectified.databinding.FragApplyOpportunityViewBinding
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 
-class GetOfferDetailsCandidateFragment : Fragment() {
+class GetOfferDetailsCandidateFragment : Fragment(R.layout.frag_apply_opportunity_view) {
 
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
     private lateinit var binding: FragApplyOpportunityViewBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-        = inflater.inflate(R.layout.frag_apply_opportunity_view, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -16,17 +16,12 @@ import com.princeakash.projectified.databinding.FragCandidateDetailsRecruiterBin
 import com.princeakash.projectified.recruiter.myOffers.model.ResponseGetApplicationByIdRecruiter
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 
-class MyOfferApplicationFragment : Fragment() {
+class MyOfferApplicationFragment : Fragment(R.layout.frag_candidate_details_recruiter) {
 
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
     private var responseGetApplicationByIdRecruiter: ResponseGetApplicationByIdRecruiter? = null
 
     private lateinit var binding: FragCandidateDetailsRecruiterBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View?
-        = inflater.inflate(R.layout.frag_candidate_details_recruiter, container, false)
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
