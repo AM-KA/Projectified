@@ -6,46 +6,47 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.children
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.chip.Chip
 import com.princeakash.projectified.MainActivity
 import com.princeakash.projectified.R
-import com.princeakash.projectified.databinding.FragCreateProfileBinding
-import com.princeakash.projectified.user.model.BodyUpdateProfile
-import com.princeakash.projectified.user.model.ResponseUpdateProfile
+import com.princeakash.projectified.databinding.CreateUpdateProfileBinding
 import com.princeakash.projectified.user.viewmodel.ProfileViewModel
+import com.princeakash.projectified.utils.HelperClass
 
 class CreateProfileActivity : AppCompatActivity() {
 
-    private var num: IntArray = intArrayOf(0, 0, 0, 0, 0, 0)
-
-    //  ViewModels
     lateinit var profileViewModel: ProfileViewModel
-    lateinit var responseUpdateProfile: ResponseUpdateProfile
-
-    lateinit var binding: FragCreateProfileBinding
-
-    private var userName: String = ""
-    private var userId: String = ""
+    lateinit var binding: CreateUpdateProfileBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = FragCreateProfileBinding.inflate(layoutInflater)
+        binding = CreateUpdateProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setAdapters()
+        binding.editTextName.setText(profileViewModel.userName)
+        binding.Save.setOnClickListener { validateParameters() }
 
         profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         profileViewModel.responseUpdateProfile().observe(this, {
-            it?.getContentIfNotHandled()?.let {
-                responseUpdateProfile = it
-                Toast.makeText(this, it.message, LENGTH_LONG).show()
-                //TODO:Apply code=200 validation
-                //Save Profile Status locally
-                profileViewModel.setProfileStatus(true)
-                //Navigate to Main Activity
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
+            it?.getContentIfNotHandled()?.let { response ->
+                Toast.makeText(this, response.message, LENGTH_LONG).show()
+                if(response.code == 200){
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                }
             }
         })
 
+        if(savedInstanceState == null)
+            loadChips(IntArray(0))
+        else
+            savedInstanceState.getIntArray(HelperClass.CHIPS)?.let { arr -> loadChips(arr) }
+    }
+
+    private fun setAdapters() {
         val adapterCourse = ArrayAdapter.createFromResource(this, R.array.courses, android.R.layout.simple_spinner_dropdown_item)
         adapterCourse.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.editTextCourse.setAdapter(adapterCourse)
@@ -59,17 +60,6 @@ class CreateProfileActivity : AppCompatActivity() {
         binding.editTextInterest1.setAdapter(adapterInterest)
         binding.editTextInterest2.setAdapter(adapterInterest)
         binding.editTextInterest3.setAdapter(adapterInterest)
-
-        prepareName()
-
-        binding.Save.setOnClickListener {
-            validateParameters()
-        }
-    }
-
-    private fun prepareName() {
-        userName = profileViewModel.getUserName()
-        binding.editTextName.setText(userName)
     }
 
     private fun validateParameters() {
@@ -96,45 +86,43 @@ class CreateProfileActivity : AppCompatActivity() {
                 editTextCourse.error = "Enter Course."
                 return
             }
-            if (editTextDescription1.text.toString().isEmpty()) {
-                editTextDescription1.error = "Enter Description."
+            if (editTextDescription.text.toString().isEmpty()) {
+                editTextDescription.error = "Enter Description."
                 return
             }
             if (editTextHobbies.text.toString().isEmpty()) {
                 editTextHobbies.error = "Enter hobbies."
                 return
             }
-            if (chipC1.isChecked)
-                num.set(0, 1)
 
-            if (chipCpp1.isChecked)
-                num.set(1, 1)
-
-            if (chipJava1.isChecked)
-                num.set(2, 1)
-
-            if (chipKotlin1.isChecked)
-                num.set(3, 1)
-
-            if (chipPython1.isChecked)
-                num.set(4, 1)
-
-            if (chipJavaScript1.isChecked)
-                num.set(5, 1)
-
-
-            userName = editTextName.text!!.toString()
-            val college = editTextCollege.text!!.toString()
-            val course = editTextCourse.text!!.toString()
-            val semester = editTextSemester.text!!.toString()
-            val interest1 = editTextInterest1.text!!.toString()
-            val interest2 = editTextInterest2.text!!.toString()
-            val interest3 = editTextInterest3.text!!.toString()
-            val description = editTextDescription1.text!!.toString()
-            val hobbies = editTextHobbies.text!!.toString()
-
-            val bodyUpdateProfile = BodyUpdateProfile(userName, college, course, semester, num, interest1, interest2, interest3, description, hobbies, userId)
-            profileViewModel.updateProfile(bodyUpdateProfile)
+            profileViewModel.updateProfile(editTextName.text!!.toString(), editTextCollege.text!!.toString(),
+                editTextCourse.text!!.toString(), editTextSemester.text!!.toString(), getChipStatusArray(),
+                editTextInterest1.text!!.toString(), editTextInterest2.text!!.toString(),
+                editTextInterest3.text!!.toString(), editTextDescription.text!!.toString(),
+                editTextHobbies.text!!.toString())
         }
+    }
+
+    private fun loadChips(num: IntArray){
+        val chips = HelperClass.getChipsArray(this)
+        for(i in chips.indices){
+            binding.chipGroupLanguages.addView(chips[i])
+            chips[i].isChecked = (i < num.size && num[i]==1)
+        }
+    }
+
+    private fun getChipStatusArray(): IntArray {
+        var arr = IntArray(0)
+        binding.chipGroupLanguages.children.forEach { v ->
+            if (v is Chip) {
+                arr = arr.plus(if (v.isChecked) 1 else 0)
+            }
+        }
+        return arr
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putIntArray(HelperClass.CHIPS, getChipStatusArray())
+        super.onSaveInstanceState(outState)
     }
 }

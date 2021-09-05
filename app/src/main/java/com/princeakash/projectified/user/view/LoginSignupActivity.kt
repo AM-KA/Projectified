@@ -25,7 +25,3 @@ class LoginSignupActivity : AppCompatActivity() {
         }.attach()
     }
 }
-
-
-
-

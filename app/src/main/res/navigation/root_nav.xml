@@ -179,5 +179,5 @@
         android:id="@+id/profileFragment"
         android:name="com.princeakash.projectified.user.view.UpdateProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/frag_update_profile" />
+        tools:layout="@layout/create_update_profile" />
 </navigation>

@@ -4,9 +4,7 @@ import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -22,7 +20,6 @@ import com.princeakash.projectified.databinding.FragmentVerifyOtpBinding
 import com.princeakash.projectified.user.viewmodel.ProfileViewModel
 import com.princeakash.projectified.user.view.LoginHomeFragment.Companion.USER_NAME
 import java.util.concurrent.TimeUnit
-
 
 class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
 
@@ -46,8 +43,8 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
                 Toast.makeText(context, "Enter the OTP Received", Toast.LENGTH_SHORT).show()
             }
         }
-        profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
 
+        profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
         subscribeToObservers(savedInstanceState)
 
     }
@@ -55,48 +52,48 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
     private fun subscribeToObservers(savedInstanceState: Bundle?) {
         profileViewModel.bodySignUp().observe(viewLifecycleOwner, {
             if(savedInstanceState==null){
-                //First loadup, hence safe to send OTP
+                //First load up, hence safe to send OTP
                 phoneNo = "+91" + it.phone
                 sendVerificationCodeToTheUser()
             }
         })
 
         profileViewModel.responseSignUp().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let {
-                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-                if (it.code == 200) {
+            it?.getContentIfNotHandled()?.let { response ->
+                Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
+                if (response.code == 200) {
                     profileViewModel.logIn()
                 }
             }
         })
 
         profileViewModel.responseLogin().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { responseLogin ->
-                if (responseLogin.code != 200) {
-                    Toast.makeText(context, responseLogin.message, Toast.LENGTH_SHORT).show()
+            it?.getContentIfNotHandled()?.let { response ->
+                if (response.code != 200) {
+                    Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
                 } else {
-                    if (responseLogin.profileCompleted!!) {
+                    if (response.profileCompleted!!) {
                         //Navigate to main activity
                         val intent = Intent(activity, MainActivity::class.java)
                         startActivity(intent)
-                        requireActivity().finish()
                     } else {
-                        //Navigate to CreateProfileFragment
+                        //Navigate to CreateProfileActivity
                         val bundle = Bundle()
-                        bundle.putString(USER_NAME, responseLogin.name)
+                        bundle.putString(USER_NAME, response.name)
                         val intent = Intent(requireActivity(), CreateProfileActivity::class.java)
                         intent.putExtra(USER_NAME, bundle)
                         startActivity(intent)
-                        requireActivity().finish()
                     }
+                    requireActivity().finish()
                 }
 
             }
 
         })
+
         profileViewModel.errorString().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let {
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            it?.getContentIfNotHandled()?.let { message ->
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -164,4 +161,3 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
                 }
     }
 }
-

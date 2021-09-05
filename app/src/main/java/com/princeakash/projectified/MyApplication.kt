@@ -19,16 +19,8 @@ import java.lang.Exception
 class MyApplication : Application() {
 
     //Moshi: GSON of Kotlin
-    var moshi = Moshi.Builder()
-            //.add(Date::class.java, Rfc3339DateJsonAdapter())
-            //.add(CustomDateAdapter())
-            //.add(KotlinJsonAdapterFactory())
-            .build()
-
-    var retrofit = Retrofit.Builder()
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .baseUrl(BASE_URL)
-            .build()
+    lateinit var moshi: Moshi
+    lateinit var retrofit: Retrofit
 
     lateinit var recruiterRepository: RecruiterRepository
     lateinit var profileRepository: ProfileRepository

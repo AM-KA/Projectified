@@ -1,26 +1,47 @@
 package com.princeakash.projectified.user.view
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import android.widget.Toast.LENGTH_SHORT
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.chip.Chip
 import com.princeakash.projectified.R
-import com.princeakash.projectified.databinding.FragUpdateProfileBinding
-import com.princeakash.projectified.user.model.BodyUpdateProfile
+import com.princeakash.projectified.databinding.CreateUpdateProfileBinding
 import com.princeakash.projectified.user.viewmodel.ProfileViewModel
+import com.princeakash.projectified.utils.HelperClass
 
-class UpdateProfileFragment : Fragment(R.layout.frag_update_profile) {
-
-    private var num: IntArray = intArrayOf(0, 0, 0, 0, 0, 0)
+class UpdateProfileFragment : Fragment(R.layout.create_update_profile) {
 
     //  ViewModels
-    lateinit var profileViewModel: ProfileViewModel
-    private lateinit var binding: FragUpdateProfileBinding
+    private lateinit var profileViewModel: ProfileViewModel
+    private lateinit var binding: CreateUpdateProfileBinding
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding = CreateUpdateProfileBinding.bind(view)
+        setAdapters()
+        binding.Save.setOnClickListener { validateParameters() }
+
+        profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
+        subscribeToObservers()
+
+        if (savedInstanceState == null)
+            loadLocalProfile()
+        else
+            savedInstanceState.getIntArray(HelperClass.CHIPS)?.let { arr -> loadChips(arr) }
+    }
+
+    private fun loadChips(num: IntArray){
+        val chips = HelperClass.getChipsArray(requireContext())
+        for(i in chips.indices){
+            binding.chipGroupLanguages.addView(chips[i])
+            chips[i].isChecked = (i < num.size && num[i]==1)
+        }
+    }
 
     private fun setAdapters() {
         val adapterCourse = ArrayAdapter.createFromResource(requireContext(), R.array.courses, android.R.layout.simple_spinner_dropdown_item)
@@ -36,20 +57,6 @@ class UpdateProfileFragment : Fragment(R.layout.frag_update_profile) {
         binding.editTextInterest1.setAdapter(adapterInterest)
         binding.editTextInterest2.setAdapter(adapterInterest)
         binding.editTextInterest3.setAdapter(adapterInterest)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding = FragUpdateProfileBinding.bind(view)
-        setAdapters()
-        binding.Save.setOnClickListener { validateParameters() }
-
-        profileViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
-        subscribeToObservers()
-
-        if (savedInstanceState == null)
-            loadLocalProfile()
     }
 
     private fun subscribeToObservers() {
@@ -68,7 +75,7 @@ class UpdateProfileFragment : Fragment(R.layout.frag_update_profile) {
     }
 
     private fun loadLocalProfile() {
-        val profileModel = profileViewModel.getLocalProfile()!!
+        val profileModel = profileViewModel.localProfile!!
         binding.apply{
             editTextName.setText(profileModel.name)
             editTextCollege.setText(profileModel.collegeName)
@@ -79,14 +86,7 @@ class UpdateProfileFragment : Fragment(R.layout.frag_update_profile) {
             editTextInterest3.setText(profileModel.interest3)
             editTextDescription.setText(profileModel.description)
             editTextHobbies.setText(profileModel.hobbies)
-            val num = profileModel.languages
-            Log.d(TAG, "loadLocalProfile: " + num[4])
-            chipC.isChecked = num[0] == 1
-            chipCpp.isChecked = num[1] == 1
-            chipJava.isChecked = num[2] == 1
-            chipKotlin.isChecked = num[3] == 1
-            chipPython.isChecked = num[4] == 1
-            chipJavaScript.isChecked = num[5] == 1
+            loadChips(num = profileModel.languages)
         }
     }
 
@@ -113,43 +113,33 @@ class UpdateProfileFragment : Fragment(R.layout.frag_update_profile) {
                 editTextDescription.error = "Enter Description."
                 return
             }
-            if (editTextHobbies.text.toString().isEmpty()){
+            if (editTextHobbies.text.toString().isEmpty()) {
                 editTextHobbies.error = "Enter hobbies."
                 return
             }
-            if (chipC.isChecked) {
-                num[0] = 1
-            }
-            if (chipCpp.isChecked) {
-                num[1] = 1
-            }
-            if (chipJava.isChecked) {
-                num[2] = 1
-            }
-            if (chipKotlin.isChecked) {
-                num[3] = 1
-            }
-            if (chipPython.isChecked) {
-                num[4] = 1
-            }
-            if (chipJavaScript.isChecked) {
-                num[5] = 1
-            }
-
-            val userName = editTextName.text.toString()
-            val college = editTextCollege.text.toString()
-            val course = editTextCourse.text.toString()
-            val semester = editTextSemester.text.toString()
-            val interest1 = editTextInterest1.text.toString()
-            val interest2 = editTextInterest2.text.toString()
-            val interest3 = editTextInterest3.text.toString()
-            val description = editTextDescription.text.toString()
-            val hobbies = editTextHobbies.text.toString()
 
             progressCircularLayout.visibility = View.VISIBLE
-            val bodyUpdateProfile = BodyUpdateProfile(userName, college, course, semester, num, interest1, interest2, interest3, description, hobbies, "0")
-            profileViewModel.updateProfile(bodyUpdateProfile)
+            profileViewModel.updateProfile(editTextName.text!!.toString(), editTextCollege.text!!.toString(),
+                editTextCourse.text!!.toString(), editTextSemester.text!!.toString(), getChipStatusArray(),
+                editTextInterest1.text!!.toString(), editTextInterest2.text!!.toString(),
+                editTextInterest3.text!!.toString(), editTextDescription.text!!.toString(),
+                editTextHobbies.text!!.toString())
         }
+    }
+
+    private fun getChipStatusArray(): IntArray {
+        var arr = IntArray(0)
+        binding.chipGroupLanguages.children.forEach { v ->
+            if (v is Chip) {
+                arr = arr.plus(if (v.isChecked) 1 else 0)
+            }
+        }
+        return arr
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putIntArray(HelperClass.CHIPS, getChipStatusArray())
+        super.onSaveInstanceState(outState)
     }
 
     companion object {

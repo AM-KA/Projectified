@@ -1,9 +1,7 @@
 package com.princeakash.projectified.user.view
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.fragment.app.Fragment
@@ -31,20 +29,20 @@ class GenerateOtpFragment : Fragment(R.layout.fragment_generate_otp) {
     }
 
     private fun subscribeToObservers() {
-        profileViewModel.responseGenerateOtp().observe(viewLifecycleOwner, { it ->
-            it?.getContentIfNotHandled()?.let {responseGenerateOtp->
+        profileViewModel.responseGenerateOtp().observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let { response->
                 binding.progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(context, responseGenerateOtp.message, LENGTH_LONG).show()
-                if (responseGenerateOtp.code.equals("200")) {
+                Toast.makeText(context, response.message, LENGTH_LONG).show()
+                if (response.code == "200") {
                     findNavController().navigate(R.id.generate_to_verify_otp)
                 }
             }
         })
 
         profileViewModel.errorString().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let {
+            it?.getContentIfNotHandled()?.let { message ->
                 binding.progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(context, it, LENGTH_LONG).show()
+                Toast.makeText(context, message, LENGTH_LONG).show()
             }
         })
     }
@@ -56,14 +54,8 @@ class GenerateOtpFragment : Fragment(R.layout.fragment_generate_otp) {
                 return
             }
 
-            val email = editTextEmail.text.toString()
             progressCircularLayout.visibility = View.VISIBLE
-            profileViewModel.generateOtp(email)
+            profileViewModel.generateOtp(email = editTextEmail.text.toString())
         }
-    }
-
-    companion object {
-        val USER_NAME = "UserName"
-        val USER_ID = "UserId"
     }
 }

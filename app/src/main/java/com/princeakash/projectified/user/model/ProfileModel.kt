@@ -12,19 +12,6 @@ data class ProfileModel(
         var description:String,
         var hobbies: String
 ){
-    /*constructor(bodyCreateProfile: BodyCreateProfile):
-        this(
-                bodyCreateProfile.name,
-                bodyCreateProfile.collegeName,
-                bodyCreateProfile.course,
-                bodyCreateProfile.semester,
-                bodyCreateProfile.languages,
-                bodyCreateProfile.interest1,
-                bodyCreateProfile.interest2,
-                bodyCreateProfile.interest3,
-                bodyCreateProfile.description,
-                bodyCreateProfile.hobbies
-        )*/
     constructor(bodyUpdateProfile: BodyUpdateProfile):this(
             bodyUpdateProfile.name,
             bodyUpdateProfile.collegeName,

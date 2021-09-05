@@ -1,9 +1,7 @@
 package com.princeakash.projectified.user.view
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.fragment.app.Fragment
@@ -32,10 +30,10 @@ class VerifyEmailOtpFragment : Fragment(R.layout.fragment_verify_otp) {
 
     private fun subscribeToObservers() {
         profileViewModel.responseVerifyOtp().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let {responseVerifyOtp->
+            it?.getContentIfNotHandled()?.let { response ->
                 binding.progressCircularLayout.visibility = View.INVISIBLE
-                Toast.makeText(context, responseVerifyOtp.message, LENGTH_LONG).show()
-                if (responseVerifyOtp.code == "200"){
+                Toast.makeText(context, response.message, LENGTH_LONG).show()
+                if (response.code == "200"){
                     //TODO: Allowed to update password
                     findNavController().navigate(R.id.verify_to_password_reset)
                 }

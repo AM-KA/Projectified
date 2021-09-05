@@ -1,9 +1,7 @@
 package com.princeakash.projectified.user.view
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.fragment.app.Fragment
@@ -66,9 +64,8 @@ class PasswordResetFragment : Fragment(R.layout.fragment_password_reset) {
                 return
             }
 
-            val password = editTextPassword.text!!.toString()
             progressCircularLayout.visibility = View.VISIBLE
-            profileViewModel.updatePassword(password)
+            profileViewModel.updatePassword(newPassword = editTextPassword.text!!.toString())
         }
     }
 }

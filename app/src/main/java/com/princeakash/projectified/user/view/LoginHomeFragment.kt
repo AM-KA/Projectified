@@ -2,9 +2,7 @@ package com.princeakash.projectified.user.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.fragment.app.Fragment
@@ -15,13 +13,11 @@ import com.princeakash.projectified.MainActivity
 import com.princeakash.projectified.R
 import com.princeakash.projectified.databinding.SigninUserBinding
 import com.princeakash.projectified.user.viewmodel.ProfileViewModel
-import com.princeakash.projectified.user.model.ResponseLogin
 
 class LoginHomeFragment : Fragment(R.layout.signin_user) {
 
     //ViewModels
     private lateinit var profileViewModel: ProfileViewModel
-    private lateinit var responseLogin: ResponseLogin
     private lateinit var binding: SigninUserBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,14 +33,13 @@ class LoginHomeFragment : Fragment(R.layout.signin_user) {
 
     private fun subscribeToObservers() {
         profileViewModel.responseLogin().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { respLogin ->
+            it?.getContentIfNotHandled()?.let { response ->
                 binding.progressCircularLayout.visibility = View.INVISIBLE
-                responseLogin = respLogin
-                if (responseLogin.code != 200) {
-                    Toast.makeText(context, responseLogin.message, LENGTH_LONG).show()
+                if (response.code != 200) {
+                    Toast.makeText(context, response.message, LENGTH_LONG).show()
                 } else {
                     
-                    if (responseLogin.profileCompleted!!)
+                    if (response.profileCompleted!!)
                         startActivity(Intent(activity, MainActivity::class.java))
                     else
                         startActivity(Intent(activity, CreateProfileActivity::class.java))

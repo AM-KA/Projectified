@@ -1,9 +1,7 @@
 package com.princeakash.projectified.user.view
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.fragment.app.Fragment
@@ -12,17 +10,12 @@ import androidx.navigation.fragment.findNavController
 import com.princeakash.projectified.R
 import com.princeakash.projectified.databinding.SignUpUserBinding
 import com.princeakash.projectified.user.viewmodel.ProfileViewModel
-import com.princeakash.projectified.user.model.ResponseSignUp
-
 
 class SignUpHomeFragment : Fragment(R.layout.sign_up_user) {
 
     ///ViewModels
     private lateinit var profileViewModel: ProfileViewModel
-    private lateinit var responseCheckSignUp: ResponseSignUp
     private lateinit var binding: SignUpUserBinding
-
-    private var errorShown = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,10 +28,9 @@ class SignUpHomeFragment : Fragment(R.layout.sign_up_user) {
     }
 
     private fun subscribeToObservers() {
-        profileViewModel.responsecheckSignUp().observe(viewLifecycleOwner, {
+        profileViewModel.responseCheckSignUp().observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { response ->
                 binding.progressCircularLayout.visibility = View.INVISIBLE
-                responseCheckSignUp = response
                 when(response.code){
                     300 -> Toast.makeText(context, "You have already signed up. Please log in to continue ", LENGTH_SHORT).show()
                     200 -> findNavController().navigate(R.id.home_to_verify_otp)
@@ -66,7 +58,8 @@ class SignUpHomeFragment : Fragment(R.layout.sign_up_user) {
                 editTextPassword.error = "Enter Password."
                 return
             }
-            if (editTextReEnterPassword.text.toString().isEmpty() || editTextPassword.text.toString() != editTextReEnterPassword.text.toString()) {
+            if (editTextReEnterPassword.text.toString().isEmpty() ||
+                editTextPassword.text.toString() != editTextReEnterPassword.text.toString()) {
                 editTextReEnterPassword.error = "Passwords didn't match"
                 return
             }
@@ -80,15 +73,10 @@ class SignUpHomeFragment : Fragment(R.layout.sign_up_user) {
             }
 
             progressCircularLayout.visibility = View.VISIBLE
-            profileViewModel.checksignup(
+            profileViewModel.checkSignUp(
                 editTextName.text!!.toString(), editTextEmail.text!!.toString(),
                 editTextPhone.text!!.toString(), editTextPassword.text!!.toString()
             )
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBoolean("Error", errorShown)
-        super.onSaveInstanceState(outState)
     }
 }

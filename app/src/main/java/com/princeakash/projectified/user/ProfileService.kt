@@ -9,16 +9,13 @@ interface ProfileService {
     suspend fun signUp(@Body bodySignUp: BodySignUp): ResponseSignUp
 
     @POST("user/login")
-    suspend fun logIn(@Body bodyLogin: LoginBody): ResponseLogin
-
-    /*@POST("profile")
-    suspend fun createProfile(@Header("Authorization") token: String, @Body bodyCreateProfile: BodyCreateProfile) :ResponseCreateProfile*/
+    suspend fun logIn(@Body bodyLogin: BodyLogin): ResponseLogin
 
     @PATCH("user/{profileID}")
     suspend fun updateProfile(@Header("Authorization") token: String, @Body bodyUpdateProfile: BodyUpdateProfile, @Path("profileID") profileID:String) : ResponseUpdateProfile
 
     @POST("user/checksignup")
-    suspend fun checksignup(@Body bodySignUp: BodySignUp) : ResponseSignUp
+    suspend fun checkSignup(@Body bodySignUp: BodySignUp) : ResponseSignUp
 
     @POST("user/reset/generateOtp")
     suspend fun generateOtp(@Body bodyGenerateOtp: BodyGenerateOtp): ResponseGenerateOtp
