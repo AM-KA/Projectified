@@ -1,10 +1,9 @@
 package com.princeakash.projectified.recruiter.myOffers.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.princeakash.projectified.R
 import com.princeakash.projectified.databinding.FragMyOffersBinding
-import com.princeakash.projectified.recruiter.myOffers.model.OfferCardModelRecruiter
 import com.princeakash.projectified.recruiter.myOffers.model.MyOffersAdapter
 import com.princeakash.projectified.recruiter.myOffers.viewmodel.RecruiterCandidateViewModel
 
@@ -24,9 +22,6 @@ class MyOfferHomeFragment : Fragment(R.layout.frag_my_offers), MyOffersAdapter.M
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
     private lateinit var binding: FragMyOffersBinding
 
-    //Offer List for RecyclerView
-    private var offerList: ArrayList<OfferCardModelRecruiter> = ArrayList()
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -35,9 +30,10 @@ class MyOfferHomeFragment : Fragment(R.layout.frag_my_offers), MyOffersAdapter.M
         recruiterCandidateViewModel = ViewModelProvider(requireActivity()).get(RecruiterCandidateViewModel::class.java)
         subscribeToObservers()
 
-        if(savedInstanceState==null)
+        if(savedInstanceState==null) {
             recruiterCandidateViewModel.nullifySafeToVisitOfferList()
-
+            Log.d("Hi", "onViewCreated: New inst")
+        }
 
         binding.recyclerViewOffers.apply {
             layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
@@ -55,10 +51,12 @@ class MyOfferHomeFragment : Fragment(R.layout.frag_my_offers), MyOffersAdapter.M
             }
         })
 
-        recruiterCandidateViewModel.responseGetOffersByRecruiter().observe(viewLifecycleOwner, {
-            offerList = it.offers as ArrayList<OfferCardModelRecruiter>
+        recruiterCandidateViewModel.responseGetOffersByRecruiter().observe(viewLifecycleOwner, { response ->
             binding.progressCircularLayout.visibility = View.INVISIBLE
-            binding.recyclerViewOffers.adapter = MyOffersAdapter(offerList, this@MyOfferHomeFragment)
+            var offers = response.offers
+            if(offers == null)
+                offers = ArrayList()
+            binding.recyclerViewOffers.adapter = MyOffersAdapter(offers, this@MyOfferHomeFragment)
         })
 
         recruiterCandidateViewModel.errorString().observe(viewLifecycleOwner, {
@@ -74,9 +72,8 @@ class MyOfferHomeFragment : Fragment(R.layout.frag_my_offers), MyOffersAdapter.M
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "My Offers"
     }
 
-    override fun onViewDetailsClick(itemPosition: Int) {
+    override fun onViewDetailsClick(offerId: String) {
         binding.progressCircularLayout.visibility = View.VISIBLE
-        val offId = offerList[itemPosition].offer_id
-        recruiterCandidateViewModel.getOfferByIdRecruiter(offId)
+        recruiterCandidateViewModel.getOfferByIdRecruiter(offerId)
     }
 }

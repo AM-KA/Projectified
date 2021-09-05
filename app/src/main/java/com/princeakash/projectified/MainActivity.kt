@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var profileViewModel:ProfileViewModel
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
-    private var isNightModeOn: Boolean = false
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var switch: SwitchMaterial
@@ -56,16 +55,14 @@ class MainActivity : AppCompatActivity() {
         binding.drawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
-        isNightModeOn = profileViewModel.darkModeStatus
-
-        if(isNightModeOn) {
+        if(profileViewModel.darkModeStatus) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
 
         switch.setOnClickListener{
-            if (isNightModeOn) {
+            if (profileViewModel.darkModeStatus) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 profileViewModel.darkModeStatus = false
             }else {

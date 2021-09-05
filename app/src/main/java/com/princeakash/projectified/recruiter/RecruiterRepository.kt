@@ -11,7 +11,7 @@ import retrofit2.Retrofit
 class RecruiterRepository(retrofit: Retrofit) {
 
     //RecruiterService class for using Retrofit
-    var recruiterService: RecruiterService = retrofit.create(RecruiterService::class.java)
+    private var recruiterService: RecruiterService = retrofit.create(RecruiterService::class.java)
 
     suspend fun addOffer(bodyAddOffer: BodyAddOffer, token:String) = recruiterService.addOffer(token, bodyAddOffer)
 
