@@ -6,7 +6,7 @@
     app:startDestination="@id/signUpHomeFragment">
     <fragment
         android:id="@+id/signUpHomeFragment"
-        android:name="com.princeakash.projectified.user.view.SignUpHomeFragment"
+        android:name="com.princeakash.projectified.view.user.SignUpHomeFragment"
         android:label="Sign Up"
         tools:layout="@layout/sign_up_user">
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/verifyOtpFragment"
-        android:name="com.princeakash.projectified.user.view.VerifyOtpFragment"
+        android:name="com.princeakash.projectified.view.user.VerifyOtpFragment"
         android:label="Verify OTP"
         tools:layout="@layout/fragment_verify_otp">
         <action

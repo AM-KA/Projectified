@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg"
-    tools:context=".recruiter.myOffers.view.MyOfferHomeFragment"
+    tools:context=".view.recruiter.MyOfferHomeFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -60,9 +60,10 @@
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent">
+
         <ProgressBar
-            android:indeterminateTint="@android:color/white"
             android:layout_width="40dp"
-            android:layout_height="40dp"/>
+            android:layout_height="40dp"
+            android:indeterminateTint="@android:color/white" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

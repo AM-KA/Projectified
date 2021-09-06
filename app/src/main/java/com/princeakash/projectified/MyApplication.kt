@@ -5,10 +5,12 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.FirebaseApp
-import com.princeakash.projectified.faq.FaqRepository
-import com.princeakash.projectified.candidate.CandidateRepository
-import com.princeakash.projectified.recruiter.RecruiterRepository
-import com.princeakash.projectified.user.ProfileRepository
+import com.princeakash.projectified.repository.FaqRepository
+import com.princeakash.projectified.repository.CandidateRepository
+import com.princeakash.projectified.repository.RecruiterRepository
+import com.princeakash.projectified.repository.ProfileRepository
+import com.princeakash.projectified.utils.CustomDateAdapter
+import com.princeakash.projectified.utils.Event
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
