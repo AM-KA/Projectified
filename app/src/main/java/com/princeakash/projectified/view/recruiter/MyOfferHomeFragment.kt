@@ -19,7 +19,6 @@ import com.princeakash.projectified.viewmodel.RecruiterCandidateViewModel
 
 class MyOfferHomeFragment : Fragment(R.layout.frag_my_offers), MyOffersAdapter.MyOffersListener {
 
-    //ViewModel
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
     private lateinit var binding: FragMyOffersBinding
 
@@ -27,6 +26,10 @@ class MyOfferHomeFragment : Fragment(R.layout.frag_my_offers), MyOffersAdapter.M
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragMyOffersBinding.bind(view)
+        binding.recyclerViewOffers.apply {
+            layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+            setHasFixedSize(true)
+        }
 
         recruiterCandidateViewModel = ViewModelProvider(requireActivity()).get(
             RecruiterCandidateViewModel::class.java)
@@ -34,13 +37,7 @@ class MyOfferHomeFragment : Fragment(R.layout.frag_my_offers), MyOffersAdapter.M
 
         if(savedInstanceState==null) {
             binding.progressCircularLayout.visibility = View.VISIBLE
-            Log.d(TAG, "onViewCreated: Hey!")
             recruiterCandidateViewModel.getOffersByRecruiter()
-        }
-
-        binding.recyclerViewOffers.apply {
-            layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-            setHasFixedSize(true)
         }
     }
 

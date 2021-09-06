@@ -11,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.princeakash.projectified.R
-import com.princeakash.projectified.model.candidate.ApplicationCardModelCandidate
 import com.princeakash.projectified.adapter.MyApplicationsAdapter
 import com.princeakash.projectified.databinding.FragMyApplicationBinding
 import com.princeakash.projectified.viewmodel.RecruiterCandidateViewModel
@@ -19,7 +18,6 @@ import com.princeakash.projectified.viewmodel.RecruiterCandidateViewModel
 class MyApplicationsHomeFragment: Fragment(R.layout.frag_my_application), MyApplicationsAdapter.MyApplicationsListener {
 
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
-    private var applicationList: ArrayList<ApplicationCardModelCandidate> = ArrayList()
     private lateinit var binding: FragMyApplicationBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,27 +33,30 @@ class MyApplicationsHomeFragment: Fragment(R.layout.frag_my_application), MyAppl
             RecruiterCandidateViewModel::class.java)
         subscribeToObservers()
 
-        if(savedInstanceState==null)
-            recruiterCandidateViewModel.nullifySafeToVisitApplicationsList()
+        if(savedInstanceState==null){
+            binding.progressCircularLayout.visibility = View.VISIBLE
+            recruiterCandidateViewModel.getApplicationsByCandidate()
+        }
     }
 
     private fun subscribeToObservers() {
-        recruiterCandidateViewModel.responseGetApplicationByCandidate().observe(viewLifecycleOwner, {
-            applicationList = it?.applications as ArrayList<ApplicationCardModelCandidate>
-            binding.recyclerViewApplications.adapter = MyApplicationsAdapter(applicationList, this@MyApplicationsHomeFragment)
+        recruiterCandidateViewModel.responseGetApplicationDetailByIdCandidate().observe(viewLifecycleOwner, { response ->
             binding.progressCircularLayout.visibility = View.INVISIBLE
-        })
-
-        recruiterCandidateViewModel.safeToVisitApplicationDetails().observe(viewLifecycleOwner, {
-            it.getContentIfNotHandled()?.let{safeToVisit->
-                if(safeToVisit){
-                    findNavController().navigate(R.id.home_to_application_details)
-                }
+            if(!response.hasBeenHandled && response.peekContent().code == 200){
+                findNavController().navigate(R.id.home_to_application_details)
             }
         })
 
+        recruiterCandidateViewModel.responseGetApplicationsByCandidate().observe(viewLifecycleOwner, { response ->
+            binding.progressCircularLayout.visibility = View.INVISIBLE
+            var list = response.applications
+            if(list == null)
+                list = ArrayList()
+            binding.recyclerViewApplications.adapter = MyApplicationsAdapter(list, this@MyApplicationsHomeFragment)
+        })
+
         recruiterCandidateViewModel.errorString().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let{ message ->
+            it.getContentIfNotHandled()?.let{ message ->
                 binding.progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(this@MyApplicationsHomeFragment.context, message, LENGTH_LONG).show()
             }
@@ -67,9 +68,6 @@ class MyApplicationsHomeFragment: Fragment(R.layout.frag_my_application), MyAppl
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "My Apps"
     }
 
-    override fun onViewDetailsClick(itemPosition: Int) {
-        binding.progressCircularLayout.visibility = View.VISIBLE
-        val applicationID = applicationList[itemPosition].application_id
-        recruiterCandidateViewModel.getApplicationDetailByIdCandidate(applicationID)
-    }
+    override fun onViewDetailsClick(applicationId: String) =
+        recruiterCandidateViewModel.getApplicationDetailByIdCandidate(applicationId)
 }

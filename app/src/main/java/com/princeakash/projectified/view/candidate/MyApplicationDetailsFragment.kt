@@ -11,12 +11,12 @@ import androidx.navigation.fragment.findNavController
 import com.princeakash.projectified.R
 import com.princeakash.projectified.model.candidate.ResponseGetApplicationDetailByIdCandidate
 import com.princeakash.projectified.databinding.FragMyApplicationDetailsBinding
+import com.princeakash.projectified.utils.Event
 import com.princeakash.projectified.viewmodel.RecruiterCandidateViewModel
 import java.net.URL
 
 class MyApplicationDetailsFragment : Fragment(R.layout.frag_my_application_details) {
 
-    //ViewModels and Observable Objects
     private lateinit var recruiterCandidateViewModel: RecruiterCandidateViewModel
     private lateinit var binding: FragMyApplicationDetailsBinding
 
@@ -24,17 +24,12 @@ class MyApplicationDetailsFragment : Fragment(R.layout.frag_my_application_detai
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragMyApplicationDetailsBinding.bind(view)
+        binding.buttonUpdateDetails.setOnClickListener { updateOffer() }
+        binding.buttonDeleteApplication.setOnClickListener { deleteApplication() }
 
         recruiterCandidateViewModel = ViewModelProvider(requireActivity()).get(
             RecruiterCandidateViewModel::class.java)
         subscribeToObservers()
-
-        binding.buttonUpdateDetails.setOnClickListener { updateOffer() }
-        binding.buttonDeleteApplication.setOnClickListener { deleteApplication() }
-
-        if(savedInstanceState==null)
-            recruiterCandidateViewModel.nullifySafeToVisitApplicationDetails()
-
     }
 
     private fun subscribeToObservers() {
@@ -45,7 +40,7 @@ class MyApplicationDetailsFragment : Fragment(R.layout.frag_my_application_detai
 
 
         recruiterCandidateViewModel.responseUpdateApplication().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { response ->
+            it.getContentIfNotHandled()?.let { response ->
                 binding.progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
             }
@@ -53,22 +48,15 @@ class MyApplicationDetailsFragment : Fragment(R.layout.frag_my_application_detai
 
 
         recruiterCandidateViewModel.responseDeleteApplication().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { response ->
+            it.getContentIfNotHandled()?.let { response ->
                 binding.progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
-            }
-        })
-
-        recruiterCandidateViewModel.safeToVisitApplicationList().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let {safeToVisit->
-                if(safeToVisit){
-                    findNavController().navigate(R.id.details_to_my_applications_home)
-                }
+                findNavController().navigate(R.id.details_to_my_applications_home)
             }
         })
 
         recruiterCandidateViewModel.errorString().observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { message ->
+            it.getContentIfNotHandled()?.let { message ->
                 binding.progressCircularLayout.visibility = View.INVISIBLE
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             }
@@ -106,33 +94,35 @@ class MyApplicationDetailsFragment : Fragment(R.layout.frag_my_application_detai
         }
     }
 
-    private fun populateViews(response: ResponseGetApplicationDetailByIdCandidate) {
-        binding.apply {
-            if (response.code == 200) {
-                textViewRequirement.text = response.application?.requirements
-                textViewSkills.text = response.application?.skills
-                textViewExpectation.text = response.application?.expectation
-                textViewName.text = response.application?.recruiter_name
-                textViewCollege.text = response.application?.recruiter_collegeName
-                textViewSemester.text = response.application?.recruiter_semester
-                textViewCourse.text = response.application?.recruiter_course
-                editTextPreviousWork.setText(response.application?.previousWork)
-                editTextResume.setText(response.application?.resume)
+    private fun populateViews(event: Event<ResponseGetApplicationDetailByIdCandidate>) {
+        event.getContentIfNotHandled()?.let { response ->
+            binding.apply {
+                if (response.code == 200) {
+                    textViewRequirement.text = response.application?.requirements
+                    textViewSkills.text = response.application?.skills
+                    textViewExpectation.text = response.application?.expectation
+                    textViewName.text = response.application?.recruiter_name
+                    textViewCollege.text = response.application?.recruiter_collegeName
+                    textViewSemester.text = response.application?.recruiter_semester
+                    textViewCourse.text = response.application?.recruiter_course
+                    editTextPreviousWork.setText(response.application?.previousWork)
+                    editTextResume.setText(response.application?.resume)
 
-                if (response.application?.is_Seen!!)
-                    imageViewSeen.setImageResource(R.drawable.ic_baseline_favorite_24)
-                else
-                    imageViewSeen.setImageResource((R.drawable.ic_outline_favorite_border_24))
+                    if (response.application?.is_Seen!!)
+                        imageViewSeen.setImageResource(R.drawable.ic_baseline_favorite_24)
+                    else
+                        imageViewSeen.setImageResource((R.drawable.ic_outline_favorite_border_24))
 
-                if (response.application?.is_Selected!!)
-                    imageViewSelected.setImageResource(R.drawable.ic_baseline_done_24)
-                else
-                    imageViewSelected.setImageResource((R.drawable.ic_baseline_done_outline_24))
+                    if (response.application?.is_Selected!!)
+                        imageViewSelected.setImageResource(R.drawable.ic_baseline_done_24)
+                    else
+                        imageViewSelected.setImageResource((R.drawable.ic_baseline_done_outline_24))
+                    progressCircularLayout.visibility = View.INVISIBLE
+                } else {
+                    Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
+                }
                 progressCircularLayout.visibility = View.INVISIBLE
-            } else {
-                Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
             }
-            progressCircularLayout.visibility = View.INVISIBLE
         }
     }
 

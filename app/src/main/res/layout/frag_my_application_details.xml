@@ -120,7 +120,7 @@
                         app:layout_constraintTop_toTopOf="@id/guideline7"/>
 
                     <TextView
-                        android:id="@+id/textViewRequirement"
+                        android:id="@+id/textViewRequirementLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -129,52 +129,52 @@
                         app:layout_constraintTop_toBottomOf="@id/textViewOpportunityDetails"/>
 
                     <TextView
-                        android:id="@+id/textViewRequirementData"
+                        android:id="@+id/textViewRequirement"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/loading"
                         android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="@id/guideline10"
                         app:layout_constraintEnd_toEndOf="@id/guideline6"
-                        app:layout_constraintTop_toBottomOf="@id/textViewRequirement"/>
+                        app:layout_constraintTop_toBottomOf="@id/textViewRequirementLabel"/>
 
                     <TextView
-                        android:id="@+id/textViewSkills"
+                        android:id="@+id/textViewSkillsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="@string/skills"
                         app:layout_constraintStart_toStartOf="@id/guideline9"
-                        app:layout_constraintTop_toBottomOf="@id/textViewRequirementData"/>
+                        app:layout_constraintTop_toBottomOf="@id/textViewRequirement"/>
 
                     <TextView
-                        android:id="@+id/textViewSkillsData"
+                        android:id="@+id/textViewSkills"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/loading"
                         android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="@id/guideline10"
                         app:layout_constraintEnd_toEndOf="@id/guideline6"
-                        app:layout_constraintTop_toBottomOf="@id/textViewSkills"/>
+                        app:layout_constraintTop_toBottomOf="@id/textViewSkillsLabel"/>
 
                     <TextView
-                        android:id="@+id/textViewExpectation"
+                        android:id="@+id/textViewExpectationLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="Expectation From Applicant"
                         app:layout_constraintStart_toStartOf="@id/guideline9"
-                        app:layout_constraintTop_toBottomOf="@id/textViewSkillsData"/>
+                        app:layout_constraintTop_toBottomOf="@id/textViewSkills"/>
 
                     <TextView
-                        android:id="@+id/textViewExpectationData"
+                        android:id="@+id/textViewExpectation"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/loading"
                         android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="@id/guideline10"
                         app:layout_constraintEnd_toEndOf="@id/guideline6"
-                        app:layout_constraintTop_toBottomOf="@id/textViewExpectation"
+                        app:layout_constraintTop_toBottomOf="@id/textViewExpectationLabel"
                         app:layout_constraintBottom_toTopOf="@id/guideline8"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -249,7 +249,7 @@
                         app:layout_constraintTop_toBottomOf="@id/guideline13" />
 
                     <TextView
-                        android:id="@+id/textViewName"
+                        android:id="@+id/textViewNameLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -258,71 +258,71 @@
                         app:layout_constraintTop_toBottomOf="@id/textViewRecruiterDetails"/>
 
                     <TextView
-                        android:id="@+id/textViewNameData"
+                        android:id="@+id/textViewName"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/loading"
                         android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="@id/guideline16"
                         app:layout_constraintEnd_toEndOf="@id/guideline12"
-                        app:layout_constraintTop_toBottomOf="@id/textViewName"/>
+                        app:layout_constraintTop_toBottomOf="@id/textViewNameLabel"/>
 
                     <TextView
-                        android:id="@+id/textViewCollege"
+                        android:id="@+id/textViewCollegeLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="@string/college"
                         app:layout_constraintStart_toStartOf="@id/guideline15"
-                        app:layout_constraintTop_toBottomOf="@id/textViewNameData"/>
+                        app:layout_constraintTop_toBottomOf="@id/textViewName"/>
 
                     <TextView
-                        android:id="@+id/textViewCollegeData"
+                        android:id="@+id/textViewCollege"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/loading"
                         android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="@id/guideline16"
                         app:layout_constraintEnd_toEndOf="@id/guideline12"
-                        app:layout_constraintTop_toBottomOf="@id/textViewCollege"/>
+                        app:layout_constraintTop_toBottomOf="@id/textViewCollegeLabel"/>
 
                     <TextView
-                        android:id="@+id/textViewCourse"
+                        android:id="@+id/textViewCourseLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="@string/course"
                         app:layout_constraintStart_toStartOf="@id/guideline15"
-                        app:layout_constraintTop_toBottomOf="@id/textViewCollegeData"/>
+                        app:layout_constraintTop_toBottomOf="@id/textViewCollege"/>
 
                     <TextView
-                        android:id="@+id/textViewCourseData"
+                        android:id="@+id/textViewCourse"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/loading"
                         android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="@id/guideline16"
                         app:layout_constraintEnd_toEndOf="@id/guideline12"
-                        app:layout_constraintTop_toBottomOf="@id/textViewCourse"/>
+                        app:layout_constraintTop_toBottomOf="@id/textViewCourseLabel"/>
 
                     <TextView
-                        android:id="@+id/textViewSemester"
+                        android:id="@+id/textViewSemesterLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="@string/semester"
                         app:layout_constraintStart_toStartOf="@id/guideline15"
-                        app:layout_constraintTop_toBottomOf="@id/textViewCourseData"/>
+                        app:layout_constraintTop_toBottomOf="@id/textViewCourse"/>
 
                     <TextView
-                        android:id="@+id/textViewSemesterData"
+                        android:id="@+id/textViewSemester"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/loading"
                         android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="@id/guideline16"
                         app:layout_constraintEnd_toEndOf="@id/guideline12"
-                        app:layout_constraintTop_toBottomOf="@id/textViewSemester"
+                        app:layout_constraintTop_toBottomOf="@id/textViewSemesterLabel"
                         app:layout_constraintBottom_toBottomOf="@id/guideline14"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

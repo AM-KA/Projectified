@@ -130,23 +130,6 @@ class RecruiterCandidateViewModel(val app: Application) : AndroidViewModel(app) 
         }
     }
 
-    fun refreshOffer(){
-        val token = profileRepository.getToken()
-        if(token == "") {
-            errorString.postValue(Event(INVALID_TOKEN))
-            return
-        }
-        viewModelScope.launch {
-            try {
-                val offerID = currentOfferId.value!!
-                responseGetOfferByIdRecruiter.postValue(
-                    Event(recruiterRepository.getOfferByIdRecruiter("Bearer $token", offerID)))
-            } catch(e: Exception){
-                handleError(e, errorString)
-            }
-        }
-    }
-
     fun toggleVisibility(isChecked: Boolean){
         val token = profileRepository.getToken()
         if(token == "") {
@@ -291,33 +274,29 @@ class RecruiterCandidateViewModel(val app: Application) : AndroidViewModel(app) 
         }
     }
 
-    fun setDomain(domainName: String){
+    private fun setDomain(domainName: String){
         currentDomainName.postValue(domainName)
     }
 
     private var responseUpdateApplication: MutableLiveData<Event<ResponseUpdateApplication>> = MutableLiveData()
     private var responseDeleteApplication: MutableLiveData<Event<ResponseDeleteApplication>> = MutableLiveData()
-    private var responseGetApplicationByCandidate: MutableLiveData<ResponseGetApplicationsByCandidate> = MutableLiveData()
-    private var responseGetApplicationDetailByIdCandidate: MutableLiveData<ResponseGetApplicationDetailByIdCandidate> = MutableLiveData()
+    private var responseGetApplicationsByCandidate: MutableLiveData<ResponseGetApplicationsByCandidate> = MutableLiveData()
+    private var responseGetApplicationDetailByIdCandidate: MutableLiveData<Event<ResponseGetApplicationDetailByIdCandidate>> = MutableLiveData()
     private var responseGetOffersByDomain: MutableLiveData<ResponseGetOffersByDomain> = MutableLiveData()
     private var responseAddApplication: MutableLiveData<Event<ResponseAddApplication>> = MutableLiveData()
     private var responseGetOfferById: MutableLiveData<ResponseGetOfferById> = MutableLiveData()
     private var safeToVisitDomainOffers: MutableLiveData<Event<Boolean>> = MutableLiveData()
     private var safeToVisitDomainOfferDetails: MutableLiveData<Event<Boolean>> = MutableLiveData()
-    private var safeToVisitApplicationDetails:MutableLiveData<Event<Boolean>> = MutableLiveData()
-    private var safeToVisitApplicationList: MutableLiveData<Event<Boolean>> = MutableLiveData()
 
     fun responseUpdateApplication(): LiveData<Event<ResponseUpdateApplication>> = responseUpdateApplication
     fun responseDeleteApplication(): LiveData<Event<ResponseDeleteApplication>> = responseDeleteApplication
-    fun responseGetApplicationByCandidate(): LiveData<ResponseGetApplicationsByCandidate> = responseGetApplicationByCandidate
-    fun responseGetApplicationDetailByIdCandidate(): LiveData<ResponseGetApplicationDetailByIdCandidate> = responseGetApplicationDetailByIdCandidate
+    fun responseGetApplicationsByCandidate(): LiveData<ResponseGetApplicationsByCandidate> = responseGetApplicationsByCandidate
+    fun responseGetApplicationDetailByIdCandidate(): LiveData<Event<ResponseGetApplicationDetailByIdCandidate>> = responseGetApplicationDetailByIdCandidate
     fun responseGetOffersByDomain(): LiveData<ResponseGetOffersByDomain> = responseGetOffersByDomain
     fun responseAddApplication(): LiveData<Event<ResponseAddApplication>> = responseAddApplication
     fun responseGetOfferById(): LiveData<ResponseGetOfferById> = responseGetOfferById
     fun safeToVisitDomainOffers(): LiveData<Event<Boolean>> = safeToVisitDomainOffers
     fun safeToVisitDomainOfferDetails(): LiveData<Event<Boolean>> = safeToVisitDomainOfferDetails
-    fun safeToVisitApplicationDetails(): LiveData<Event<Boolean>> = safeToVisitApplicationDetails
-    fun safeToVisitApplicationList(): LiveData<Event<Boolean>> = safeToVisitApplicationList
 
     fun getApplicationsByCandidate() {
         val token: String = profileRepository.getToken()
@@ -332,8 +311,7 @@ class RecruiterCandidateViewModel(val app: Application) : AndroidViewModel(app) 
         }
         viewModelScope.launch {
             try {
-                responseGetApplicationByCandidate.postValue(candidateRepository.getApplicationByCandidate("Bearer $token", applicantID))
-                safeToVisitApplicationList.postValue(Event(true))
+                responseGetApplicationsByCandidate.postValue(candidateRepository.getApplicationByCandidate("Bearer $token", applicantID))
             } catch (e: Exception) {
                 handleError(e, errorString)
             }
@@ -349,8 +327,8 @@ class RecruiterCandidateViewModel(val app: Application) : AndroidViewModel(app) 
         viewModelScope.launch {
             try {
                 currentApplicationId.postValue(applicationID)
-                responseGetApplicationDetailByIdCandidate.postValue(candidateRepository.getApplicationDetailByIdCandidate("Bearer $token", applicationID))
-                safeToVisitApplicationDetails.postValue(Event(true))
+                responseGetApplicationDetailByIdCandidate.postValue(
+                    Event(candidateRepository.getApplicationDetailByIdCandidate("Bearer $token", applicationID)))
             } catch (e: Exception) {
                 handleError(e, errorString)
             }
@@ -369,7 +347,6 @@ class RecruiterCandidateViewModel(val app: Application) : AndroidViewModel(app) 
         viewModelScope.launch {
             try {
                 responseUpdateApplication.postValue(Event(candidateRepository.updateApplication("Bearer $token", applicationID, bodyUpdateApplication)))
-                getApplicationDetailByIdCandidate(currentApplicationId.value!!)
             } catch (e: Exception) {
                 handleError(e, errorString)
             }
@@ -387,7 +364,6 @@ class RecruiterCandidateViewModel(val app: Application) : AndroidViewModel(app) 
         viewModelScope.launch {
             try {
                 responseDeleteApplication.postValue(Event(candidateRepository.deleteApplication("Bearer $token", applicationID)))
-                getApplicationsByCandidate()
             } catch (e: Exception) {
                 handleError(e, errorString)
             }
@@ -423,7 +399,6 @@ class RecruiterCandidateViewModel(val app: Application) : AndroidViewModel(app) 
             try {
                 val bodyAddApplication = BodyAddApplication(Date(), Resume, PreviousWork, applicantID, offerId)
                 responseAddApplication.postValue(Event(candidateRepository.addApplication("Bearer $token", bodyAddApplication)))
-                getApplicationsByCandidate()
             } catch (e: Exception) {
                 handleError(e, errorString)
             }
@@ -453,12 +428,6 @@ class RecruiterCandidateViewModel(val app: Application) : AndroidViewModel(app) 
     }
     fun nullifySafeToVisitDomainOfferDetails(){
         safeToVisitDomainOfferDetails.postValue(Event(false))
-    }
-    fun nullifySafeToVisitApplicationsList(){
-        safeToVisitApplicationList.postValue(Event(false))
-    }
-    fun nullifySafeToVisitApplicationDetails(){
-        safeToVisitApplicationDetails.postValue(Event(false))
     }
 
     fun getLocalProfile() = profileRepository.getLocalProfile()
